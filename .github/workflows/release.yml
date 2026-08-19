@@ -91,7 +91,7 @@ jobs:
 
       - name: Build the provenance attestation
         id: attest
-        uses: actions/attest-build-provenance@v1
+        uses: actions/attest-build-provenance@v4
         with:
           subject-path: |
             dist/businessid-rules-${{ needs.build.outputs.rules_version }}.binpb
