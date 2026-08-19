@@ -121,6 +121,10 @@ checksum "probe" "generic" {
             complement(mod_digits(slice(subject(), 0, 4), 97), 97),
             subject(), 6, 8,
           ),
+          compare_constant(
+            modulo(weighted_sum(slice(subject(), 0, 4), [1], "cycle", "digit_value"), 5),
+            0,
+          ),
           compare_digit(
             modulo(digits_to_integer(slice(subject(), 0, 4)), 10),
             subject(), 0,

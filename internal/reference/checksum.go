@@ -269,6 +269,8 @@ func (m *machine) evalChecksum(f *frame, index uint32) (checksumOutcome, error) 
 	case irv1.ChecksumOpKind_CHECKSUM_OP_KIND_COMPARE_DIGIT,
 		irv1.ChecksumOpKind_CHECKSUM_OP_KIND_COMPARE_SLICE:
 		return m.evalCompare(f, node, op)
+	case irv1.ChecksumOpKind_CHECKSUM_OP_KIND_COMPARE_CONSTANT:
+		return m.evalCompareConstant(f, node, op)
 	case irv1.ChecksumOpKind_CHECKSUM_OP_KIND_WHEN:
 		predicate, err := operand(node, 0)
 		if err != nil {
@@ -361,6 +363,34 @@ func (m *machine) evalAnyCheck(f *frame, node *irv1.Node) (checksumOutcome, erro
 	default:
 		return checksumUnsupported, nil
 	}
+}
+
+// evalCompareConstant compares a computed integer against a literal.
+//
+// COMPARE_DIGIT and COMPARE_SLICE can only compare against part of the value
+// being checked, which leaves no way to state that a remainder must equal a
+// fixed number. An indeterminate operand stays unsupported, exactly as it does
+// for the other comparisons: an integer that could not be evaluated never
+// proves an identifier wrong.
+func (m *machine) evalCompareConstant(f *frame, node *irv1.Node, op *irv1.ChecksumOperation) (checksumOutcome, error) {
+	left, err := operand(node, 0)
+	if err != nil {
+		return checksumUnsupported, err
+	}
+	actual, err := m.evalInteger(f, left)
+	if err != nil {
+		return checksumUnsupported, err
+	}
+	if actual.indeterminate {
+		return checksumUnsupported, nil
+	}
+	if actual.value == op.GetConstant() {
+		return checksumOutcome{status: StatusValid, reason: irv1.ReasonCode_REASON_CODE_OK}, nil
+	}
+	return withMessageKey(checksumOutcome{
+		status: StatusInvalid,
+		reason: irv1.ReasonCode_REASON_CODE_INVALID_CHECKSUM,
+	}, op.MessageKey), nil
 }
 
 func (m *machine) evalCompare(f *frame, node *irv1.Node, op *irv1.ChecksumOperation) (checksumOutcome, error) {

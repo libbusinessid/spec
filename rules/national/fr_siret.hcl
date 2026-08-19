@@ -6,12 +6,8 @@
 #
 # La Poste is a documented derogation. Its establishments were numbered before
 # the Luhn constraint applied to them, and INSEE accepts a La Poste SIRET whose
-# digits sum to a multiple of five. That alternative cannot be expressed in the
-# V1 IR: a checksum can only compare a computed integer against a digit or a
-# slice of the value, never against a literal constant. The rule therefore
-# reports `valid` when the Luhn holds and `unsupported` when it does not, rather
-# than `invalid`. Refusing a genuine La Poste SIRET would be a false negative,
-# which the tri-state exists to prevent.
+# fourteen digits sum to a multiple of five. A La Poste SIRET is therefore valid
+# when either check holds, and invalid only when both fail.
 
 canonicalizer "fr" "siret" {
   steps = [
@@ -36,7 +32,13 @@ checksum "fr" "siret" {
       starts_with(subject(), "356000000"),
       any_check(
         luhn(subject()),
-        unsupported_checksum("checksum_not_published"),
+        compare_constant(
+          modulo(
+            weighted_sum(slice(subject(), 0, 14), [1], "cycle", "digit_value"),
+            5,
+          ),
+          0,
+        ),
       ),
     ),
     luhn(subject()),

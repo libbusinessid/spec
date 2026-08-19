@@ -23,6 +23,7 @@ const (
 	ChecksumLuhnV1                uint32 = 31
 	ChecksumMod97V1               uint32 = 32
 	ChecksumWeightedV1            uint32 = 33
+	ChecksumCompareConstantV1     uint32 = 34
 	ProvenanceV1                  uint32 = 40
 )
 
@@ -176,6 +177,15 @@ var capabilities = []Capability{
 			"The `WEIGHTED_SUM` integer operation.",
 			"The `WeightAlignment` values `LEFT`, `RIGHT` and `CYCLE`.",
 			"The `CharMapping` values `DIGIT_VALUE` and `ALNUM_BASE36`.",
+		},
+	},
+	{
+		ID:      ChecksumCompareConstantV1,
+		Name:    "CHECKSUM_COMPARE_CONSTANT_V1",
+		Summary: "comparison against a literal constant",
+		Content: []string{
+			"The `COMPARE_CONSTANT` checksum operation.",
+			"It closes the gap left by `COMPARE_DIGIT` and `COMPARE_SLICE`, which can only compare a computed integer against part of the value being checked. A rule stating that a remainder must equal zero has nothing in the value to compare against.",
 		},
 	},
 	{

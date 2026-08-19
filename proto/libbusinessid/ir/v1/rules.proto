@@ -186,6 +186,10 @@ message ChecksumOperation {
   optional uint32 end = 4;
   optional ReasonCode reason_code = 5;
   optional string message_key = 6;
+  // The literal the operand is compared against, for COMPARE_CONSTANT. Signed
+  // because an integer expression is signed, and bounded by the same checked
+  // arithmetic as every other integer of the IR.
+  optional int64 constant = 7;
 }
 
 // CallOperation reuses another program on a caller supplied view.
@@ -343,6 +347,10 @@ enum ChecksumOpKind {
   CHECKSUM_OP_KIND_ALL_CHECKS = 7;
   CHECKSUM_OP_KIND_ANY_CHECK = 8;
   CHECKSUM_OP_KIND_UNSUPPORTED = 9;
+  // Compares a computed integer against a literal constant. COMPARE_DIGIT and
+  // COMPARE_SLICE can only compare against part of the value being checked, so a
+  // rule stating that a remainder must equal zero had nothing to compare with.
+  CHECKSUM_OP_KIND_COMPARE_CONSTANT = 10;
 }
 
 // CallOpKind selects the program family reused by a CallOperation.

@@ -44,6 +44,7 @@ const (
 	ParamLengths         Param = "lengths"
 	ParamValues          Param = "values"
 	ParamModulus         Param = "modulus"
+	ParamConstant        Param = "constant"
 	ParamWeights         Param = "weights"
 	ParamAlignment       Param = "alignment"
 	ParamMapping         Param = "mapping"
@@ -528,6 +529,13 @@ var ops = []Op{
 		Operands: []Operand{integerOperand, str("string_expr")}, Required: []Param{ParamIndex}, Optional: []Param{ParamMessageKey},
 		Features: []uint32{CoreGraphV1, ChecksumTristateV1},
 		Doc:      "Compares `int_expr` to the ASCII digit of `string_expr` at code point position `index`. Indeterminate when the integer is indeterminate, the string is absent, `index` is out of range or the code point is not an ASCII digit.",
+	},
+	{
+		Category: CategoryChecksum, Code: int32(irv1.ChecksumOpKind_CHECKSUM_OP_KIND_COMPARE_CONSTANT),
+		Symbol: "CHECKSUM_OP_KIND_COMPARE_CONSTANT", HCL: "compare_constant(int_expr, constant)", Output: tCheck,
+		Operands: []Operand{integerOperand}, Required: []Param{ParamConstant}, Optional: []Param{ParamMessageKey},
+		Features: []uint32{CoreGraphV1, ChecksumTristateV1, ChecksumCompareConstantV1},
+		Doc:      "Compares `int_expr` to the literal `constant`. `COMPARE_DIGIT` and `COMPARE_SLICE` can only compare against part of the value being checked, so a rule stating that a remainder must equal a fixed number had nothing to compare with. Indeterminate when the integer is indeterminate, which never proves an identifier wrong.",
 	},
 	{
 		Category: CategoryChecksum, Code: int32(irv1.ChecksumOpKind_CHECKSUM_OP_KIND_COMPARE_SLICE),

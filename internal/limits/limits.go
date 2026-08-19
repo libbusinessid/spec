@@ -48,6 +48,13 @@ const (
 	MaxRemainderValues = 1_000_000
 	// MaxIndex is the largest accepted index or slice bound.
 	MaxIndex = 4_096
+
+	// MinConstant and MaxConstant bound the literal COMPARE_CONSTANT compares
+	// against. The range matches what a checked integer expression can produce,
+	// so a comparison can never be written against a value no expression could
+	// reach.
+	MinConstant = -1_000_000_000
+	MaxConstant = 1_000_000_000
 	// MinConcatOperands is the smallest accepted number of concat operands.
 	MinConcatOperands = 1
 	// MaxConcatOperands is the largest accepted number of concat operands.

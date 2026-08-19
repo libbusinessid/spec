@@ -220,6 +220,7 @@ func (l *lowerer) buildNode(n *typecheck.Node, inputs []uint32) *irv1.Node {
 		op.End = n.End
 		op.ReasonCode = n.ReasonCode
 		op.MessageKey = n.MessageKey
+		op.Constant = n.Constant
 		node.Operation = &irv1.Node_ChecksumOperation{ChecksumOperation: op}
 	case features.CategoryCall:
 		id, ok := l.programID[n.CallTarget]

@@ -28,6 +28,7 @@ a bundle declaring a single unknown ID.
 | 31 | `CHECKSUM_LUHN_V1` | Luhn |
 | 32 | `CHECKSUM_MOD97_V1` | ISO 7064 / modulo 97 |
 | 33 | `CHECKSUM_WEIGHTED_V1` | weighted sums, alignments and remainders |
+| 34 | `CHECKSUM_COMPARE_CONSTANT_V1` | comparison against a literal constant |
 | 40 | `PROVENANCE_V1` | sources linked to definitions |
 
 ## 1 - `CORE_GRAPH_V1`
@@ -63,6 +64,7 @@ Operations requiring this capability:
 - `CHECKSUM_OP_KIND_ALL_CHECKS`
 - `CHECKSUM_OP_KIND_ANY_CHECK`
 - `CHECKSUM_OP_KIND_CHOOSE`
+- `CHECKSUM_OP_KIND_COMPARE_CONSTANT`
 - `CHECKSUM_OP_KIND_COMPARE_DIGIT`
 - `CHECKSUM_OP_KIND_COMPARE_SLICE`
 - `CHECKSUM_OP_KIND_ISO7064_MOD97_10`
@@ -283,6 +285,7 @@ Operations requiring this capability:
 - `CHECKSUM_OP_KIND_ALL_CHECKS`
 - `CHECKSUM_OP_KIND_ANY_CHECK`
 - `CHECKSUM_OP_KIND_CHOOSE`
+- `CHECKSUM_OP_KIND_COMPARE_CONSTANT`
 - `CHECKSUM_OP_KIND_COMPARE_DIGIT`
 - `CHECKSUM_OP_KIND_COMPARE_SLICE`
 - `CHECKSUM_OP_KIND_ISO7064_MOD97_10`
@@ -333,6 +336,19 @@ Frozen content:
 Operations requiring this capability:
 
 - `INTEGER_OP_KIND_WEIGHTED_SUM`
+
+## 34 - `CHECKSUM_COMPARE_CONSTANT_V1`
+
+Comparison against a literal constant.
+
+Frozen content:
+
+- The `COMPARE_CONSTANT` checksum operation.
+- It closes the gap left by `COMPARE_DIGIT` and `COMPARE_SLICE`, which can only compare a computed integer against part of the value being checked. A rule stating that a remainder must equal zero has nothing in the value to compare against.
+
+Operations requiring this capability:
+
+- `CHECKSUM_OP_KIND_COMPARE_CONSTANT`
 
 ## 40 - `PROVENANCE_V1`
 

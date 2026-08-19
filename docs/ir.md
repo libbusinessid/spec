@@ -920,6 +920,20 @@ Capabilities: `CORE_GRAPH_V1` (1), `CHECKSUM_TRISTATE_V1` (30).
 
 Always yields `unsupported` with `reason_code`, restricted to `unsupported_checksum` and `checksum_not_published`.
 
+#### `CHECKSUM_OP_KIND_COMPARE_CONSTANT`
+
+Surface syntax: `compare_constant(int_expr, constant)`.
+
+Output: `VALUE_TYPE_CHECKSUM_OUTCOME`.
+
+Operands: `int_expr` of type `VALUE_TYPE_INTEGER`.
+
+Parameters: `constant` (required), `message_key` (optional); any other field present in the message is refused.
+
+Capabilities: `CORE_GRAPH_V1` (1), `CHECKSUM_TRISTATE_V1` (30), `CHECKSUM_COMPARE_CONSTANT_V1` (34).
+
+Compares `int_expr` to the literal `constant`. `COMPARE_DIGIT` and `COMPARE_SLICE` can only compare against part of the value being checked, so a rule stating that a remainder must equal a fixed number had nothing to compare with. Indeterminate when the integer is indeterminate, which never proves an identifier wrong.
+
 ### 3.7 Call operations
 
 #### `CALL_OP_KIND_FORMAT`
@@ -961,7 +975,7 @@ Runs the checksum program `program_id` with `input` as its subject and propagate
 | `input_too_long` | `unsupported` |
 | `invalid_characters` | `invalid` |
 | `invalid_checksum` | `invalid` |
-| `invalid_encoding` | unspecified |
+| `invalid_encoding` | `unsupported` |
 | `invalid_format` | `invalid` |
 | `invalid_length` | `invalid` |
 | `invalid_ruleset` | `unsupported` |
@@ -1082,8 +1096,8 @@ these rules today. They are normative regardless.
 `not_run`/`not_requested` when the format is valid. `validateChecksum` returns
 exactly the report of `validate`. `canonicalize` stops after step 2 and returns
 `valid`/`ok`, `invalid`/`country_mismatch`, or `unsupported` with
-`unsupported_kind`, `unsupported_country`, `missing_country_code` or
-`input_too_long`.
+`unsupported_kind`, `unsupported_country`, `missing_country_code`,
+`input_too_long` or `invalid_encoding`.
 
 Results produced before a rule assertion never carry a message key. An assertion
 or a checksum declared by the bundle keeps its message key exactly, including

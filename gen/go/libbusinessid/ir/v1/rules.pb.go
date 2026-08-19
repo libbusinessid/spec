@@ -740,21 +740,26 @@ const (
 	ChecksumOpKind_CHECKSUM_OP_KIND_ALL_CHECKS       ChecksumOpKind = 7
 	ChecksumOpKind_CHECKSUM_OP_KIND_ANY_CHECK        ChecksumOpKind = 8
 	ChecksumOpKind_CHECKSUM_OP_KIND_UNSUPPORTED      ChecksumOpKind = 9
+	// Compares a computed integer against a literal constant. COMPARE_DIGIT and
+	// COMPARE_SLICE can only compare against part of the value being checked, so a
+	// rule stating that a remainder must equal zero had nothing to compare with.
+	ChecksumOpKind_CHECKSUM_OP_KIND_COMPARE_CONSTANT ChecksumOpKind = 10
 )
 
 // Enum value maps for ChecksumOpKind.
 var (
 	ChecksumOpKind_name = map[int32]string{
-		0: "CHECKSUM_OP_KIND_UNSPECIFIED",
-		1: "CHECKSUM_OP_KIND_LUHN",
-		2: "CHECKSUM_OP_KIND_ISO7064_MOD97_10",
-		3: "CHECKSUM_OP_KIND_COMPARE_DIGIT",
-		4: "CHECKSUM_OP_KIND_COMPARE_SLICE",
-		5: "CHECKSUM_OP_KIND_CHOOSE",
-		6: "CHECKSUM_OP_KIND_WHEN",
-		7: "CHECKSUM_OP_KIND_ALL_CHECKS",
-		8: "CHECKSUM_OP_KIND_ANY_CHECK",
-		9: "CHECKSUM_OP_KIND_UNSUPPORTED",
+		0:  "CHECKSUM_OP_KIND_UNSPECIFIED",
+		1:  "CHECKSUM_OP_KIND_LUHN",
+		2:  "CHECKSUM_OP_KIND_ISO7064_MOD97_10",
+		3:  "CHECKSUM_OP_KIND_COMPARE_DIGIT",
+		4:  "CHECKSUM_OP_KIND_COMPARE_SLICE",
+		5:  "CHECKSUM_OP_KIND_CHOOSE",
+		6:  "CHECKSUM_OP_KIND_WHEN",
+		7:  "CHECKSUM_OP_KIND_ALL_CHECKS",
+		8:  "CHECKSUM_OP_KIND_ANY_CHECK",
+		9:  "CHECKSUM_OP_KIND_UNSUPPORTED",
+		10: "CHECKSUM_OP_KIND_COMPARE_CONSTANT",
 	}
 	ChecksumOpKind_value = map[string]int32{
 		"CHECKSUM_OP_KIND_UNSPECIFIED":      0,
@@ -767,6 +772,7 @@ var (
 		"CHECKSUM_OP_KIND_ALL_CHECKS":       7,
 		"CHECKSUM_OP_KIND_ANY_CHECK":        8,
 		"CHECKSUM_OP_KIND_UNSUPPORTED":      9,
+		"CHECKSUM_OP_KIND_COMPARE_CONSTANT": 10,
 	}
 )
 
@@ -2110,13 +2116,17 @@ func (x *AssertionOperation) GetMessageKey() string {
 
 // ChecksumOperation produces a tri-state checksum outcome.
 type ChecksumOperation struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Kind          ChecksumOpKind         `protobuf:"varint,1,opt,name=kind,proto3,enum=libbusinessid.ir.v1.ChecksumOpKind" json:"kind,omitempty"`
-	Index         *uint32                `protobuf:"varint,2,opt,name=index,proto3,oneof" json:"index,omitempty"`
-	Start         *uint32                `protobuf:"varint,3,opt,name=start,proto3,oneof" json:"start,omitempty"`
-	End           *uint32                `protobuf:"varint,4,opt,name=end,proto3,oneof" json:"end,omitempty"`
-	ReasonCode    *ReasonCode            `protobuf:"varint,5,opt,name=reason_code,json=reasonCode,proto3,enum=libbusinessid.ir.v1.ReasonCode,oneof" json:"reason_code,omitempty"`
-	MessageKey    *string                `protobuf:"bytes,6,opt,name=message_key,json=messageKey,proto3,oneof" json:"message_key,omitempty"`
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	Kind       ChecksumOpKind         `protobuf:"varint,1,opt,name=kind,proto3,enum=libbusinessid.ir.v1.ChecksumOpKind" json:"kind,omitempty"`
+	Index      *uint32                `protobuf:"varint,2,opt,name=index,proto3,oneof" json:"index,omitempty"`
+	Start      *uint32                `protobuf:"varint,3,opt,name=start,proto3,oneof" json:"start,omitempty"`
+	End        *uint32                `protobuf:"varint,4,opt,name=end,proto3,oneof" json:"end,omitempty"`
+	ReasonCode *ReasonCode            `protobuf:"varint,5,opt,name=reason_code,json=reasonCode,proto3,enum=libbusinessid.ir.v1.ReasonCode,oneof" json:"reason_code,omitempty"`
+	MessageKey *string                `protobuf:"bytes,6,opt,name=message_key,json=messageKey,proto3,oneof" json:"message_key,omitempty"`
+	// The literal the operand is compared against, for COMPARE_CONSTANT. Signed
+	// because an integer expression is signed, and bounded by the same checked
+	// arithmetic as every other integer of the IR.
+	Constant      *int64 `protobuf:"varint,7,opt,name=constant,proto3,oneof" json:"constant,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2191,6 +2201,13 @@ func (x *ChecksumOperation) GetMessageKey() string {
 		return *x.MessageKey
 	}
 	return ""
+}
+
+func (x *ChecksumOperation) GetConstant() int64 {
+	if x != nil && x.Constant != nil {
+		return *x.Constant
+	}
+	return 0
 }
 
 // CallOperation reuses another program on a caller supplied view.
@@ -2384,7 +2401,7 @@ const file_libbusinessid_ir_v1_rules_proto_rawDesc = "" +
 	"\vmessage_key\x18\x03 \x01(\tH\x01R\n" +
 	"messageKey\x88\x01\x01B\x0e\n" +
 	"\f_reason_codeB\x0e\n" +
-	"\f_message_key\"\xc2\x02\n" +
+	"\f_message_key\"\xf0\x02\n" +
 	"\x11ChecksumOperation\x127\n" +
 	"\x04kind\x18\x01 \x01(\x0e2#.libbusinessid.ir.v1.ChecksumOpKindR\x04kind\x12\x19\n" +
 	"\x05index\x18\x02 \x01(\rH\x00R\x05index\x88\x01\x01\x12\x19\n" +
@@ -2393,12 +2410,14 @@ const file_libbusinessid_ir_v1_rules_proto_rawDesc = "" +
 	"\vreason_code\x18\x05 \x01(\x0e2\x1f.libbusinessid.ir.v1.ReasonCodeH\x03R\n" +
 	"reasonCode\x88\x01\x01\x12$\n" +
 	"\vmessage_key\x18\x06 \x01(\tH\x04R\n" +
-	"messageKey\x88\x01\x01B\b\n" +
+	"messageKey\x88\x01\x01\x12\x1f\n" +
+	"\bconstant\x18\a \x01(\x03H\x05R\bconstant\x88\x01\x01B\b\n" +
 	"\x06_indexB\b\n" +
 	"\x06_startB\x06\n" +
 	"\x04_endB\x0e\n" +
 	"\f_reason_codeB\x0e\n" +
-	"\f_message_key\"c\n" +
+	"\f_message_keyB\v\n" +
+	"\t_constant\"c\n" +
 	"\rCallOperation\x123\n" +
 	"\x04kind\x18\x01 \x01(\x0e2\x1f.libbusinessid.ir.v1.CallOpKindR\x04kind\x12\x1d\n" +
 	"\n" +
@@ -2512,7 +2531,7 @@ const file_libbusinessid_ir_v1_rules_proto_rawDesc = "" +
 	"\x0fAssertionOpKind\x12!\n" +
 	"\x1dASSERTION_OP_KIND_UNSPECIFIED\x10\x00\x12\x1e\n" +
 	"\x1aASSERTION_OP_KIND_SEQUENCE\x10\x01\x12\x1d\n" +
-	"\x19ASSERTION_OP_KIND_REQUIRE\x10\x02*\xd7\x02\n" +
+	"\x19ASSERTION_OP_KIND_REQUIRE\x10\x02*\xfe\x02\n" +
 	"\x0eChecksumOpKind\x12 \n" +
 	"\x1cCHECKSUM_OP_KIND_UNSPECIFIED\x10\x00\x12\x19\n" +
 	"\x15CHECKSUM_OP_KIND_LUHN\x10\x01\x12%\n" +
@@ -2523,7 +2542,9 @@ const file_libbusinessid_ir_v1_rules_proto_rawDesc = "" +
 	"\x15CHECKSUM_OP_KIND_WHEN\x10\x06\x12\x1f\n" +
 	"\x1bCHECKSUM_OP_KIND_ALL_CHECKS\x10\a\x12\x1e\n" +
 	"\x1aCHECKSUM_OP_KIND_ANY_CHECK\x10\b\x12 \n" +
-	"\x1cCHECKSUM_OP_KIND_UNSUPPORTED\x10\t*^\n" +
+	"\x1cCHECKSUM_OP_KIND_UNSUPPORTED\x10\t\x12%\n" +
+	"!CHECKSUM_OP_KIND_COMPARE_CONSTANT\x10\n" +
+	"*^\n" +
 	"\n" +
 	"CallOpKind\x12\x1c\n" +
 	"\x18CALL_OP_KIND_UNSPECIFIED\x10\x00\x12\x17\n" +
