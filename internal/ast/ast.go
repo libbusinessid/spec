@@ -188,6 +188,7 @@ type Source struct {
 	Language       string
 	Notes          string
 	LicenseOrTerms string
+	Tier           string
 	HasArchiveURL  bool
 	ArchiveURL     string
 	Position       diagnostics.Position

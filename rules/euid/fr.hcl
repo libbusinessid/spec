@@ -43,16 +43,6 @@ checksum "euid" "fr" {
   rule = apply_checksum(checksum.fr.siren, after_first(subject(), "."))
 }
 
-dispatcher "euid" {
-  pre_canonicalizer = canonicalizer.dispatch.structured
-
-  target {
-    country_code      = "FR"
-    accepted_prefixes = ["FR"]
-    canonical_prefix  = "FR"
-    identifier        = identifier.euid.FR
-  }
-}
 
 identifier "euid" "FR" {
   canonicalizer   = canonicalizer.euid.fr
@@ -70,6 +60,7 @@ identifier "euid" "FR" {
     language         = "en"
     notes            = "The EUID is composed of the country code, the register identifier and the registration number separated by a dot."
     license_or_terms = "EUR-Lex reuse policy, Decision 2011/833/EU"
+    tier             = "primary"
   }
 
   source {
@@ -82,5 +73,6 @@ identifier "euid" "FR" {
     language         = "fr"
     notes            = "The French registration number of the trade and companies register is the SIREN."
     license_or_terms = "Licence Ouverte / Open Licence (Etalab), public sector information"
+    tier             = "primary"
   }
 }

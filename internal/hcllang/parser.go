@@ -537,6 +537,7 @@ func (p *parser) parseIdentifier(block *hclsyntax.Block) *ast.Identifier {
 		s.Language = sr.requireString("language", sb.DefRange())
 		s.Notes = sr.requireString("notes", sb.DefRange())
 		s.LicenseOrTerms = sr.requireString("license_or_terms", sb.DefRange())
+		s.Tier = sr.requireString("tier", sb.DefRange())
 		if v, _, ok := sr.optionalString("archive_url"); ok {
 			s.HasArchiveURL = true
 			s.ArchiveURL = v

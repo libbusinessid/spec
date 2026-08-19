@@ -63,6 +63,26 @@ message Source {
   string notes = 8;
   string license_or_terms = 9;
   optional string archive_url = 10;
+  // How close the source sits to the authority that defines the format.
+  SourceTier tier = 11;
+}
+
+// SourceTier separates a document published by the authority owning the format
+// from a third party description of it.
+//
+// Both are usable, but they do not carry the same weight: a secondary source
+// can be accurate and still be someone's reading of an algorithm the authority
+// never published. Recording which is which keeps that visible instead of
+// letting every rule look equally well founded.
+enum SourceTier {
+  SOURCE_TIER_UNSPECIFIED = 0;
+  // Published by the authority that owns the format, or the law establishing
+  // it.
+  SOURCE_TIER_PRIMARY = 1;
+  // A third party description: a reference implementation, an industry note,
+  // an encyclopedia. Used when the authority documents the format but not its
+  // check algorithm.
+  SOURCE_TIER_SECONDARY = 2;
 }
 
 // IdentifierDispatcher routes a (kind, optional country, raw value) triple to

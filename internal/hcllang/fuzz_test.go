@@ -93,6 +93,7 @@ identifier "demo" "BE" {
     language         = "en"
     notes            = "n"
     license_or_terms = "l"
+    tier = "primary"
   }
 }
 `

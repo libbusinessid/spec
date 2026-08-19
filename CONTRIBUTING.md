@@ -146,6 +146,31 @@ go run ./cmd/conformance-runner --corpus dist/businessid-conformance-<version>.b
 A run restricted with `--operation` is a diagnosis aid and never a verdict; the
 runner says so and exits non-zero even when every selected case matches.
 
+## Sources and their tier
+
+Every rule carries at least one `source`, and every source declares a `tier`.
+
+`primary` is a document published by the authority owning the format, or the law
+establishing it. `secondary` is a third party description: a reference
+implementation, an industry note, an encyclopedia.
+
+Both are usable. They do not carry the same weight, and the point of recording
+which is which is that the difference stays visible: a secondary source can be
+accurate and still be someone's reading of an algorithm the authority never
+published.
+
+This is not hypothetical. Skatteverket publishes the shape of an
+organisationsnummer — ten digits, the third at least two, the last a check
+digit — and does not publish the algorithm computing that check digit. The
+format is therefore `primary` and the Luhn algorithm `secondary`, on the same
+definition.
+
+When only a secondary source exists for a check algorithm, prefer it to no
+checksum at all, and say so in `notes`: state the normative reference it cites
+when there is one, and that the entry records where the algorithm was read
+rather than an authority for it. A definition whose algorithm cannot be
+established at all declares `absent_checksum_reason` instead of guessing.
+
 ## Commit and review
 
 - Keep the change minimal and reviewable.

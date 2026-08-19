@@ -249,10 +249,18 @@ func (l *linker) checkSources(id *ast.Identifier, format *ast.Format) {
 			"id": s.ID, "url": s.URL, "authority": s.Authority, "title": s.Title,
 			"accessed_at": s.AccessedAt, "jurisdiction": s.Jurisdiction,
 			"language": s.Language, "license_or_terms": s.LicenseOrTerms,
+			"tier": s.Tier,
 		} {
 			if strings.TrimSpace(value) == "" {
 				l.bag.Errorf(s.Position, CodeSourceField, "source field %q must not be empty", name)
 			}
+		}
+		// The tier is a closed set: a source is either published by the
+		// authority owning the format or it is a third party reading of it, and
+		// leaving that to free text would make every rule look equally founded.
+		if s.Tier != "primary" && s.Tier != "secondary" {
+			l.bag.Errorf(s.Position, CodeSourceField,
+				"source tier %q is not one of primary, secondary", s.Tier)
 		}
 		if !isISODate(s.AccessedAt) {
 			l.bag.Errorf(s.Position, CodeSourceField,

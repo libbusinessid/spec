@@ -58,6 +58,7 @@ identifier "vat" "BE" {
     language         = "en"
     notes            = "official"
     license_or_terms = "public sector information"
+    tier = "primary"
   }
 }
 `
@@ -264,6 +265,7 @@ identifier "lei" "GLOBAL" {
     language         = "en"
     notes            = "structure"
     license_or_terms = "standard"
+    tier = "primary"
   }
 }
 `

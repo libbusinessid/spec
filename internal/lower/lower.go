@@ -287,6 +287,20 @@ func (l *lowerer) rejectDuplicateIdentifiers(defs []*irv1.IdentifierDefinition) 
 	}
 }
 
+// sourceTier maps the authored tier onto the wire enum. An unknown value is
+// rejected by the linker, so the fallback is unreachable in practice and stays
+// unspecified rather than guessing a tier.
+func sourceTier(v string) irv1.SourceTier {
+	switch v {
+	case "primary":
+		return irv1.SourceTier_SOURCE_TIER_PRIMARY
+	case "secondary":
+		return irv1.SourceTier_SOURCE_TIER_SECONDARY
+	default:
+		return irv1.SourceTier_SOURCE_TIER_UNSPECIFIED
+	}
+}
+
 func lowerSources(sources []*ast.Source) []*irv1.Source {
 	out := make([]*irv1.Source, 0, len(sources))
 	for _, s := range sources {
@@ -300,6 +314,7 @@ func lowerSources(sources []*ast.Source) []*irv1.Source {
 			Language:       s.Language,
 			Notes:          s.Notes,
 			LicenseOrTerms: s.LicenseOrTerms,
+			Tier:           sourceTier(s.Tier),
 		}
 		if s.HasArchiveURL {
 			archive := s.ArchiveURL
