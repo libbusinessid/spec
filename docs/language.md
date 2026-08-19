@@ -323,6 +323,46 @@ documented historical variants that can still legitimately appear.
 never change the canonicalization shared by both profiles, so a profile
 difference always lives in a format rule, never in a canonicalizer.
 
+### 12.1 Which historical variants belong in a rule
+
+Section 2.6 of the specification settles it: the criterion is usage, never the
+issuing date. A variant stays supported as long as a conforming value can
+legitimately appear in data processed today.
+
+Two consequences are easy to get wrong.
+
+The criterion is about the **data**, not the entity. An identifier keeps
+appearing in invoices, contracts and archives long after the company holding it
+was struck off, and a system reading an old invoice must still accept it. A
+variant is therefore not dropped the day its last holder disappears.
+
+The burden of proof is **asymmetric**. Nobody can prove that a format circulates
+nowhere any more, so including a variant requires a source attesting that it
+exists, while excluding one requires a source attesting that it stopped
+circulating. Without proof, the variant is supported — refusing a valid
+identifier is the most serious defect of the project.
+
+The pattern to think with is a licence plate: a country switches format, every
+new vehicle gets the new one, but the old plates on the road stay perfectly
+valid. Conversely, a format issued in 1850 that no longer appears anywhere must
+not be supported: widening a rule without evidence of use adds false positives
+without removing a single false negative.
+
+The FR VAT rule is the worked example. Its computation key is normally two
+digits, but keys holding a letter were issued and still circulate, so
+`compatible` accepts them while `strict_current` refuses them:
+
+```hcl
+require(
+  any(
+    ascii_digits(slice(subject(), 2, 4)),
+    all(profile_is("compatible"), ascii_alphanumeric(slice(subject(), 2, 4))),
+  ),
+  "invalid_characters",
+  "vat.fr.key_characters",
+)
+```
+
 ## 13. Provenance
 
 Every rejecting rule must be linked to at least one source, holding an `id`, a

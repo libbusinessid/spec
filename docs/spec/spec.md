@@ -64,6 +64,31 @@ Les textes humains peuvent différer et ne font pas partie du contrat normatif.
 La compilation des règles et l’exécution des tests de conformité doivent pouvoir
 fonctionner hors ligne après installation initiale des dépendances et outils.
 
+### 2.6 Support des variantes historiques
+
+Le critère d’inclusion d’une variante est l’usage, jamais la date d’émission.
+
+Une variante DOIT être supportée tant qu’une valeur conforme à cette variante peut
+légitimement apparaître dans une donnée traitée aujourd’hui. Cela couvre les
+identifiants encore portés par une entité existante et les identifiants figurant
+dans des données en circulation, même lorsque l’entité a disparu : un système qui
+traite une facture ancienne doit continuer d’accepter l’identifiant qu’elle porte.
+
+Une variante qui n’est plus émise mais qui satisfait ce critère est une variante
+historique. Elle DOIT rester acceptée par le profil `compatible` et PEUT être
+refusée par `strict_current`, qui n’accepte que les variantes d’émission actuelle.
+Le profil est le seul mécanisme normatif distinguant une variante historique d’une
+variante actuelle.
+
+Une variante NE DOIT être retirée que lorsqu’une source documente qu’elle a cessé
+de circuler. Un format dont plus aucune valeur ne circule NE DOIT PAS être
+supporté : l’élargir sans preuve d’usage augmente le risque de faux positif sans
+supprimer aucun faux négatif.
+
+La charge de la preuve est asymétrique. Inclure une variante exige une source
+attestant son existence ; l’exclure exige une source attestant sa disparition. En
+l’absence de preuve, la variante est supportée, conformément à 2.1.
+
 ## 3. Périmètre de la première version
 
 La V1 couvre uniquement :
@@ -617,7 +642,8 @@ cible DOIT référencer une définition du même kind et du même pays. Le linke
 les définitions orphelines et les incohérences.
 
 Le profil `compatible` est le défaut normatif. Il accepte les variantes actuelles et
-les variantes historiques documentées qui peuvent encore légitimement apparaître.
+les variantes historiques documentées qui peuvent encore légitimement apparaître au
+sens de 2.6.
 `strict_current` est opt-in et ne doit pas modifier la canonicalisation commune.
 
 Les dates `valid_from` et `valid_until` sont des métadonnées en V1. Elles ne causent
