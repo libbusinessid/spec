@@ -2,6 +2,11 @@ module github.com/libbusinessid/spec
 
 go 1.25.0
 
+// The build toolchain is pinned so that every environment compiles with the
+// same standard library. A patched toolchain is a security requirement: an
+// unpatched one reaches this module through filepath.WalkDir (GO-2026-4602).
+toolchain go1.26.5
+
 require (
 	github.com/hashicorp/hcl/v2 v2.24.0
 	github.com/zclconf/go-cty v1.16.3

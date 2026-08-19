@@ -56,7 +56,17 @@ jobs:
         run: buf lint
       - name: buf breaking
         if: github.event_name == 'pull_request'
-        run: buf breaking --against "https://github.com/${{ github.repository }}.git#branch=${{ github.base_ref }}"
+        run: |
+          set -euo pipefail
+          base="${{ github.base_ref }}"
+          # The very first pull request introduces the schemas, so the base
+          # branch carries none: there is nothing to compare, and that must not
+          # be confused with a passing comparison.
+          if git ls-tree -r --name-only "origin/${base}" | grep -q '\.proto$'; then
+            buf breaking --against "https://github.com/${{ github.repository }}.git#branch=${base}"
+          else
+            echo "::notice::the base branch ${base} carries no schema yet, nothing to compare"
+          fi
 
   lint:
     name: go lint
@@ -69,7 +79,7 @@ jobs:
           cache: true
       - name: go vet
         run: go vet ./...
-      - uses: golangci/golangci-lint-action@v6
+      - uses: golangci/golangci-lint-action@v7
         with:
           version: ${{ env.GOLANGCI_LINT_VERSION }}
       - name: businessidc lint
