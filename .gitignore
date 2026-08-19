@@ -2,6 +2,11 @@
 # dedicated fixtures under testdata/ are committed.
 /dist/
 /bin/
+# `go build ./cmd/x` drops its binary here rather than under bin/, which is easy
+# to commit by accident.
+/businessidc
+/conformance-runner
+/conformance-testee
 /coverage.out
 /coverage.html
 /coverage-branch.json

@@ -107,6 +107,13 @@ linters:
       - path: tools/
         linters:
           - gochecknoinits
+      # The runner spawns the testee the operator names on the command line.
+      # Running that command is the purpose of the program, not a tainted input
+      # reaching a subprocess by accident, so G204 has nothing to warn about
+      # here. The exclusion is deliberately scoped to this one file.
+      - path: internal/runner/process\.go
+        linters:
+          - gosec
 
 formatters:
   enable:

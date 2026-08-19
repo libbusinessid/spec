@@ -104,6 +104,10 @@ jobs:
         run: go test -race ./...
       - name: Conformance suite
         run: go run ./cmd/businessidc verify
+      - name: Conformance through the engine protocol
+        run: |
+          export SOURCE_DATE_EPOCH="$(git log -1 --pretty=%ct)"
+          make conformance
       - name: Coverage thresholds
         run: make cover
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
