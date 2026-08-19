@@ -25,7 +25,7 @@ jobs:
       artifact_sha256: ${{ steps.build.outputs.artifact_sha256 }}
       conformance_sha256: ${{ steps.build.outputs.conformance_sha256 }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - uses: actions/setup-go@v5
@@ -63,7 +63,7 @@ jobs:
         working-directory: dist
         run: sha256sum --check --strict SHA256SUMS
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: release-artifacts
           path: dist/
@@ -79,7 +79,7 @@ jobs:
       id-token: write
       attestations: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/download-artifact@v4
         with:
           name: release-artifacts
@@ -91,7 +91,7 @@ jobs:
 
       - name: Build the provenance attestation
         id: attest
-        uses: actions/attest-build-provenance@v1
+        uses: actions/attest-build-provenance@v4
         with:
           subject-path: |
             dist/businessid-rules-${{ needs.build.outputs.rules_version }}.binpb

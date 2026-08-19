@@ -46,7 +46,7 @@ jobs:
           - businessid-typescript
     steps:
       - name: Checkout the spec repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           path: spec
 
