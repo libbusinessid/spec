@@ -387,6 +387,13 @@ func validateCanonicalizationNode(n *irv1.Node, fail func(string, ...any) error)
 		if s.GetLength() == 0 {
 			return fail("left_pad length must be at least 1")
 		}
+		// The target length is bounded like every other slice bound. Without an
+		// upper bound an interpreter is still protected by the step budget, but
+		// an engine that compiles the rules ahead of time sizes its buffer from
+		// this number and has nothing to stop it.
+		if s.GetLength() > limits.MaxIndex {
+			return fail("left_pad length %d exceeds the limit of %d", s.GetLength(), limits.MaxIndex)
+		}
 	default:
 	}
 	return nil
@@ -484,7 +491,16 @@ func checkIndex(v *uint32, fail func(string, ...any) error) error {
 }
 
 func checkMessageKey(v *string, fail func(string, ...any) error) error {
-	if v != nil && len(*v) > limits.MaxConstantBytes {
+	if v == nil {
+		return nil
+	}
+	// A present but empty key cannot be told apart from an absent one in an
+	// idiomatic API, so two engines could report differently on the same
+	// bundle. Constants are already forbidden from being empty.
+	if *v == "" {
+		return fail("message key must not be empty when present")
+	}
+	if len(*v) > limits.MaxConstantBytes {
 		return fail("message key exceeds %d bytes", limits.MaxConstantBytes)
 	}
 	return nil

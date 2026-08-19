@@ -31,7 +31,8 @@ Absence is never an error and never an exception.
 ### 1.2 Indeterminate integers
 
 An integer expression is **indeterminate** when it cannot be evaluated: an absent
-or empty operand, a code point outside the mapping domain, an index outside a
+or empty operand, a code point outside the mapping domain anywhere in the view,
+even at a position no weight pairs with, an index outside a
 remainder table, or a complement operand outside `[0, modulus]`. An indeterminate
 integer propagates through every integer operation and makes the enclosing
 checksum node evaluate to `unsupported` with `unsupported_checksum`. It never
@@ -66,6 +67,13 @@ unit per started slice of 64 produced code points. That charge is what
 bounds the memory a bundle can make an engine allocate: the total number
 of code points materialized by one public operation can never exceed the
 budget times 64. Exhausting the budget is an engine error.
+
+The budget bounds an interpretation. An engine that compiles the rules into
+native code ahead of time does not count steps: the graph is acyclic and the
+call depth is bounded, so the emitted code terminates by construction, and the
+bounds below are what its generator enforces instead. An engine that walks the
+IR at validation time applies the budget as written. Section 2.4 of the
+specification binds observable results, never the strategy that produces them.
 
 ### 2.1 Calls
 
@@ -981,12 +989,14 @@ to 8 ASCII alphanumeric characters compared case sensitively.
 
 1. Normalize the kind by trim ASCII, lower case ASCII and the `kind_aliases` table.
 2. If no dispatcher matches, return `unsupported_kind` without running any program.
-3. Normalize an explicit country by trim ASCII, upper case ASCII and the
+3. Run the `pre_canonicalization_program` exactly once on the raw value. It
+   runs as soon as the dispatcher is resolved, before any country decision,
+   so a result that stops at step 4 still carries the pre-canonical value.
+4. Normalize an explicit country by trim ASCII, upper case ASCII and the
    `country_aliases` table. A syntactically invalid token returns
    `unsupported_country`; in a country specific dispatcher a country without
    target also returns `unsupported_country`. An empty token behaves like an
    absent context.
-4. Run the `pre_canonicalization_program` exactly once on the raw value.
 5. Select the target owning the longest exactly matching `accepted_prefix`.
 6. If an explicit country and a recognized prefix designate two different
    targets, return `country_mismatch`.
@@ -1007,12 +1017,36 @@ replace or interpret a prefix.
 | Input above the byte limit | requested token after trim and lower casing | raw input | raw context |
 | Dispatcher not resolved | requested token after trim and lower casing | raw input | raw context |
 | Dispatcher resolved, definition not selected | canonical kind | pre-canonical value | normalized country when one exists, otherwise the raw context |
-| Definition selected | canonical kind | canonical value | country code of the target, absent for a GLOBAL target |
+| Definition selected | canonical kind | canonical value | country code of the target, or the normalized country context for a GLOBAL target |
 
 A GLOBAL target keeps a well formed country context in the result without using
 it for routing. The country of a country target is its ISO 3166-1 alpha-2 code,
 even when its business prefix differs, for example country `GR` with the
 canonical VAT prefix `EL`.
+
+Two distinct notions share the name here, and confusing them changes results.
+The `countryCode` of the report is the normalized country context, which a
+GLOBAL target preserves. The `COUNTRY_CODE` string operation yields the country
+of the selected target, which is absent for a GLOBAL target because such a
+target has none. A GLOBAL definition can therefore report a country while
+`COUNTRY_CODE` yields the absent string within the same evaluation.
+
+### 5.2 Effective profile
+
+The profile is resolved in two moments, because a definition cannot supply its
+own default before it has been selected.
+
+Dispatch uses the profile of the caller, or `compatible` when the caller gives
+none. This is the profile `PROFILE_IS` observes in a pre-canonicalization
+program.
+
+Once a definition is selected, its `default_profile` applies when, and only
+when, the caller supplied no profile. That resolved profile governs the format
+and checksum programs, and is the profile reported in the result. A caller who
+passes a profile explicitly always overrides the default.
+
+All current definitions declare `compatible`, so no conformance case separates
+these rules today. They are normative regardless.
 
 ## 6. Pipeline
 
@@ -1082,6 +1116,12 @@ code points billed as one step 64
 maximum captures per format    128
 ```
 
+The bundle shaped limits are enforced when the bundle is accepted, whether by
+a loader or by a generator, and no longer apply once code has been emitted.
+The user input limit is an obligation of the engine itself: a longer input is
+refused without being processed. The step budget applies only to an engine
+that interprets.
+
 ```text
 integer constant                     signed int64
 modulus / complement                 2..1000000000
@@ -1150,7 +1190,7 @@ An engine performs these checks, in this order, before executing anything:
 12. only the parameters the operation declares, and every required parameter
 13. arithmetic bounds: moduli, weights, remainder tables, indices and provable integer widths
 14. root, subject and capture nodes inside the program and correctly typed
-15. program shape: accepted root per kind, `WHEN` only inside `CHOOSE`
+15. program shape: accepted root per kind, `WHEN` only inside `CHOOSE`, and a pre-canonicalization program restricted to its five permitted operations
 16. identifier ids unique, kinds and countries well formed, serialization order respected
 17. exactly one checksum program or one absence reason per definition
 18. dispatcher kinds and aliases globally unique, sorted, and never ambiguous
@@ -1165,4 +1205,16 @@ A size, structural, arithmetic or graph violation is `invalid_ruleset`. An
 unsupported `format_version` and an unknown capability id are
 `incompatible_ruleset`. An engine never executes a partially validated graph and
 never re-serializes a decoded message to verify the published SHA-256.
+
+An unknown operation is therefore `invalid_ruleset`, not `incompatible_ruleset`,
+and the distinction is deliberate. A bundle that legitimately uses a newer
+operation declares the capability that introduced it, so an engine too old to
+understand it stops at check 5 with `incompatible_ruleset`. Reaching check 10
+with an unknown operation means the bundle used one without declaring it, which
+is a forged bundle rather than a version gap.
+
+A bundle whose encoding repeats a singular field, or carries two branches of the
+same `oneof`, is not a valid bundle. A generator SHOULD refuse it. One that does
+not inspect the wire encoding decodes it with the Protobuf semantics, and the
+determinism of specification 2.4 is stated over valid bundles.
 
