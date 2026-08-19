@@ -71,6 +71,19 @@ A restriction is a high risk change and requires a reinforced review. A
 documented widening that fixes a false negative can be published as a rule
 patch.
 
+### Which historical variants to accept
+
+Section 2.6 of the specification gives the criterion: usage, never the issuing
+date. A variant stays supported as long as a conforming value can legitimately
+appear in data processed today, including data whose subject no longer exists —
+an identifier outlives the company in invoices and archives.
+
+Removing a variant therefore needs a source attesting that it stopped
+circulating, while adding one needs a source attesting that it exists. Without
+proof, the variant is supported. A variant that is no longer issued but still
+circulates belongs to `compatible` and may be refused by `strict_current`; that
+profile split is the only normative way to mark a variant as historical.
+
 Never write an expected result by running the reference interpreter. Expectations
 come from the published algorithm, from an independent implementation such as
 `tools/vectors.py`, or from an authority document.
