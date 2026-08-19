@@ -1,0 +1,132 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Build and verify without publishing
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: reproducible build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      rules_version: ${{ steps.build.outputs.rules_version }}
+      artifact_sha256: ${{ steps.build.outputs.artifact_sha256 }}
+      conformance_sha256: ${{ steps.build.outputs.conformance_sha256 }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Quality gates
+        run: |
+          go test -race ./...
+          go run ./cmd/businessidc verify
+          make cover
+
+      - name: Build twice in two distinct temporary directories
+        id: build
+        run: |
+          set -euo pipefail
+          export SOURCE_DATE_EPOCH="$(git log -1 --pretty=%ct)"
+          commit="$(git rev-parse HEAD)"
+          for suffix in one two-with-a-longer-name; do
+            go run ./cmd/businessidc compile \
+              --out "${RUNNER_TEMP}/dist-${suffix}" \
+              --release --source-commit "$commit"
+          done
+          diff -r "${RUNNER_TEMP}/dist-one" "${RUNNER_TEMP}/dist-two-with-a-longer-name"
+          cp -a "${RUNNER_TEMP}/dist-one" dist
+          version="$(cat RULES_VERSION)"
+          manifest="dist/businessid-manifest-${version}.json"
+          test "$(jq -r .reproducible "$manifest")" = "true"
+          echo "rules_version=${version}" >> "$GITHUB_OUTPUT"
+          echo "artifact_sha256=$(jq -r .artifactSha256 "$manifest")" >> "$GITHUB_OUTPUT"
+          echo "conformance_sha256=$(jq -r .conformanceSha256 "$manifest")" >> "$GITHUB_OUTPUT"
+
+      - name: Verify SHA256SUMS
+        working-directory: dist
+        run: sha256sum --check --strict SHA256SUMS
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-artifacts
+          path: dist/
+          if-no-files-found: error
+
+  publish:
+    name: attest and publish
+    needs: build
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-artifacts
+          path: dist
+
+      - name: Verify SHA256SUMS again before publishing
+        working-directory: dist
+        run: sha256sum --check --strict SHA256SUMS
+
+      - name: Build the provenance attestation
+        id: attest
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: |
+            dist/businessid-rules-${{ needs.build.outputs.rules_version }}.binpb
+            dist/businessid-conformance-${{ needs.build.outputs.rules_version }}.binpb
+            dist/businessid-conformance-${{ needs.build.outputs.rules_version }}.jsonl.gz
+            dist/businessid-manifest-${{ needs.build.outputs.rules_version }}.json
+            dist/rules.proto
+            dist/conformance.proto
+            dist/ir.md
+            dist/features.md
+            dist/SHA256SUMS
+            dist/SBOM.spdx.json
+
+      - name: Collect the attestation bundle
+        run: cp "${{ steps.attest.outputs.bundle-path }}" dist/provenance.intoto.jsonl
+
+      - name: Publish the release
+        if: startsWith(github.ref, 'refs/tags/') && inputs.dry_run != true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" \
+            --title "Rules ${{ needs.build.outputs.rules_version }}" \
+            --notes-file docs/generated/coverage.md \
+            dist/*
+
+  downstream:
+    name: open the downstream pull requests
+    needs: [build, publish]
+    if: startsWith(github.ref, 'refs/tags/') && inputs.dry_run != true
+    uses: ./.github/workflows/downstream.yml
+    permissions:
+      contents: read
+    secrets: inherit
+    with:
+      rules_version: ${{ needs.build.outputs.rules_version }}
+      tag: ${{ github.ref_name }}
+      dry_run: false

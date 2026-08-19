@@ -1,0 +1,114 @@
+name: downstream
+
+on:
+  workflow_call:
+    inputs:
+      rules_version:
+        required: true
+        type: string
+      tag:
+        required: true
+        type: string
+      dry_run:
+        description: Verify the artifacts without opening a pull request
+        required: false
+        type: boolean
+        default: false
+  workflow_dispatch:
+    inputs:
+      rules_version:
+        description: Rules version to synchronize
+        required: true
+        type: string
+      tag:
+        description: Protected release tag
+        required: true
+        type: string
+      dry_run:
+        description: Verify the artifacts without opening a pull request
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    name: ${{ matrix.engine }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        engine:
+          - businessid-go
+          - businessid-swift
+          - businessid-kotlin
+          - businessid-typescript
+    steps:
+      - name: Checkout the spec repository
+        uses: actions/checkout@v4
+        with:
+          path: spec
+
+      - name: Download the release artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p artifacts
+          gh release download "${{ inputs.tag }}" \
+            --repo "${{ github.repository }}" \
+            --dir artifacts
+
+      - name: Verify the SHA-256 of every artifact
+        working-directory: artifacts
+        run: sha256sum --check --strict SHA256SUMS
+
+      - name: Verify the attestation identity
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          version="${{ inputs.rules_version }}"
+          expected_workflow=".github/workflows/release.yml"
+          for artifact in \
+            "businessid-rules-${version}.binpb" \
+            "businessid-conformance-${version}.binpb" \
+            "businessid-manifest-${version}.json"; do
+            gh attestation verify "artifacts/${artifact}" \
+              --owner "${{ github.repository_owner }}" \
+              --repo "${{ github.repository }}" \
+              --signer-workflow "${{ github.repository }}/${expected_workflow}" \
+              --source-ref "refs/tags/${{ inputs.tag }}"
+          done
+
+      - name: Build rules.lock from the attested manifest
+        run: |
+          set -euo pipefail
+          version="${{ inputs.rules_version }}"
+          manifest="artifacts/businessid-manifest-${version}.json"
+          {
+            printf 'rules_version = "%s"\n' "$(jq -r .rulesVersion "$manifest")"
+            printf 'format_version = %s\n' "$(jq -r .formatVersion "$manifest")"
+            printf 'rules_sha256 = "%s"\n' "$(jq -r .artifactSha256 "$manifest")"
+            printf 'conformance_sha256 = "%s"\n' "$(jq -r .conformanceSha256 "$manifest")"
+            printf 'rules_proto_sha256 = "%s"\n' "$(jq -r .rulesProtoSha256 "$manifest")"
+            printf 'conformance_proto_sha256 = "%s"\n' "$(jq -r .conformanceProtoSha256 "$manifest")"
+            printf 'ir_doc_sha256 = "%s"\n' "$(jq -r .irDocSha256 "$manifest")"
+            printf 'features_doc_sha256 = "%s"\n' "$(jq -r .featuresDocSha256 "$manifest")"
+            printf 'source_commit = "%s"\n' "$(jq -r .sourceCommit "$manifest")"
+            printf 'attestation_identity = "%s/%s@refs/tags/%s"\n' \
+              "${{ github.repository }}" ".github/workflows/release.yml" "${{ inputs.tag }}"
+          } > rules.lock
+          cat rules.lock
+
+      - name: Check the artifacts against rules.lock
+        run: ./spec/tools/check_lock.sh rules.lock artifacts "${{ inputs.rules_version }}"
+
+      - name: Open the synchronization pull request
+        if: inputs.dry_run != true
+        env:
+          GH_TOKEN: ${{ secrets.DOWNSTREAM_TOKEN }}
+        run: ./spec/tools/open_downstream_pr.sh \
+          "${{ github.repository_owner }}/${{ matrix.engine }}" \
+          "${{ inputs.rules_version }}" \
+          "${{ inputs.tag }}"

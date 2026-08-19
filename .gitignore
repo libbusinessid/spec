@@ -1,0 +1,9 @@
+# Build output. The published artifacts are rebuilt by `make compile`; only the
+# dedicated fixtures under testdata/ are committed.
+/dist/
+/bin/
+/coverage.out
+/coverage.html
+/coverage-branch.json
+__pycache__/
+*.pyc

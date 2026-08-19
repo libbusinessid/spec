@@ -1,0 +1,71 @@
+name: scheduled
+
+on:
+  schedule:
+    - cron: "17 3 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  long-fuzz:
+    name: long fuzzing
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - { package: ./internal/hcllang, fuzz: FuzzParseHCL }
+          - { package: ./internal/conformance, fuzz: FuzzReadJSONL }
+          - { package: ./internal/artifact, fuzz: FuzzLoadRuleset }
+          - { package: ./internal/artifact, fuzz: FuzzMutateBundle }
+          - { package: ./internal/reference, fuzz: FuzzValidateInput }
+          - { package: ./internal/typecheck, fuzz: FuzzCompileUnit }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: Fuzz for 20 minutes
+        run: go test -run '^$' -fuzz ${{ matrix.target.fuzz }} -fuzztime 20m ${{ matrix.target.package }}
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: fuzz-corpus-${{ matrix.target.fuzz }}
+          path: testdata/fuzz
+
+  mutation:
+    name: mutation testing of the critical core
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: Mutation score of the checksum, dispatch and bounds code
+        run: python3 tools/mutation.py
+
+  sources:
+    name: business source availability
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: Check that every declared source URL still resolves
+        run: ./tools/check_sources.sh
+
+  engines:
+    name: latest engine releases
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compare the published rules.lock of every engine
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: ./tools/check_engines.sh
