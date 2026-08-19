@@ -23,14 +23,14 @@ jobs:
           - { package: ./internal/reference, fuzz: FuzzValidateInput }
           - { package: ./internal/typecheck, fuzz: FuzzCompileUnit }
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-go@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version-file: go.mod
           cache: true
       - name: Fuzz for 20 minutes
         run: go test -run '^$' -fuzz ${{ matrix.target.fuzz }} -fuzztime 20m ${{ matrix.target.package }}
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: failure()
         with:
           name: fuzz-corpus-${{ matrix.target.fuzz }}
@@ -40,8 +40,8 @@ jobs:
     name: mutation testing of the critical core
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-go@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version-file: go.mod
           cache: true
@@ -52,8 +52,8 @@ jobs:
     name: business source availability
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-go@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version-file: go.mod
           cache: true
@@ -64,7 +64,7 @@ jobs:
     name: latest engine releases
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Compare the published rules.lock of every engine
         env:
           GH_TOKEN: ${{ github.token }}
