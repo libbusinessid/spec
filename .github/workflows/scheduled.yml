@@ -23,7 +23,7 @@ jobs:
           - { package: ./internal/reference, fuzz: FuzzValidateInput }
           - { package: ./internal/typecheck, fuzz: FuzzCompileUnit }
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
@@ -40,7 +40,7 @@ jobs:
     name: mutation testing of the critical core
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
@@ -52,7 +52,7 @@ jobs:
     name: business source availability
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
@@ -64,7 +64,7 @@ jobs:
     name: latest engine releases
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Compare the published rules.lock of every engine
         env:
           GH_TOKEN: ${{ github.token }}
