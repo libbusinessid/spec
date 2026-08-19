@@ -22,6 +22,7 @@ jobs:
       contents: read
     outputs:
       rules_version: ${{ steps.build.outputs.rules_version }}
+      stability: ${{ steps.build.outputs.stability }}
       artifact_sha256: ${{ steps.build.outputs.artifact_sha256 }}
       conformance_sha256: ${{ steps.build.outputs.conformance_sha256 }}
     steps:
@@ -55,7 +56,9 @@ jobs:
           version="$(cat RULES_VERSION)"
           manifest="dist/businessid-manifest-${version}.json"
           test "$(jq -r .reproducible "$manifest")" = "true"
+          stability="$(jq -r .stability "$manifest")"
           echo "rules_version=${version}" >> "$GITHUB_OUTPUT"
+          echo "stability=${stability}" >> "$GITHUB_OUTPUT"
           echo "artifact_sha256=$(jq -r .artifactSha256 "$manifest")" >> "$GITHUB_OUTPUT"
           echo "conformance_sha256=$(jq -r .conformanceSha256 "$manifest")" >> "$GITHUB_OUTPUT"
 
@@ -113,9 +116,17 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          set -euo pipefail
+          # A pre-release stays out of the releases/latest endpoint, so a
+          # consumer or a downstream script never picks it up by accident.
+          prerelease=""
+          if [ "${{ needs.build.outputs.stability }}" != "stable" ]; then
+            prerelease="--prerelease"
+          fi
           gh release create "${GITHUB_REF_NAME}" \
-            --title "Rules ${{ needs.build.outputs.rules_version }}" \
+            --title "Rules ${{ needs.build.outputs.rules_version }} (${{ needs.build.outputs.stability }})" \
             --notes-file docs/generated/coverage.md \
+            ${prerelease} \
             dist/*
 
   downstream:

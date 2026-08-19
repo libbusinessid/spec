@@ -26,6 +26,7 @@ type buildOptions struct {
 	fixtures     string
 	moduleRoot   string
 	rulesVersion string
+	stability    string
 	sourceCommit string
 	optimize     bool
 	release      bool
@@ -38,6 +39,7 @@ func (o *buildOptions) bind(fs *flag.FlagSet) {
 	fs.StringVar(&o.fixtures, "fixtures", "testdata", "root of the `load_ruleset` fixtures")
 	fs.StringVar(&o.moduleRoot, "module-root", ".", "directory holding go.mod, used to build the SBOM")
 	fs.StringVar(&o.rulesVersion, "rules-version", "", "business version; defaults to the RULES_VERSION file")
+	fs.StringVar(&o.stability, "stability", "", "maturity of the release; defaults to the RULES_STABILITY file")
 	fs.StringVar(&o.sourceCommit, "source-commit", "", "commit recorded in the manifest")
 	fs.BoolVar(&o.optimize, "optimize", true, "deduplicate identical sub-graphs")
 	fs.BoolVar(&o.release, "release", false, "require a reproducible build with SOURCE_DATE_EPOCH")
@@ -58,6 +60,10 @@ type buildResult struct {
 func build(opts buildOptions) (*buildResult, *diagnostics.Bag) {
 	bag := diagnostics.New()
 	rulesVersion, ok := resolveRulesVersion(bag, opts)
+	if !ok {
+		return nil, bag
+	}
+	stability, ok := resolveStability(bag, opts)
 	if !ok {
 		return nil, bag
 	}
@@ -117,6 +123,7 @@ func build(opts buildOptions) (*buildResult, *diagnostics.Bag) {
 	manifest := buildManifest(manifestInput{
 		opts:         opts,
 		rulesVersion: rulesVersion,
+		stability:    stability,
 		generatedAt:  generatedAt,
 		reproducible: reproducible,
 		rules:        rules,
@@ -182,6 +189,26 @@ func resolveRulesVersion(bag *diagnostics.Bag, opts buildOptions) (string, bool)
 	return rulesVersion, true
 }
 
+// resolveStability reads and validates the declared maturity of the release.
+func resolveStability(bag *diagnostics.Bag, opts buildOptions) (string, bool) {
+	stability := opts.stability
+	if stability == "" {
+		raw, err := os.ReadFile(filepath.Join(opts.moduleRoot, "RULES_STABILITY"))
+		if err != nil {
+			bag.Errorf(diagnostics.Position{}, "CLI023", "cannot read RULES_STABILITY: %v", err)
+			return "", false
+		}
+		stability = strings.TrimSpace(string(raw))
+	}
+	if !artifact.ValidStability(stability) {
+		bag.Suggestf(diagnostics.Position{File: "RULES_STABILITY"}, "CLI024",
+			"accepted levels are alpha, beta and stable",
+			"invalid stability level %q", stability)
+		return "", false
+	}
+	return stability, true
+}
+
 // buildInputs are the files read from the repository, outside the compilers.
 type buildInputs struct {
 	rulesProto       []byte
@@ -227,6 +254,7 @@ func readBuildInputs(bag *diagnostics.Bag, opts buildOptions) (buildInputs, bool
 type manifestInput struct {
 	opts         buildOptions
 	rulesVersion string
+	stability    string
 	generatedAt  string
 	reproducible bool
 	rules        *artifact.CompileResult
@@ -274,6 +302,7 @@ func buildManifest(in manifestInput) *artifact.Manifest {
 		IrDocSha256:               artifact.SHA256Hex(in.irDoc),
 		FeaturesDocSha256:         artifact.SHA256Hex(in.featuresDoc),
 		Reproducible:              in.reproducible,
+		Stability:                 in.stability,
 		ConformanceCaseCount:      len(in.suite.Bundle.GetCases()),
 		ConformanceTagCounts:      artifact.TagCounts(in.suite.Bundle),
 	}

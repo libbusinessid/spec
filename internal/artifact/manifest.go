@@ -31,10 +31,38 @@ type Manifest struct {
 	IrDocSha256               string            `json:"irDocSha256"`
 	FeaturesDocSha256         string            `json:"featuresDocSha256"`
 	Reproducible              bool              `json:"reproducible"`
+	Stability                 string            `json:"stability"`
 	ConformanceCaseCount      int               `json:"conformanceCaseCount"`
 	ConformanceTagCounts      map[string]int    `json:"conformanceTagCounts"`
 	Extra                     map[string]string `json:"extra,omitempty"`
 }
+
+// Stability levels a rules release can declare.
+//
+// The level describes the maturity of the contract, not the extent of the rule
+// coverage: rules keep evolving forever, so coverage can never be a release
+// criterion. A release stays a pre-release until an independent engine passes
+// the whole conformance suite on a published bundle, because until then the IR
+// contract may still have to change.
+const (
+	StabilityAlpha  = "alpha"
+	StabilityBeta   = "beta"
+	StabilityStable = "stable"
+)
+
+// ValidStability reports whether the declared stability level is known.
+func ValidStability(v string) bool {
+	switch v {
+	case StabilityAlpha, StabilityBeta, StabilityStable:
+		return true
+	default:
+		return false
+	}
+}
+
+// IsPreRelease reports whether a release of this level must be published as a
+// GitHub pre-release, which keeps it out of the `releases/latest` endpoint.
+func IsPreRelease(v string) bool { return v != StabilityStable }
 
 // Feature is one declared capability of the bundle.
 type Feature struct {

@@ -304,3 +304,24 @@ func TestRenderedDocumentsAreStable(t *testing.T) {
 		}
 	}
 }
+
+func TestStabilityLevels(t *testing.T) {
+	for _, ok := range []string{artifact.StabilityAlpha, artifact.StabilityBeta, artifact.StabilityStable} {
+		if !artifact.ValidStability(ok) {
+			t.Fatalf("%q must be a valid level", ok)
+		}
+	}
+	for _, bad := range []string{"", "ALPHA", "rc", "1.0"} {
+		if artifact.ValidStability(bad) {
+			t.Fatalf("%q must be refused", bad)
+		}
+	}
+	// Only a stable release leaves the pre-release state: the level describes
+	// the maturity of the contract, never the extent of the rule coverage.
+	if !artifact.IsPreRelease(artifact.StabilityAlpha) || !artifact.IsPreRelease(artifact.StabilityBeta) {
+		t.Fatal("alpha and beta are pre-releases")
+	}
+	if artifact.IsPreRelease(artifact.StabilityStable) {
+		t.Fatal("a stable release is not a pre-release")
+	}
+}

@@ -95,6 +95,7 @@ jobs:
             printf 'conformance_proto_sha256 = "%s"\n' "$(jq -r .conformanceProtoSha256 "$manifest")"
             printf 'ir_doc_sha256 = "%s"\n' "$(jq -r .irDocSha256 "$manifest")"
             printf 'features_doc_sha256 = "%s"\n' "$(jq -r .featuresDocSha256 "$manifest")"
+            printf 'stability = "%s"\n' "$(jq -r .stability "$manifest")"
             printf 'source_commit = "%s"\n' "$(jq -r .sourceCommit "$manifest")"
             printf 'attestation_identity = "%s/%s@refs/tags/%s"\n' \
               "${{ github.repository }}" ".github/workflows/release.yml" "${{ inputs.tag }}"

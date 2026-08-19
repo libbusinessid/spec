@@ -123,6 +123,32 @@ provenance.intoto.jsonl   (produced by the release attestation)
 The bundles carry no timestamp: `generatedAt` exists only in the manifest and is
 derived from `SOURCE_DATE_EPOCH`.
 
+## Versions
+
+Four things move at different rates and are versioned independently.
+
+| Axis | Form | Changes when | Effect on the engines |
+|---|---|---|---|
+| `formatVersion` | integer | the structure of the IR changes | breaking: the engines must be published first |
+| `requiredFeatures` | frozen capability IDs | a rule uses a new primitive | an engine refuses a bundle declaring an ID it does not implement |
+| `rulesVersion` | `YYYY.MM.PATCH` | at every batch of rules | none, as long as the two above do not move |
+| `compilerVersion` | SemVer | the tooling evolves | none |
+
+A release publishes artifacts, not the specification. One release is one
+`rulesVersion` and one immutable Git tag `v<rulesVersion>`; the patch number
+carries every rule change, so the specification can stay untouched across dozens
+of releases. Two artifacts must never share a `rulesVersion`: `rules.lock`
+identifies a bundle by that version and its SHA-256, and `businessidc diff`, the
+revocation list and the downstream verification all rely on that being unique.
+
+`RULES_STABILITY` declares the maturity of the **contract**, never the extent of
+the rule coverage — rules keep evolving forever, so coverage can never be a
+release criterion. A release stays `alpha` while only the reference interpreter
+has validated the contract, and becomes `stable` once an independent engine
+passes the whole conformance suite on a published bundle. Anything other than
+`stable` is published as a GitHub pre-release, which keeps it out of the
+`releases/latest` endpoint so that no consumer picks it up by accident.
+
 ## Documentation
 
 | Document | Contents |
