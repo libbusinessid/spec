@@ -78,6 +78,7 @@ identifier "beta" "FR" {
     language         = "en"
     notes            = "n"
     license_or_terms = "l"
+    tier = "primary"
   }
 
   source {
@@ -90,6 +91,7 @@ identifier "beta" "FR" {
     language         = "en"
     notes            = "n"
     license_or_terms = "l"
+    tier = "primary"
     archive_url      = "https://archive.invalid/a"
   }
 }
@@ -114,6 +116,7 @@ identifier "beta" "BE" {
     language         = "en"
     notes            = "n"
     license_or_terms = "l"
+    tier = "primary"
   }
 }
 
@@ -133,6 +136,7 @@ identifier "alphakind" "GLOBAL" {
     language         = "en"
     notes            = "n"
     license_or_terms = "l"
+    tier = "primary"
   }
 }
 `

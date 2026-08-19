@@ -51,5 +51,6 @@ identifier "siren" "FR" {
     language         = "fr"
     notes            = "Nine digits assigned by INSEE, closed by a Luhn check digit computed over the nine digits."
     license_or_terms = "Licence Ouverte / Open Licence (Etalab), public sector information"
+    tier             = "primary"
   }
 }

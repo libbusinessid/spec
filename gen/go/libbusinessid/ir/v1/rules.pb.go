@@ -29,6 +29,67 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// SourceTier separates a document published by the authority owning the format
+// from a third party description of it.
+//
+// Both are usable, but they do not carry the same weight: a secondary source
+// can be accurate and still be someone's reading of an algorithm the authority
+// never published. Recording which is which keeps that visible instead of
+// letting every rule look equally well founded.
+type SourceTier int32
+
+const (
+	SourceTier_SOURCE_TIER_UNSPECIFIED SourceTier = 0
+	// Published by the authority that owns the format, or the law establishing
+	// it.
+	SourceTier_SOURCE_TIER_PRIMARY SourceTier = 1
+	// A third party description: a reference implementation, an industry note,
+	// an encyclopedia. Used when the authority documents the format but not its
+	// check algorithm.
+	SourceTier_SOURCE_TIER_SECONDARY SourceTier = 2
+)
+
+// Enum value maps for SourceTier.
+var (
+	SourceTier_name = map[int32]string{
+		0: "SOURCE_TIER_UNSPECIFIED",
+		1: "SOURCE_TIER_PRIMARY",
+		2: "SOURCE_TIER_SECONDARY",
+	}
+	SourceTier_value = map[string]int32{
+		"SOURCE_TIER_UNSPECIFIED": 0,
+		"SOURCE_TIER_PRIMARY":     1,
+		"SOURCE_TIER_SECONDARY":   2,
+	}
+)
+
+func (x SourceTier) Enum() *SourceTier {
+	p := new(SourceTier)
+	*p = x
+	return p
+}
+
+func (x SourceTier) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (SourceTier) Descriptor() protoreflect.EnumDescriptor {
+	return file_libbusinessid_ir_v1_rules_proto_enumTypes[0].Descriptor()
+}
+
+func (SourceTier) Type() protoreflect.EnumType {
+	return &file_libbusinessid_ir_v1_rules_proto_enumTypes[0]
+}
+
+func (x SourceTier) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use SourceTier.Descriptor instead.
+func (SourceTier) EnumDescriptor() ([]byte, []int) {
+	return file_libbusinessid_ir_v1_rules_proto_rawDescGZIP(), []int{0}
+}
+
 // ValueType is the static type of a node output.
 type ValueType int32
 
@@ -75,11 +136,11 @@ func (x ValueType) String() string {
 }
 
 func (ValueType) Descriptor() protoreflect.EnumDescriptor {
-	return file_libbusinessid_ir_v1_rules_proto_enumTypes[0].Descriptor()
+	return file_libbusinessid_ir_v1_rules_proto_enumTypes[1].Descriptor()
 }
 
 func (ValueType) Type() protoreflect.EnumType {
-	return &file_libbusinessid_ir_v1_rules_proto_enumTypes[0]
+	return &file_libbusinessid_ir_v1_rules_proto_enumTypes[1]
 }
 
 func (x ValueType) Number() protoreflect.EnumNumber {
@@ -88,7 +149,7 @@ func (x ValueType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use ValueType.Descriptor instead.
 func (ValueType) EnumDescriptor() ([]byte, []int) {
-	return file_libbusinessid_ir_v1_rules_proto_rawDescGZIP(), []int{0}
+	return file_libbusinessid_ir_v1_rules_proto_rawDescGZIP(), []int{1}
 }
 
 // ProgramKind constrains which operations a program may contain.
@@ -128,11 +189,11 @@ func (x ProgramKind) String() string {
 }
 
 func (ProgramKind) Descriptor() protoreflect.EnumDescriptor {
-	return file_libbusinessid_ir_v1_rules_proto_enumTypes[1].Descriptor()
+	return file_libbusinessid_ir_v1_rules_proto_enumTypes[2].Descriptor()
 }
 
 func (ProgramKind) Type() protoreflect.EnumType {
-	return &file_libbusinessid_ir_v1_rules_proto_enumTypes[1]
+	return &file_libbusinessid_ir_v1_rules_proto_enumTypes[2]
 }
 
 func (x ProgramKind) Number() protoreflect.EnumNumber {
@@ -141,7 +202,7 @@ func (x ProgramKind) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use ProgramKind.Descriptor instead.
 func (ProgramKind) EnumDescriptor() ([]byte, []int) {
-	return file_libbusinessid_ir_v1_rules_proto_rawDescGZIP(), []int{1}
+	return file_libbusinessid_ir_v1_rules_proto_rawDescGZIP(), []int{2}
 }
 
 // ReasonCode is the immutable V1 registry of machine readable reasons.
@@ -237,11 +298,11 @@ func (x ReasonCode) String() string {
 }
 
 func (ReasonCode) Descriptor() protoreflect.EnumDescriptor {
-	return file_libbusinessid_ir_v1_rules_proto_enumTypes[2].Descriptor()
+	return file_libbusinessid_ir_v1_rules_proto_enumTypes[3].Descriptor()
 }
 
 func (ReasonCode) Type() protoreflect.EnumType {
-	return &file_libbusinessid_ir_v1_rules_proto_enumTypes[2]
+	return &file_libbusinessid_ir_v1_rules_proto_enumTypes[3]
 }
 
 func (x ReasonCode) Number() protoreflect.EnumNumber {
@@ -250,7 +311,7 @@ func (x ReasonCode) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use ReasonCode.Descriptor instead.
 func (ReasonCode) EnumDescriptor() ([]byte, []int) {
-	return file_libbusinessid_ir_v1_rules_proto_rawDescGZIP(), []int{2}
+	return file_libbusinessid_ir_v1_rules_proto_rawDescGZIP(), []int{3}
 }
 
 // StringOpKind enumerates the V1 string constructors.
@@ -314,11 +375,11 @@ func (x StringOpKind) String() string {
 }
 
 func (StringOpKind) Descriptor() protoreflect.EnumDescriptor {
-	return file_libbusinessid_ir_v1_rules_proto_enumTypes[3].Descriptor()
+	return file_libbusinessid_ir_v1_rules_proto_enumTypes[4].Descriptor()
 }
 
 func (StringOpKind) Type() protoreflect.EnumType {
-	return &file_libbusinessid_ir_v1_rules_proto_enumTypes[3]
+	return &file_libbusinessid_ir_v1_rules_proto_enumTypes[4]
 }
 
 func (x StringOpKind) Number() protoreflect.EnumNumber {
@@ -327,7 +388,7 @@ func (x StringOpKind) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use StringOpKind.Descriptor instead.
 func (StringOpKind) EnumDescriptor() ([]byte, []int) {
-	return file_libbusinessid_ir_v1_rules_proto_rawDescGZIP(), []int{3}
+	return file_libbusinessid_ir_v1_rules_proto_rawDescGZIP(), []int{4}
 }
 
 // IntegerOpKind enumerates the V1 integer constructors.
@@ -376,11 +437,11 @@ func (x IntegerOpKind) String() string {
 }
 
 func (IntegerOpKind) Descriptor() protoreflect.EnumDescriptor {
-	return file_libbusinessid_ir_v1_rules_proto_enumTypes[4].Descriptor()
+	return file_libbusinessid_ir_v1_rules_proto_enumTypes[5].Descriptor()
 }
 
 func (IntegerOpKind) Type() protoreflect.EnumType {
-	return &file_libbusinessid_ir_v1_rules_proto_enumTypes[4]
+	return &file_libbusinessid_ir_v1_rules_proto_enumTypes[5]
 }
 
 func (x IntegerOpKind) Number() protoreflect.EnumNumber {
@@ -389,7 +450,7 @@ func (x IntegerOpKind) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use IntegerOpKind.Descriptor instead.
 func (IntegerOpKind) EnumDescriptor() ([]byte, []int) {
-	return file_libbusinessid_ir_v1_rules_proto_rawDescGZIP(), []int{4}
+	return file_libbusinessid_ir_v1_rules_proto_rawDescGZIP(), []int{5}
 }
 
 // WeightAlignment describes how weights are paired with input code points.
@@ -429,11 +490,11 @@ func (x WeightAlignment) String() string {
 }
 
 func (WeightAlignment) Descriptor() protoreflect.EnumDescriptor {
-	return file_libbusinessid_ir_v1_rules_proto_enumTypes[5].Descriptor()
+	return file_libbusinessid_ir_v1_rules_proto_enumTypes[6].Descriptor()
 }
 
 func (WeightAlignment) Type() protoreflect.EnumType {
-	return &file_libbusinessid_ir_v1_rules_proto_enumTypes[5]
+	return &file_libbusinessid_ir_v1_rules_proto_enumTypes[6]
 }
 
 func (x WeightAlignment) Number() protoreflect.EnumNumber {
@@ -442,7 +503,7 @@ func (x WeightAlignment) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use WeightAlignment.Descriptor instead.
 func (WeightAlignment) EnumDescriptor() ([]byte, []int) {
-	return file_libbusinessid_ir_v1_rules_proto_rawDescGZIP(), []int{5}
+	return file_libbusinessid_ir_v1_rules_proto_rawDescGZIP(), []int{6}
 }
 
 // CharMapping maps a code point to its numeric contribution.
@@ -479,11 +540,11 @@ func (x CharMapping) String() string {
 }
 
 func (CharMapping) Descriptor() protoreflect.EnumDescriptor {
-	return file_libbusinessid_ir_v1_rules_proto_enumTypes[6].Descriptor()
+	return file_libbusinessid_ir_v1_rules_proto_enumTypes[7].Descriptor()
 }
 
 func (CharMapping) Type() protoreflect.EnumType {
-	return &file_libbusinessid_ir_v1_rules_proto_enumTypes[6]
+	return &file_libbusinessid_ir_v1_rules_proto_enumTypes[7]
 }
 
 func (x CharMapping) Number() protoreflect.EnumNumber {
@@ -492,7 +553,7 @@ func (x CharMapping) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use CharMapping.Descriptor instead.
 func (CharMapping) EnumDescriptor() ([]byte, []int) {
-	return file_libbusinessid_ir_v1_rules_proto_rawDescGZIP(), []int{6}
+	return file_libbusinessid_ir_v1_rules_proto_rawDescGZIP(), []int{7}
 }
 
 // PredicateOpKind enumerates the V1 predicates.
@@ -580,11 +641,11 @@ func (x PredicateOpKind) String() string {
 }
 
 func (PredicateOpKind) Descriptor() protoreflect.EnumDescriptor {
-	return file_libbusinessid_ir_v1_rules_proto_enumTypes[7].Descriptor()
+	return file_libbusinessid_ir_v1_rules_proto_enumTypes[8].Descriptor()
 }
 
 func (PredicateOpKind) Type() protoreflect.EnumType {
-	return &file_libbusinessid_ir_v1_rules_proto_enumTypes[7]
+	return &file_libbusinessid_ir_v1_rules_proto_enumTypes[8]
 }
 
 func (x PredicateOpKind) Number() protoreflect.EnumNumber {
@@ -593,7 +654,7 @@ func (x PredicateOpKind) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use PredicateOpKind.Descriptor instead.
 func (PredicateOpKind) EnumDescriptor() ([]byte, []int) {
-	return file_libbusinessid_ir_v1_rules_proto_rawDescGZIP(), []int{7}
+	return file_libbusinessid_ir_v1_rules_proto_rawDescGZIP(), []int{8}
 }
 
 // CanonicalizationOpKind enumerates the V1 canonicalization steps.
@@ -660,11 +721,11 @@ func (x CanonicalizationOpKind) String() string {
 }
 
 func (CanonicalizationOpKind) Descriptor() protoreflect.EnumDescriptor {
-	return file_libbusinessid_ir_v1_rules_proto_enumTypes[8].Descriptor()
+	return file_libbusinessid_ir_v1_rules_proto_enumTypes[9].Descriptor()
 }
 
 func (CanonicalizationOpKind) Type() protoreflect.EnumType {
-	return &file_libbusinessid_ir_v1_rules_proto_enumTypes[8]
+	return &file_libbusinessid_ir_v1_rules_proto_enumTypes[9]
 }
 
 func (x CanonicalizationOpKind) Number() protoreflect.EnumNumber {
@@ -673,7 +734,7 @@ func (x CanonicalizationOpKind) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use CanonicalizationOpKind.Descriptor instead.
 func (CanonicalizationOpKind) EnumDescriptor() ([]byte, []int) {
-	return file_libbusinessid_ir_v1_rules_proto_rawDescGZIP(), []int{8}
+	return file_libbusinessid_ir_v1_rules_proto_rawDescGZIP(), []int{9}
 }
 
 // AssertionOpKind enumerates the V1 assertion nodes.
@@ -710,11 +771,11 @@ func (x AssertionOpKind) String() string {
 }
 
 func (AssertionOpKind) Descriptor() protoreflect.EnumDescriptor {
-	return file_libbusinessid_ir_v1_rules_proto_enumTypes[9].Descriptor()
+	return file_libbusinessid_ir_v1_rules_proto_enumTypes[10].Descriptor()
 }
 
 func (AssertionOpKind) Type() protoreflect.EnumType {
-	return &file_libbusinessid_ir_v1_rules_proto_enumTypes[9]
+	return &file_libbusinessid_ir_v1_rules_proto_enumTypes[10]
 }
 
 func (x AssertionOpKind) Number() protoreflect.EnumNumber {
@@ -723,7 +784,7 @@ func (x AssertionOpKind) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use AssertionOpKind.Descriptor instead.
 func (AssertionOpKind) EnumDescriptor() ([]byte, []int) {
-	return file_libbusinessid_ir_v1_rules_proto_rawDescGZIP(), []int{9}
+	return file_libbusinessid_ir_v1_rules_proto_rawDescGZIP(), []int{10}
 }
 
 // ChecksumOpKind enumerates the V1 checksum nodes.
@@ -787,11 +848,11 @@ func (x ChecksumOpKind) String() string {
 }
 
 func (ChecksumOpKind) Descriptor() protoreflect.EnumDescriptor {
-	return file_libbusinessid_ir_v1_rules_proto_enumTypes[10].Descriptor()
+	return file_libbusinessid_ir_v1_rules_proto_enumTypes[11].Descriptor()
 }
 
 func (ChecksumOpKind) Type() protoreflect.EnumType {
-	return &file_libbusinessid_ir_v1_rules_proto_enumTypes[10]
+	return &file_libbusinessid_ir_v1_rules_proto_enumTypes[11]
 }
 
 func (x ChecksumOpKind) Number() protoreflect.EnumNumber {
@@ -800,7 +861,7 @@ func (x ChecksumOpKind) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use ChecksumOpKind.Descriptor instead.
 func (ChecksumOpKind) EnumDescriptor() ([]byte, []int) {
-	return file_libbusinessid_ir_v1_rules_proto_rawDescGZIP(), []int{10}
+	return file_libbusinessid_ir_v1_rules_proto_rawDescGZIP(), []int{11}
 }
 
 // CallOpKind selects the program family reused by a CallOperation.
@@ -837,11 +898,11 @@ func (x CallOpKind) String() string {
 }
 
 func (CallOpKind) Descriptor() protoreflect.EnumDescriptor {
-	return file_libbusinessid_ir_v1_rules_proto_enumTypes[11].Descriptor()
+	return file_libbusinessid_ir_v1_rules_proto_enumTypes[12].Descriptor()
 }
 
 func (CallOpKind) Type() protoreflect.EnumType {
-	return &file_libbusinessid_ir_v1_rules_proto_enumTypes[11]
+	return &file_libbusinessid_ir_v1_rules_proto_enumTypes[12]
 }
 
 func (x CallOpKind) Number() protoreflect.EnumNumber {
@@ -850,7 +911,7 @@ func (x CallOpKind) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use CallOpKind.Descriptor instead.
 func (CallOpKind) EnumDescriptor() ([]byte, []int) {
-	return file_libbusinessid_ir_v1_rules_proto_rawDescGZIP(), []int{11}
+	return file_libbusinessid_ir_v1_rules_proto_rawDescGZIP(), []int{12}
 }
 
 // RuleBundle is the root message of `businessid-rules.binpb`.
@@ -1082,8 +1143,10 @@ type Source struct {
 	Notes          string                 `protobuf:"bytes,8,opt,name=notes,proto3" json:"notes,omitempty"`
 	LicenseOrTerms string                 `protobuf:"bytes,9,opt,name=license_or_terms,json=licenseOrTerms,proto3" json:"license_or_terms,omitempty"`
 	ArchiveUrl     *string                `protobuf:"bytes,10,opt,name=archive_url,json=archiveUrl,proto3,oneof" json:"archive_url,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	// How close the source sits to the authority that defines the format.
+	Tier          SourceTier `protobuf:"varint,11,opt,name=tier,proto3,enum=libbusinessid.ir.v1.SourceTier" json:"tier,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Source) Reset() {
@@ -1184,6 +1247,13 @@ func (x *Source) GetArchiveUrl() string {
 		return *x.ArchiveUrl
 	}
 	return ""
+}
+
+func (x *Source) GetTier() SourceTier {
+	if x != nil {
+		return x.Tier
+	}
+	return SourceTier_SOURCE_TIER_UNSPECIFIED
 }
 
 // IdentifierDispatcher routes a (kind, optional country, raw value) triple to
@@ -2289,7 +2359,7 @@ const file_libbusinessid_ir_v1_rules_proto_rawDesc = "" +
 	"\x16absent_checksum_reason\x18\t \x01(\x0e2\x1f.libbusinessid.ir.v1.ReasonCodeH\x02R\x14absentChecksumReason\x88\x01\x01B\x0f\n" +
 	"\r_country_codeB\x13\n" +
 	"\x11_checksum_programB\x19\n" +
-	"\x17_absent_checksum_reason\"\xb5\x02\n" +
+	"\x17_absent_checksum_reason\"\xea\x02\n" +
 	"\x06Source\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x10\n" +
 	"\x03url\x18\x02 \x01(\tR\x03url\x12\x1c\n" +
@@ -2303,7 +2373,8 @@ const file_libbusinessid_ir_v1_rules_proto_rawDesc = "" +
 	"\x10license_or_terms\x18\t \x01(\tR\x0elicenseOrTerms\x12$\n" +
 	"\varchive_url\x18\n" +
 	" \x01(\tH\x00R\n" +
-	"archiveUrl\x88\x01\x01B\x0e\n" +
+	"archiveUrl\x88\x01\x01\x123\n" +
+	"\x04tier\x18\v \x01(\x0e2\x1f.libbusinessid.ir.v1.SourceTierR\x04tierB\x0e\n" +
 	"\f_archive_url\"\x9a\x02\n" +
 	"\x14IdentifierDispatcher\x12\x12\n" +
 	"\x04kind\x18\x01 \x01(\tR\x04kind\x12!\n" +
@@ -2421,7 +2492,12 @@ const file_libbusinessid_ir_v1_rules_proto_rawDesc = "" +
 	"\rCallOperation\x123\n" +
 	"\x04kind\x18\x01 \x01(\x0e2\x1f.libbusinessid.ir.v1.CallOpKindR\x04kind\x12\x1d\n" +
 	"\n" +
-	"program_id\x18\x02 \x01(\rR\tprogramId*\xcf\x01\n" +
+	"program_id\x18\x02 \x01(\rR\tprogramId*]\n" +
+	"\n" +
+	"SourceTier\x12\x1b\n" +
+	"\x17SOURCE_TIER_UNSPECIFIED\x10\x00\x12\x17\n" +
+	"\x13SOURCE_TIER_PRIMARY\x10\x01\x12\x19\n" +
+	"\x15SOURCE_TIER_SECONDARY\x10\x02*\xcf\x01\n" +
 	"\tValueType\x12\x1a\n" +
 	"\x16VALUE_TYPE_UNSPECIFIED\x10\x00\x12\x15\n" +
 	"\x11VALUE_TYPE_STRING\x10\x01\x12\x16\n" +
@@ -2563,73 +2639,75 @@ func file_libbusinessid_ir_v1_rules_proto_rawDescGZIP() []byte {
 	return file_libbusinessid_ir_v1_rules_proto_rawDescData
 }
 
-var file_libbusinessid_ir_v1_rules_proto_enumTypes = make([]protoimpl.EnumInfo, 12)
+var file_libbusinessid_ir_v1_rules_proto_enumTypes = make([]protoimpl.EnumInfo, 13)
 var file_libbusinessid_ir_v1_rules_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_libbusinessid_ir_v1_rules_proto_goTypes = []any{
-	(ValueType)(0),                    // 0: libbusinessid.ir.v1.ValueType
-	(ProgramKind)(0),                  // 1: libbusinessid.ir.v1.ProgramKind
-	(ReasonCode)(0),                   // 2: libbusinessid.ir.v1.ReasonCode
-	(StringOpKind)(0),                 // 3: libbusinessid.ir.v1.StringOpKind
-	(IntegerOpKind)(0),                // 4: libbusinessid.ir.v1.IntegerOpKind
-	(WeightAlignment)(0),              // 5: libbusinessid.ir.v1.WeightAlignment
-	(CharMapping)(0),                  // 6: libbusinessid.ir.v1.CharMapping
-	(PredicateOpKind)(0),              // 7: libbusinessid.ir.v1.PredicateOpKind
-	(CanonicalizationOpKind)(0),       // 8: libbusinessid.ir.v1.CanonicalizationOpKind
-	(AssertionOpKind)(0),              // 9: libbusinessid.ir.v1.AssertionOpKind
-	(ChecksumOpKind)(0),               // 10: libbusinessid.ir.v1.ChecksumOpKind
-	(CallOpKind)(0),                   // 11: libbusinessid.ir.v1.CallOpKind
-	(*RuleBundle)(nil),                // 12: libbusinessid.ir.v1.RuleBundle
-	(*IdentifierDefinition)(nil),      // 13: libbusinessid.ir.v1.IdentifierDefinition
-	(*Source)(nil),                    // 14: libbusinessid.ir.v1.Source
-	(*IdentifierDispatcher)(nil),      // 15: libbusinessid.ir.v1.IdentifierDispatcher
-	(*CountryAlias)(nil),              // 16: libbusinessid.ir.v1.CountryAlias
-	(*DispatchTarget)(nil),            // 17: libbusinessid.ir.v1.DispatchTarget
-	(*Program)(nil),                   // 18: libbusinessid.ir.v1.Program
-	(*Capture)(nil),                   // 19: libbusinessid.ir.v1.Capture
-	(*Node)(nil),                      // 20: libbusinessid.ir.v1.Node
-	(*StringOperation)(nil),           // 21: libbusinessid.ir.v1.StringOperation
-	(*IntegerOperation)(nil),          // 22: libbusinessid.ir.v1.IntegerOperation
-	(*PredicateOperation)(nil),        // 23: libbusinessid.ir.v1.PredicateOperation
-	(*CanonicalizationOperation)(nil), // 24: libbusinessid.ir.v1.CanonicalizationOperation
-	(*AssertionOperation)(nil),        // 25: libbusinessid.ir.v1.AssertionOperation
-	(*ChecksumOperation)(nil),         // 26: libbusinessid.ir.v1.ChecksumOperation
-	(*CallOperation)(nil),             // 27: libbusinessid.ir.v1.CallOperation
+	(SourceTier)(0),                   // 0: libbusinessid.ir.v1.SourceTier
+	(ValueType)(0),                    // 1: libbusinessid.ir.v1.ValueType
+	(ProgramKind)(0),                  // 2: libbusinessid.ir.v1.ProgramKind
+	(ReasonCode)(0),                   // 3: libbusinessid.ir.v1.ReasonCode
+	(StringOpKind)(0),                 // 4: libbusinessid.ir.v1.StringOpKind
+	(IntegerOpKind)(0),                // 5: libbusinessid.ir.v1.IntegerOpKind
+	(WeightAlignment)(0),              // 6: libbusinessid.ir.v1.WeightAlignment
+	(CharMapping)(0),                  // 7: libbusinessid.ir.v1.CharMapping
+	(PredicateOpKind)(0),              // 8: libbusinessid.ir.v1.PredicateOpKind
+	(CanonicalizationOpKind)(0),       // 9: libbusinessid.ir.v1.CanonicalizationOpKind
+	(AssertionOpKind)(0),              // 10: libbusinessid.ir.v1.AssertionOpKind
+	(ChecksumOpKind)(0),               // 11: libbusinessid.ir.v1.ChecksumOpKind
+	(CallOpKind)(0),                   // 12: libbusinessid.ir.v1.CallOpKind
+	(*RuleBundle)(nil),                // 13: libbusinessid.ir.v1.RuleBundle
+	(*IdentifierDefinition)(nil),      // 14: libbusinessid.ir.v1.IdentifierDefinition
+	(*Source)(nil),                    // 15: libbusinessid.ir.v1.Source
+	(*IdentifierDispatcher)(nil),      // 16: libbusinessid.ir.v1.IdentifierDispatcher
+	(*CountryAlias)(nil),              // 17: libbusinessid.ir.v1.CountryAlias
+	(*DispatchTarget)(nil),            // 18: libbusinessid.ir.v1.DispatchTarget
+	(*Program)(nil),                   // 19: libbusinessid.ir.v1.Program
+	(*Capture)(nil),                   // 20: libbusinessid.ir.v1.Capture
+	(*Node)(nil),                      // 21: libbusinessid.ir.v1.Node
+	(*StringOperation)(nil),           // 22: libbusinessid.ir.v1.StringOperation
+	(*IntegerOperation)(nil),          // 23: libbusinessid.ir.v1.IntegerOperation
+	(*PredicateOperation)(nil),        // 24: libbusinessid.ir.v1.PredicateOperation
+	(*CanonicalizationOperation)(nil), // 25: libbusinessid.ir.v1.CanonicalizationOperation
+	(*AssertionOperation)(nil),        // 26: libbusinessid.ir.v1.AssertionOperation
+	(*ChecksumOperation)(nil),         // 27: libbusinessid.ir.v1.ChecksumOperation
+	(*CallOperation)(nil),             // 28: libbusinessid.ir.v1.CallOperation
 }
 var file_libbusinessid_ir_v1_rules_proto_depIdxs = []int32{
-	13, // 0: libbusinessid.ir.v1.RuleBundle.identifiers:type_name -> libbusinessid.ir.v1.IdentifierDefinition
-	18, // 1: libbusinessid.ir.v1.RuleBundle.programs:type_name -> libbusinessid.ir.v1.Program
-	15, // 2: libbusinessid.ir.v1.RuleBundle.dispatchers:type_name -> libbusinessid.ir.v1.IdentifierDispatcher
-	14, // 3: libbusinessid.ir.v1.IdentifierDefinition.sources:type_name -> libbusinessid.ir.v1.Source
-	2,  // 4: libbusinessid.ir.v1.IdentifierDefinition.absent_checksum_reason:type_name -> libbusinessid.ir.v1.ReasonCode
-	16, // 5: libbusinessid.ir.v1.IdentifierDispatcher.country_aliases:type_name -> libbusinessid.ir.v1.CountryAlias
-	17, // 6: libbusinessid.ir.v1.IdentifierDispatcher.targets:type_name -> libbusinessid.ir.v1.DispatchTarget
-	1,  // 7: libbusinessid.ir.v1.Program.kind:type_name -> libbusinessid.ir.v1.ProgramKind
-	20, // 8: libbusinessid.ir.v1.Program.nodes:type_name -> libbusinessid.ir.v1.Node
-	19, // 9: libbusinessid.ir.v1.Program.captures:type_name -> libbusinessid.ir.v1.Capture
-	0,  // 10: libbusinessid.ir.v1.Node.output_type:type_name -> libbusinessid.ir.v1.ValueType
-	21, // 11: libbusinessid.ir.v1.Node.string_operation:type_name -> libbusinessid.ir.v1.StringOperation
-	22, // 12: libbusinessid.ir.v1.Node.integer_operation:type_name -> libbusinessid.ir.v1.IntegerOperation
-	23, // 13: libbusinessid.ir.v1.Node.predicate_operation:type_name -> libbusinessid.ir.v1.PredicateOperation
-	24, // 14: libbusinessid.ir.v1.Node.canonicalization_operation:type_name -> libbusinessid.ir.v1.CanonicalizationOperation
-	25, // 15: libbusinessid.ir.v1.Node.assertion_operation:type_name -> libbusinessid.ir.v1.AssertionOperation
-	26, // 16: libbusinessid.ir.v1.Node.checksum_operation:type_name -> libbusinessid.ir.v1.ChecksumOperation
-	27, // 17: libbusinessid.ir.v1.Node.call_operation:type_name -> libbusinessid.ir.v1.CallOperation
-	3,  // 18: libbusinessid.ir.v1.StringOperation.kind:type_name -> libbusinessid.ir.v1.StringOpKind
-	4,  // 19: libbusinessid.ir.v1.IntegerOperation.kind:type_name -> libbusinessid.ir.v1.IntegerOpKind
-	5,  // 20: libbusinessid.ir.v1.IntegerOperation.alignment:type_name -> libbusinessid.ir.v1.WeightAlignment
-	6,  // 21: libbusinessid.ir.v1.IntegerOperation.mapping:type_name -> libbusinessid.ir.v1.CharMapping
-	7,  // 22: libbusinessid.ir.v1.PredicateOperation.kind:type_name -> libbusinessid.ir.v1.PredicateOpKind
-	8,  // 23: libbusinessid.ir.v1.CanonicalizationOperation.kind:type_name -> libbusinessid.ir.v1.CanonicalizationOpKind
-	9,  // 24: libbusinessid.ir.v1.AssertionOperation.kind:type_name -> libbusinessid.ir.v1.AssertionOpKind
-	2,  // 25: libbusinessid.ir.v1.AssertionOperation.reason_code:type_name -> libbusinessid.ir.v1.ReasonCode
-	10, // 26: libbusinessid.ir.v1.ChecksumOperation.kind:type_name -> libbusinessid.ir.v1.ChecksumOpKind
-	2,  // 27: libbusinessid.ir.v1.ChecksumOperation.reason_code:type_name -> libbusinessid.ir.v1.ReasonCode
-	11, // 28: libbusinessid.ir.v1.CallOperation.kind:type_name -> libbusinessid.ir.v1.CallOpKind
-	29, // [29:29] is the sub-list for method output_type
-	29, // [29:29] is the sub-list for method input_type
-	29, // [29:29] is the sub-list for extension type_name
-	29, // [29:29] is the sub-list for extension extendee
-	0,  // [0:29] is the sub-list for field type_name
+	14, // 0: libbusinessid.ir.v1.RuleBundle.identifiers:type_name -> libbusinessid.ir.v1.IdentifierDefinition
+	19, // 1: libbusinessid.ir.v1.RuleBundle.programs:type_name -> libbusinessid.ir.v1.Program
+	16, // 2: libbusinessid.ir.v1.RuleBundle.dispatchers:type_name -> libbusinessid.ir.v1.IdentifierDispatcher
+	15, // 3: libbusinessid.ir.v1.IdentifierDefinition.sources:type_name -> libbusinessid.ir.v1.Source
+	3,  // 4: libbusinessid.ir.v1.IdentifierDefinition.absent_checksum_reason:type_name -> libbusinessid.ir.v1.ReasonCode
+	0,  // 5: libbusinessid.ir.v1.Source.tier:type_name -> libbusinessid.ir.v1.SourceTier
+	17, // 6: libbusinessid.ir.v1.IdentifierDispatcher.country_aliases:type_name -> libbusinessid.ir.v1.CountryAlias
+	18, // 7: libbusinessid.ir.v1.IdentifierDispatcher.targets:type_name -> libbusinessid.ir.v1.DispatchTarget
+	2,  // 8: libbusinessid.ir.v1.Program.kind:type_name -> libbusinessid.ir.v1.ProgramKind
+	21, // 9: libbusinessid.ir.v1.Program.nodes:type_name -> libbusinessid.ir.v1.Node
+	20, // 10: libbusinessid.ir.v1.Program.captures:type_name -> libbusinessid.ir.v1.Capture
+	1,  // 11: libbusinessid.ir.v1.Node.output_type:type_name -> libbusinessid.ir.v1.ValueType
+	22, // 12: libbusinessid.ir.v1.Node.string_operation:type_name -> libbusinessid.ir.v1.StringOperation
+	23, // 13: libbusinessid.ir.v1.Node.integer_operation:type_name -> libbusinessid.ir.v1.IntegerOperation
+	24, // 14: libbusinessid.ir.v1.Node.predicate_operation:type_name -> libbusinessid.ir.v1.PredicateOperation
+	25, // 15: libbusinessid.ir.v1.Node.canonicalization_operation:type_name -> libbusinessid.ir.v1.CanonicalizationOperation
+	26, // 16: libbusinessid.ir.v1.Node.assertion_operation:type_name -> libbusinessid.ir.v1.AssertionOperation
+	27, // 17: libbusinessid.ir.v1.Node.checksum_operation:type_name -> libbusinessid.ir.v1.ChecksumOperation
+	28, // 18: libbusinessid.ir.v1.Node.call_operation:type_name -> libbusinessid.ir.v1.CallOperation
+	4,  // 19: libbusinessid.ir.v1.StringOperation.kind:type_name -> libbusinessid.ir.v1.StringOpKind
+	5,  // 20: libbusinessid.ir.v1.IntegerOperation.kind:type_name -> libbusinessid.ir.v1.IntegerOpKind
+	6,  // 21: libbusinessid.ir.v1.IntegerOperation.alignment:type_name -> libbusinessid.ir.v1.WeightAlignment
+	7,  // 22: libbusinessid.ir.v1.IntegerOperation.mapping:type_name -> libbusinessid.ir.v1.CharMapping
+	8,  // 23: libbusinessid.ir.v1.PredicateOperation.kind:type_name -> libbusinessid.ir.v1.PredicateOpKind
+	9,  // 24: libbusinessid.ir.v1.CanonicalizationOperation.kind:type_name -> libbusinessid.ir.v1.CanonicalizationOpKind
+	10, // 25: libbusinessid.ir.v1.AssertionOperation.kind:type_name -> libbusinessid.ir.v1.AssertionOpKind
+	3,  // 26: libbusinessid.ir.v1.AssertionOperation.reason_code:type_name -> libbusinessid.ir.v1.ReasonCode
+	11, // 27: libbusinessid.ir.v1.ChecksumOperation.kind:type_name -> libbusinessid.ir.v1.ChecksumOpKind
+	3,  // 28: libbusinessid.ir.v1.ChecksumOperation.reason_code:type_name -> libbusinessid.ir.v1.ReasonCode
+	12, // 29: libbusinessid.ir.v1.CallOperation.kind:type_name -> libbusinessid.ir.v1.CallOpKind
+	30, // [30:30] is the sub-list for method output_type
+	30, // [30:30] is the sub-list for method input_type
+	30, // [30:30] is the sub-list for extension type_name
+	30, // [30:30] is the sub-list for extension extendee
+	0,  // [0:30] is the sub-list for field type_name
 }
 
 func init() { file_libbusinessid_ir_v1_rules_proto_init() }
@@ -2661,7 +2739,7 @@ func file_libbusinessid_ir_v1_rules_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libbusinessid_ir_v1_rules_proto_rawDesc), len(file_libbusinessid_ir_v1_rules_proto_rawDesc)),
-			NumEnums:      12,
+			NumEnums:      13,
 			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   0,

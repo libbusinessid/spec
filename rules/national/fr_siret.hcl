@@ -72,5 +72,6 @@ identifier "siret" "FR" {
     language         = "fr"
     notes            = "Fourteen digits: the nine digit SIREN of the legal unit followed by a five digit NIC, closed by a Luhn check over the fourteen digits. Establishments of La Poste follow a documented derogation."
     license_or_terms = "Licence Ouverte / Open Licence (Etalab), public sector information"
+    tier             = "primary"
   }
 }

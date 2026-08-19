@@ -51,6 +51,7 @@ identifier "vat" "DE" {
     language         = "de"
     notes            = "DE followed by nine digits. The published check digit procedure is the iterative MOD 11,10 of DIN ISO 7064."
     license_or_terms = "Public sector information published by the German federal tax administration"
+    tier             = "primary"
   }
 
   source {
@@ -63,5 +64,6 @@ identifier "vat" "DE" {
     language         = "en"
     notes            = "Cross-check of the published length and prefix of each Member State VAT identification number."
     license_or_terms = "European Commission reuse policy, Decision 2011/833/EU"
+    tier             = "primary"
   }
 }

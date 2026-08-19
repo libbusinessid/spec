@@ -185,5 +185,6 @@ identifier "probe" "XX" {
     language         = "en"
     notes            = "Covers every V1 operation of the IR; never published."
     license_or_terms = "Apache-2.0"
+    tier = "primary"
   }
 }

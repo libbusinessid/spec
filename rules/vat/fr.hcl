@@ -84,6 +84,7 @@ identifier "vat" "FR" {
     language         = "fr"
     notes            = "FR, a two character computation key and the nine digit SIREN. The numeric key is (12 + 3 * (SIREN mod 97)) mod 97. Alphanumeric keys exist and their derivation is not published. The embedded SIREN keeps its own Luhn check digit."
     license_or_terms = "Licence Ouverte / Open Licence (Etalab), public sector information"
+    tier             = "primary"
   }
 
   source {
@@ -96,5 +97,6 @@ identifier "vat" "FR" {
     language         = "en"
     notes            = "Cross-check of the published length and prefix of each Member State VAT identification number."
     license_or_terms = "European Commission reuse policy, Decision 2011/833/EU"
+    tier             = "primary"
   }
 }

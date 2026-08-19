@@ -146,6 +146,7 @@ identifier "vat" "BE" {
     language         = "en"
     notes            = "n/a"
     license_or_terms = "public"
+    tier = "primary"
     archive_url      = "https://archive.invalid/be"
   }
 }

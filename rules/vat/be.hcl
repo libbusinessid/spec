@@ -51,6 +51,7 @@ identifier "vat" "BE" {
     language         = "fr"
     notes            = "BE followed by the ten digit enterprise number. Numbers issued before 2008 held nine digits and are completed by a leading zero. The last two digits are 97 minus the first eight digits modulo 97."
     license_or_terms = "Public sector information published by the Belgian federal administration"
+    tier             = "primary"
   }
 
   source {
@@ -63,5 +64,6 @@ identifier "vat" "BE" {
     language         = "en"
     notes            = "Cross-check of the published length and prefix of each Member State VAT identification number."
     license_or_terms = "European Commission reuse policy, Decision 2011/833/EU"
+    tier             = "primary"
   }
 }

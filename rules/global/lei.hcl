@@ -54,5 +54,6 @@ identifier "lei" "GLOBAL" {
     language         = "en"
     notes            = "Twenty alphanumeric characters. Characters 1 to 4 are the LOU prefix, 5 and 6 are reserved, 7 to 18 identify the entity and 19 and 20 are ISO 7064 MOD 97-10 check digits."
     license_or_terms = "GLEIF publishes the LEI data and its documentation under CC0 1.0"
+    tier             = "primary"
   }
 }

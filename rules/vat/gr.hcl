@@ -60,6 +60,7 @@ identifier "vat" "GR" {
     language         = "el"
     notes            = "Nine digits. The check digit weights the first eight digits by 256, 128, 64, 32, 16, 8, 4 and 2, reduces the sum modulo 11 and maps a remainder of 10 to 0."
     license_or_terms = "Public sector information published by the Greek tax administration"
+    tier             = "primary"
   }
 
   source {
@@ -72,5 +73,6 @@ identifier "vat" "GR" {
     language         = "en"
     notes            = "The Greek VAT prefix is EL although the ISO 3166-1 alpha-2 country code is GR."
     license_or_terms = "European Commission reuse policy, Decision 2011/833/EU"
+    tier             = "primary"
   }
 }
