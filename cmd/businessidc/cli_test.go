@@ -337,6 +337,7 @@ func TestCompileReportsMissingInputs(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			root := t.TempDir()
 			writeFile(t, filepath.Join(root, "RULES_VERSION"), "2026.08.0\n")
+			writeFile(t, filepath.Join(root, "RULES_STABILITY"), "alpha\n")
 			tc.setup(root)
 			repo := repoRoot(t)
 			code, _, stderr := exec(t, "compile",
@@ -474,5 +475,47 @@ func TestDiffPrintsEveryChange(t *testing.T) {
 		if !strings.Contains(stdout, class) {
 			t.Fatalf("the diff does not report %q:\n%s", class, stdout)
 		}
+	}
+}
+
+func TestCompileRecordsTheStabilityLevel(t *testing.T) {
+	t.Setenv("SOURCE_DATE_EPOCH", "1755475200")
+	out := t.TempDir()
+	if code, _, stderr := exec(t, "compile", "--out", out); code != exitOK {
+		t.Fatalf("compile failed: %s", stderr)
+	}
+	version := strings.TrimSpace(readFile(t, filepath.Join(repoRoot(t), "RULES_VERSION")))
+	declared := strings.TrimSpace(readFile(t, filepath.Join(repoRoot(t), "RULES_STABILITY")))
+	var manifest struct {
+		Stability string `json:"stability"`
+	}
+	if err := json.Unmarshal([]byte(readFile(t, filepath.Join(out, "businessid-manifest-"+version+".json"))), &manifest); err != nil {
+		t.Fatal(err)
+	}
+	if manifest.Stability != declared {
+		t.Fatalf("the manifest declares %q, RULES_STABILITY says %q", manifest.Stability, declared)
+	}
+}
+
+func TestCompileRejectsAnUnknownStabilityLevel(t *testing.T) {
+	t.Setenv("SOURCE_DATE_EPOCH", "1755475200")
+	code, _, stderr := exec(t, "compile", "--out", t.TempDir(), "--stability", "rc")
+	if code != exitRejected || !strings.Contains(stderr, "invalid stability level") {
+		t.Fatalf("expected a rejection, got code=%d stderr=%q", code, stderr)
+	}
+}
+
+func TestCompileRejectsAMissingStabilityFile(t *testing.T) {
+	t.Setenv("SOURCE_DATE_EPOCH", "1755475200")
+	root := t.TempDir()
+	writeFile(t, filepath.Join(root, "RULES_VERSION"), "2026.08.0\n")
+	repo := repoRoot(t)
+	code, _, stderr := exec(t, "compile",
+		"--out", filepath.Join(root, "dist"), "--module-root", root,
+		"--rules", filepath.Join(repo, "rules"),
+		"--cases", filepath.Join(repo, "conformance"),
+		"--fixtures", filepath.Join(repo, "testdata"))
+	if code != exitRejected || !strings.Contains(stderr, "RULES_STABILITY") {
+		t.Fatalf("expected a missing RULES_STABILITY, got code=%d stderr=%q", code, stderr)
 	}
 }
