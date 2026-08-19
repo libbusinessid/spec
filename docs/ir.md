@@ -1075,6 +1075,11 @@ Results produced before a rule assertion never carry a message key. An assertion
 or a checksum declared by the bundle keeps its message key exactly, including
 when it is absent.
 
+A declared `message_key` is never empty. An empty one is refused at load time,
+because a present but empty key cannot be told apart from an absent one in an
+idiomatic API: two engines could then report differently on the same bundle,
+which 2.4 forbids. Absence is expressed by omitting the field.
+
 ## 7. Character classes
 
 The V1 classes are ASCII only: digits `U+0030..U+0039`, upper letters
