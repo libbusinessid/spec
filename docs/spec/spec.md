@@ -47,17 +47,49 @@ Les règles et les cas de conformité sont communs. Les moteurs sont indépendan
 idiomatiques à leur langage. Aucun moteur ne doit être une traduction mécanique
 ligne par ligne d’un autre moteur.
 
-### 2.3 Exécution fermée en cas d’incompatibilité
+Deux rôles distincts sont à distinguer dans tout ce document.
 
-Un moteur qui ne comprend pas une version ou une fonctionnalité requise par un
-bundle DOIT refuser de charger ce bundle. Il NE DOIT PAS ignorer une opération
-inconnue et continuer partiellement.
+Le **générateur** est l’outil qui lit le bundle IR, le valide et produit du code
+source dans un langage cible. Il s’exécute chez l’auteur du moteur, jamais chez le
+consommateur de la bibliothèque. Chaque langage fournit son propre générateur, écrit
+dans le langage de son choix ; ce dépôt n’en impose aucun et n’en héberge aucun.
+
+Le **moteur** est la bibliothèque publiée : le code généré, les primitives de
+support qu’il appelle, et une API publique écrite à la main. Le moteur n’interprète
+pas le bundle et n’en embarque pas nécessairement une copie.
+
+Cette séparation est ce qui permet à la spécification de rester agnostique : elle
+définit une sémantique et un artefact, jamais une stratégie d’exécution.
+
+### 2.3 Génération fermée en cas d’incompatibilité
+
+Un générateur qui ne comprend pas une version, un champ, un opcode ou une
+fonctionnalité requise par un bundle DOIT refuser de produire du code. Il NE DOIT
+PAS ignorer une opération inconnue et générer partiellement.
+
+Le refus est une propriété du temps de génération, jamais du temps d’exécution : un
+moteur généré ne rencontre par construction aucune construction qu’il ne comprend
+pas, puisque tout ce qu’il contient a été produit à partir d’un bundle accepté.
+
+Un moteur qui choisirait néanmoins d’interpréter le bundle à l’exécution reste
+conforme s’il produit les mêmes résultats observables, et applique alors la même
+règle de refus au chargement.
 
 ### 2.4 Déterminisme observable
 
 À bundle, entrée et contexte identiques, tous les moteurs DOIVENT produire le même
 résultat sémantique : valeur canonique, étapes exécutées, statuts et codes de raison.
 Les textes humains peuvent différer et ne font pas partie du contrat normatif.
+
+Les « étapes exécutées » désignent les niveaux de validation observables — format et
+checksum, chacun avec son statut et son code de raison — et non une trace des nœuds
+IR parcourus. Aucune trace d’exécution n’est normative.
+
+Le contrat porte donc sur les sorties, jamais sur la méthode. Un moteur PEUT
+interpréter le bundle, compiler ses règles en code natif, ou employer toute autre
+stratégie, dès lors que les sorties observables sont identiques. Cette liberté est
+délibérée : elle autorise les optimisations qu’un code généré rend possibles, comme
+la suppression des branches mortes ou l’absence totale d’allocation.
 
 ### 2.5 Aucune dépendance réseau
 
@@ -129,13 +161,31 @@ rules/*.hcl + conformance/*.jsonl
         ▼                  ▼
 businessid-rules.binpb  conformance.binpb
         │                  │
-        └────────┬─────────┘
-                 ▼
-       moteurs et suites de tests
+        │                  └──────────────┐
+        ▼                                 ▼
+générateur du langage cible        runner de conformité
+  (hors de ce dépôt)                (dans ce dépôt)
+        │                                 │
+        ▼                                 │
+  code source généré                      │
+        │                                 │
+        ▼                                 │
+moteur publié = code généré ◀──── testé ──┘
+  + primitives + API
 ```
 
 HCL est uniquement un langage d’auteur. Aucun moteur de production n’analyse HCL.
 Toutes les références symboliques sont résolues par `businessidc`.
+
+Le bundle est destiné à être consommé par un générateur au moment où le moteur est
+construit, et non par le moteur au moment où il valide un identifiant. Ce dépôt
+produit et atteste l’artefact ; il ne produit aucun générateur et ne connaît aucun
+langage cible.
+
+La conformité est vérifiée par un protocole d’exécution commun décrit en 8.5, et non
+par une suite de tests réécrite dans chaque moteur. Toute implémentation, y compris
+tierce et dans un langage que ce projet ne publie pas, se déclare conforme en
+satisfaisant ce protocole.
 
 ## 5. Organisation du dépôt
 
@@ -163,6 +213,7 @@ La structure cible est :
 │   │   └── downstream.yml
 │   └── dependabot.yml
 ├── cmd/businessidc/
+├── cmd/conformance-runner/
 ├── internal/
 │   ├── ast/
 │   ├── hcllang/
@@ -176,7 +227,8 @@ La structure cible est :
 │   └── diagnostics/
 ├── proto/libbusinessid/
 │   ├── ir/v1/rules.proto
-│   └── conformance/v1/conformance.proto
+│   ├── conformance/v1/conformance.proto
+│   └── testee/v1/testee.proto
 ├── gen/go/                       # code Protobuf généré
 ├── rules/
 │   ├── common/
@@ -679,14 +731,14 @@ Utiliser `proto3` pour la V1. Ne pas utiliser `google.protobuf.Any`, les extensi
 les champs `required`, ni des `map` lorsque l’ordre est significatif. Les listes
 doivent être triées par le compilateur lorsque l’ordre métier ne l’est pas.
 
-Chaque enum réserve la valeur zéro à `UNSPECIFIED`, que les moteurs rejettent lors
-de la validation du bundle.
+Chaque enum réserve la valeur zéro à `UNSPECIFIED`, que les générateurs rejettent
+lors de la validation du bundle.
 
 Tout champ Protobuf inconnu est rejeté en V1, à n’importe quelle profondeur. Un
-moteur configure son décodeur pour conserver/rapporter les unknown fields ou effectue
-un pré-scan wire borné contre les descripteurs avant le décodage métier. Les ignorer
-en se reposant uniquement sur `required_feature_ids` n’est pas sûr face à un bundle
-forgé qui omettrait volontairement la capability correspondante.
+générateur configure son décodeur pour conserver/rapporter les unknown fields ou
+effectue un pré-scan wire borné contre les descripteurs avant le décodage métier. Les
+ignorer en se reposant uniquement sur `required_feature_ids` n’est pas sûr face à un
+bundle forgé qui omettrait volontairement la capability correspondante.
 
 Les champs supprimés doivent avoir leur numéro et leur nom placés dans `reserved`.
 Un numéro de champ ne doit jamais être réutilisé.
@@ -756,8 +808,8 @@ Le compilateur Go utilise `proto.MarshalOptions{Deterministic: true}` avec versi
 runtime verrouillée, émet les champs répétés dans l’ordre normatif documenté et
 compare toujours les octets originaux. Cette option garantit la reproductibilité du
 compilateur verrouillé, pas une canonicalisation universelle entre runtimes
-Protobuf ; c’est pourquoi les moteurs vérifient le hash du fichier avant décodage et
-ne le recalculent jamais depuis l’objet décodé.
+Protobuf ; c’est pourquoi les générateurs vérifient le hash du fichier avant
+décodage et ne le recalculent jamais depuis l’objet décodé.
 
 ### 7.3 Programmes et nœuds
 
@@ -922,6 +974,21 @@ captures par format maximum     128
 
 Ces limites sont normatives et incluses dans les tests de conformité de sécurité.
 
+Elles ne s’appliquent pas toutes au même moment. Les limites portant sur la forme du
+bundle — taille binaire, nombre d’identifiants, nœuds, profondeur d’appel, chaînes
+constantes — sont vérifiées par le générateur et n’ont plus d’objet une fois le code
+produit. La limite d’entrée utilisateur reste une obligation du moteur : elle est
+observable, et une entrée plus longue DOIT être refusée sans être traitée.
+
+Le budget d’étapes borne une interprétation. Un moteur généré n’en a pas besoin, car
+l’acyclicité du graphe et la borne de profondeur d’appel sont établies à la
+génération : le code produit termine par construction. Un moteur qui interprète le
+bundle applique le budget tel quel.
+
+La borne d’entrée de 1 024 octets est délibérément petite. Elle rend possible une
+implémentation sans allocation, sur un tampon de taille fixe, ce que les moteurs
+DEVRAIENT viser.
+
 Limites arithmétiques V1 supplémentaires :
 
 ```text
@@ -936,10 +1003,18 @@ opérandes de concat                 1..256
 
 Toutes les additions, multiplications, négations et conversions sont vérifiées. Le
 compilateur rejette tout overflow prouvable et calcule des bornes conservatrices
-pour chaque expression entière. Le moteur répète ces validations au chargement ; si
-la sûreté d’un calcul ne peut pas être prouvée dans les bornes V1, le bundle est
-`invalid_ruleset`. Aucun wrap, saturation ou promotion silencieuse propre au langage
-n’est autorisé.
+pour chaque expression entière. Le générateur répète ces validations avant de
+produire du code ; si la sûreté d’un calcul ne peut pas être prouvée dans les bornes
+V1, le bundle est `invalid_ruleset` et rien n’est généré. Aucun wrap, saturation ou
+promotion silencieuse propre au langage n’est autorisé.
+
+La borne `int64` est un maximum théorique que tout langage cible ne représente pas
+exactement. Un langage dont le type entier natif est un flottant double précision —
+JavaScript en particulier — n’est exact que jusqu’à 2^53. Un générateur ciblant un
+tel langage DOIT soit émettre un type entier de précision arbitraire, soit refuser de
+générer lorsqu’une expression peut dépasser 2^53. Il NE DOIT PAS émettre un calcul
+silencieusement inexact. Aucune règle officielle n’excède 2^53 à ce jour ; cette
+exigence porte sur les règles futures.
 
 `digits_to_integer` n’est autorisé que si la longueur maximale et la borne de la vue
 prouvent un résultat ≤ `INT64_MAX` ; une longueur non bornée ou une tranche pouvant
@@ -1211,6 +1286,56 @@ réduit les risques de reproduire le même défaut.
 
 L’interpréteur de référence vérifie les attentes écrites ; il ne les génère pas.
 
+Aucun moteur NE DOIT être dérivé, porté ou transcrit depuis cet interpréteur. Un
+moteur qui en descendrait passerait la conformité par construction et ne prouverait
+ni que l’IR est implémentable, ni que la documentation des opcodes suffit à
+l’implémenter. C’est précisément ce que chaque nouveau moteur doit établir.
+
+### 8.7 Protocole de conformité
+
+La conformité NE DOIT PAS être vérifiée par une suite de tests réécrite dans chaque
+moteur. Un moteur qui interprète lui-même les résultats attendus peut se déclarer
+conforme à tort, en comparant trop faiblement ou en ignorant un champ absent.
+
+Ce dépôt publie donc un **runner de conformité** : le seul programme qui lit les
+résultats attendus et décide de la conformité. Un moteur ne voit jamais un résultat
+attendu.
+
+Le moteur fournit en regard un exécutable minimal, le **testee**, qui lit des
+requêtes sur son entrée standard, appelle son API publique et écrit des réponses sur
+sa sortie standard. Le protocole est un cadrage binaire simple : pour chaque message,
+un entier non signé de 32 bits en petit-boutiste donnant la longueur, suivi du
+message Protobuf sérialisé. Les schémas de requête et de réponse sont normatifs et
+publiés avec les autres schémas du dépôt.
+
+Le testee NE DOIT PAS lire le corpus, ni interpréter un résultat attendu, ni adapter
+son comportement au cas reçu. Il traduit une requête en appel d’API et un résultat en
+réponse, rien de plus.
+
+Trois propriétés découlent de ce découpage. La logique de comparaison n’existe qu’une
+fois, donc une divergence d’interprétation des attentes est impossible. Le protocole
+est agnostique au langage, donc une implémentation tierce, dans un langage que ce
+projet ne publie pas, se déclare conforme par les mêmes moyens que les moteurs
+officiels. Et le testee reste assez petit pour être relu intégralement, ce qui rend
+vérifiable l’absence de triche.
+
+Un moteur est conforme lorsque le runner rapporte zéro écart sur la totalité du
+corpus. Une exécution partielle, une catégorie ignorée ou un cas déclaré non
+applicable NE constituent PAS une conformité.
+
+### 8.8 Cas de chargement et cas d’exécution
+
+Les cas dont l’opération est `load_ruleset` éprouvent le refus d’un bundle hostile ou
+malformé. Ils s’adressent au **générateur**, qui doit refuser de produire du code,
+et non au moteur généré, lequel ne charge aucun bundle.
+
+Les autres cas s’adressent au moteur, à travers le protocole de 8.7.
+
+Un moteur qui interprète le bundle à l’exécution répond aux deux catégories. Un
+moteur généré répond aux cas d’exécution, et son générateur répond aux cas de
+chargement. Dans les deux cas, la totalité du corpus est couverte : aucun cas n’est
+sans destinataire.
+
 ## 9. CLI `businessidc`
 
 La CLI doit proposer :
@@ -1305,10 +1430,26 @@ Après publication d’une release :
 
 1. `downstream.yml` ouvre une PR dans `businessid-go`, `businessid-swift`,
    `businessid-kotlin` et `businessid-typescript` ;
-2. la PR met à jour `rules.lock`, le bundle et la conformité ;
-3. chaque moteur vérifie tous les SHA-256 et l’attestation avant commit ;
-4. chaque CI exécute toute la conformité et ses tests propres ;
-5. aucune publication de package n’est automatique avant succès de ses quality gates.
+2. la PR met à jour `rules.lock`, et lui seul ;
+3. le générateur du moteur récupère les artefacts de la release désignée, vérifie
+   tous les SHA-256 et l’attestation, puis régénère le code ;
+4. le code généré est committé ; les artefacts binaires ne le sont pas ;
+5. chaque CI exécute toute la conformité et ses tests propres ;
+6. aucune publication de package n’est automatique avant succès de ses quality gates.
+
+La PR ne transporte pas le bundle. Un dépôt moteur qui committerait un `.binpb`
+présenterait à ses relecteurs un objet opaque à la place du changement réel ; le code
+généré, lui, se lit en diff et montre exactement quelle règle a changé. Le bundle
+reste l’artefact attesté et fait toujours autorité — il est vérifié à la génération,
+pas archivé.
+
+Le code généré DOIT être committé. Cette obligation garantit qu’une construction du
+moteur, chez un consommateur comme en intégration continue, n’exige ni réseau ni
+accès au dépôt `spec`, conformément à 2.5. La régénération est une opération
+volontaire de mainteneur, jamais une étape de build.
+
+Un moteur PEUT malgré tout embarquer le bundle s’il choisit de l’interpréter ; il
+applique alors les mêmes vérifications de digest et d’attestation avant usage.
 
 Format de `rules.lock` :
 
@@ -1329,6 +1470,10 @@ Le lock est généré depuis le manifeste attesté ; l’automatisation ne peut 
 auto-approuver ni fusionner sa propre PR. Lorsqu’une nouvelle feature IR est
 nécessaire, les moteurs doivent la publier avant que les règles officielles ne
 l’utilisent.
+
+`rules.lock` est ainsi le seul point de couplage entre ce dépôt et un moteur. Il
+désigne une release, en atteste le contenu, et ne dit rien du langage ni de la
+stratégie d’implémentation.
 
 ## 12. Qualité, tests et sécurité du dépôt `spec`
 
@@ -1505,6 +1650,10 @@ Le dépôt V1 est terminé lorsque :
 - la documentation générée correspond aux règles ;
 - `ir.md`, `features.md`, les deux `.proto` et les fixtures de référence permettent
   à un moteur d’être implémenté sans consulter le code Go du compilateur ;
+- le runner de conformité exécute un testee externe de bout en bout et rapporte un
+  écart lorsqu’une réponse diffère, y compris sur un seul champ ;
+- le protocole de testee est documenté et son schéma est publié, de sorte qu’une
+  implémentation tierce puisse se déclarer conforme sans modifier ce dépôt ;
 - une release de test peut ouvrir les quatre PR downstream ;
 - le pilote couvre toutes les familles d’opérations nécessaires ;
 - README, CONTRIBUTING, SECURITY, DATA_POLICY et guide de langage permettent une
