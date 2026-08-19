@@ -84,17 +84,18 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 | `CHECKSUM_OP_KIND_ALL_CHECKS` | 1 |
 | `CHECKSUM_OP_KIND_ANY_CHECK` | 1 |
 | `CHECKSUM_OP_KIND_CHOOSE` | 2 |
+| `CHECKSUM_OP_KIND_COMPARE_CONSTANT` | 1 |
 | `CHECKSUM_OP_KIND_COMPARE_DIGIT` | 1 |
 | `CHECKSUM_OP_KIND_COMPARE_SLICE` | 2 |
 | `CHECKSUM_OP_KIND_ISO7064_MOD97_10` | 1 |
 | `CHECKSUM_OP_KIND_LUHN` | 2 |
-| `CHECKSUM_OP_KIND_UNSUPPORTED` | 2 |
+| `CHECKSUM_OP_KIND_UNSUPPORTED` | 1 |
 | `CHECKSUM_OP_KIND_WHEN` | 2 |
 | `INTEGER_OP_KIND_COMPLEMENT` | 1 |
-| `INTEGER_OP_KIND_MODULO` | 1 |
+| `INTEGER_OP_KIND_MODULO` | 2 |
 | `INTEGER_OP_KIND_MOD_DIGITS` | 2 |
 | `INTEGER_OP_KIND_REMAINDER_MAP` | 2 |
-| `INTEGER_OP_KIND_WEIGHTED_SUM` | 1 |
+| `INTEGER_OP_KIND_WEIGHTED_SUM` | 2 |
 | `PREDICATE_OP_KIND_ALL` | 2 |
 | `PREDICATE_OP_KIND_ANY` | 1 |
 | `PREDICATE_OP_KIND_ASCII_ALPHANUMERIC` | 3 |
@@ -110,7 +111,7 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 | `PREDICATE_OP_KIND_STARTS_WITH` | 6 |
 | `STRING_OP_KIND_AFTER_FIRST` | 2 |
 | `STRING_OP_KIND_BEFORE_FIRST` | 1 |
-| `STRING_OP_KIND_SLICE` | 5 |
+| `STRING_OP_KIND_SLICE` | 6 |
 | `STRING_OP_KIND_SLICE_FROM` | 6 |
 | `STRING_OP_KIND_SUBJECT` | 15 |
 | `STRING_OP_KIND_VALUE` | 1 |
@@ -136,6 +137,7 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 | 31 | `CHECKSUM_LUHN_V1` | Luhn |
 | 32 | `CHECKSUM_MOD97_V1` | ISO 7064 / modulo 97 |
 | 33 | `CHECKSUM_WEIGHTED_V1` | weighted sums, alignments and remainders |
+| 34 | `CHECKSUM_COMPARE_CONSTANT_V1` | comparison against a literal constant |
 | 40 | `PROVENANCE_V1` | sources linked to definitions |
 
 ## Provenance
@@ -153,7 +155,7 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 
 ## Conformance statistics
 
-Total cases: **234**.
+Total cases: **236**.
 
 | Kind | Cases |
 |---|---:|
@@ -164,7 +166,7 @@ Total cases: **234**.
 | `fr_siren` | 2 |
 | `lei` | 30 |
 | `siren` | 40 |
-| `siret` | 14 |
+| `siret` | 16 |
 | `unknown_kind` | 2 |
 | `vat` | 94 |
 | `vat_number` | 1 |
@@ -183,7 +185,7 @@ Total cases: **234**.
 | `country` | 13 |
 | `cycle` | 1 |
 | `decoder` | 23 |
-| `derogation` | 2 |
+| `derogation` | 4 |
 | `digest` | 1 |
 | `dispatch` | 16 |
 | `empty` | 8 |
@@ -192,7 +194,7 @@ Total cases: **234**.
 | `global` | 2 |
 | `graph` | 5 |
 | `implicit` | 1 |
-| `invalid` | 123 |
+| `invalid` | 125 |
 | `iso7064` | 2 |
 | `legacy` | 3 |
 | `length` | 16 |
@@ -210,17 +212,17 @@ Total cases: **234**.
 | `shape` | 4 |
 | `strict` | 6 |
 | `structure` | 2 |
-| `synthetic` | 206 |
+| `synthetic` | 208 |
 | `truncation` | 1 |
 | `types` | 1 |
 | `unknown-field` | 1 |
-| `unsupported` | 18 |
-| `valid` | 57 |
+| `unsupported` | 17 |
+| `valid` | 58 |
 | `version` | 3 |
 | `weighted` | 4 |
 
 | Data classification | Cases |
 |---|---:|
 | `public_business_identifier` | 5 |
-| `synthetic` | 229 |
+| `synthetic` | 231 |
 

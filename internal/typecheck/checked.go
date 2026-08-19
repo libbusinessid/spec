@@ -30,6 +30,7 @@ type Node struct {
 	Lengths     []uint32
 	Values      []string
 	Modulus     *int64
+	Constant    *int64
 	Weights     []int64
 	Alignment   *irv1.WeightAlignment
 	Mapping     *irv1.CharMapping

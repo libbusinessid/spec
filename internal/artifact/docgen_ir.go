@@ -256,8 +256,8 @@ func RenderIRDoc() []byte {
 	w("`not_run`/`not_requested` when the format is valid. `validateChecksum` returns")
 	w("exactly the report of `validate`. `canonicalize` stops after step 2 and returns")
 	w("`valid`/`ok`, `invalid`/`country_mismatch`, or `unsupported` with")
-	w("`unsupported_kind`, `unsupported_country`, `missing_country_code` or")
-	w("`input_too_long`.")
+	w("`unsupported_kind`, `unsupported_country`, `missing_country_code`,")
+	w("`input_too_long` or `invalid_encoding`.")
 	w("")
 	w("Results produced before a rule assertion never carry a message key. An assertion")
 	w("or a checksum declared by the bundle keeps its message key exactly, including")
@@ -525,16 +525,24 @@ var reasonStatuses = map[string]string{
 	"incompatible_ruleset":       statusUnsupported,
 	"invalid_ruleset":            statusUnsupported,
 	"input_too_long":             statusUnsupported,
+	"invalid_encoding":           statusUnsupported,
 	"not_requested":              statusNotRun,
 	"not_run_format_invalid":     statusNotRun,
 	"not_run_format_unsupported": statusNotRun,
 }
 
+// statusesFor reports the statuses a reason code may carry.
+//
+// A reason code absent from the table is a defect, not a documented state: the
+// generated table would silently claim the code carries no status. Panicking
+// here surfaces the omission when the documents are built, which is what a
+// missing entry deserves.
 func statusesFor(reason string) string {
-	if s, ok := reasonStatuses[reason]; ok {
-		return s
+	s, ok := reasonStatuses[reason]
+	if !ok {
+		panic("docgen: reason code " + reason + " has no declared status; add it to reasonStatuses")
 	}
-	return "unspecified"
+	return s
 }
 
 // titleASCII upper cases the first ASCII letter of a word.

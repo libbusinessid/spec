@@ -147,6 +147,8 @@ func (c *checker) bindArg(cx *ctx, node *Node, op features.Op, slot argSlot, arg
 		return c.setUint(node, slot.param, v, arg)
 	case argModulus:
 		return c.bindModulus(node, arg)
+	case argConstant:
+		return c.bindConstant(node, arg)
 	case argString, argOptionalString:
 		return c.bindString(node, slot, arg, call)
 	case argCharList:
@@ -198,6 +200,23 @@ func (c *checker) bindModulus(node *Node, arg ast.Expr) bool {
 		return false
 	}
 	node.Modulus = int64Ptr(v)
+	return true
+}
+
+// bindConstant binds the literal an outcome is compared against. It is bounded
+// like every other integer of the IR so that a rule cannot smuggle an unchecked
+// value past the arithmetic limits.
+func (c *checker) bindConstant(node *Node, arg ast.Expr) bool {
+	v, ok := c.intConstant(arg)
+	if !ok {
+		return false
+	}
+	if v < limits.MinConstant || v > limits.MaxConstant {
+		c.bag.Errorf(arg.Pos(), CodeBounds,
+			"constant %d is outside the accepted range %d..%d", v, limits.MinConstant, limits.MaxConstant)
+		return false
+	}
+	node.Constant = int64Ptr(v)
 	return true
 }
 

@@ -18,6 +18,8 @@ const (
 	argInt
 	// argModulus is an integer literal bound to the modulus parameter.
 	argModulus
+	// argConstant is a signed integer literal an outcome is compared against.
+	argConstant
 	// argString is a string literal bound to a text parameter.
 	argString
 	// argOptionalString is a trailing optional string literal.
@@ -83,7 +85,8 @@ func variadic() argSlot { return argSlot{kind: argVariadicOperand} }
 func intArg(p features.Param) argSlot {
 	return argSlot{kind: argInt, param: p}
 }
-func modulusArg() argSlot { return argSlot{kind: argModulus, param: features.ParamModulus} }
+func modulusArg() argSlot  { return argSlot{kind: argModulus, param: features.ParamModulus} }
+func constantArg() argSlot { return argSlot{kind: argConstant, param: features.ParamConstant} }
 func strArg(p features.Param) argSlot {
 	return argSlot{kind: argString, param: p}
 }

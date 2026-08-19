@@ -308,9 +308,35 @@ func TestWriteFileAtomicRejectsAnUnwritableDirectory(t *testing.T) {
 	}
 }
 
-func TestStatusesForUnknownReason(t *testing.T) {
-	if got := statusesFor("nope"); got != "unspecified" {
-		t.Fatalf("unexpected status %q", got)
+// A reason code with no declared status used to render as "unspecified" in the
+// generated table, which is how invalid_encoding shipped a documented status of
+// nothing. The omission must stop the build instead.
+func TestStatusesForUnknownReasonPanics(t *testing.T) {
+	defer func() {
+		r := recover()
+		if r == nil {
+			t.Fatal("an undeclared reason code must stop the document build")
+		}
+		if msg, _ := r.(string); !strings.Contains(msg, "nope") {
+			t.Fatalf("the panic should name the missing code, got %v", r)
+		}
+	}()
+	_ = statusesFor("nope")
+}
+
+// Every reason code the IR declares must have a status, or the table it feeds
+// is incomplete for that code.
+func TestEveryReasonCodeHasADeclaredStatus(t *testing.T) {
+	values := irv1.ReasonCode(0).Descriptor().Values()
+	for i := 0; i < values.Len(); i++ {
+		name := string(values.Get(i).Name())
+		if name == "REASON_CODE_UNSPECIFIED" {
+			continue
+		}
+		reason := strings.ToLower(strings.TrimPrefix(name, "REASON_CODE_"))
+		if _, ok := reasonStatuses[reason]; !ok {
+			t.Errorf("reason code %q has no declared status", reason)
+		}
 	}
 }
 

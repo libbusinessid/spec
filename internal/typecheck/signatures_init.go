@@ -94,6 +94,8 @@ func buildSignatures() map[string]signature {
 		operand(), operand(), intArg(features.ParamIndex))
 	register(table, k, int32(irv1.ChecksumOpKind_CHECKSUM_OP_KIND_COMPARE_SLICE),
 		operand(), operand(), intArg(features.ParamStart), intArg(features.ParamEnd))
+	register(table, k, int32(irv1.ChecksumOpKind_CHECKSUM_OP_KIND_COMPARE_CONSTANT),
+		operand(), constantArg())
 	register(table, k, int32(irv1.ChecksumOpKind_CHECKSUM_OP_KIND_CHOOSE), variadic())
 	register(table, k, int32(irv1.ChecksumOpKind_CHECKSUM_OP_KIND_WHEN), operand(), operand())
 	register(table, k, int32(irv1.ChecksumOpKind_CHECKSUM_OP_KIND_ALL_CHECKS), variadic())

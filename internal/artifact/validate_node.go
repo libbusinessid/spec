@@ -65,6 +65,7 @@ func shapeOf(n *irv1.Node) (nodeShape, error) {
 		mark(p, features.ParamIndex, s.Index != nil)
 		mark(p, features.ParamStart, s.Start != nil)
 		mark(p, features.ParamEnd, s.End != nil)
+		mark(p, features.ParamConstant, s.Constant != nil)
 		mark(p, features.ParamReasonCode, s.ReasonCode != nil)
 		mark(p, features.ParamMessageKey, s.MessageKey != nil)
 		return nodeShape{features.CategoryChecksum, int32(s.GetKind()), p}, nil
@@ -409,6 +410,13 @@ func validateChecksumNode(p *irv1.Program, n *irv1.Node, fail func(string, ...an
 	}
 	if err := checkIndex(s.End, fail); err != nil {
 		return err
+	}
+	// The constant is bounded like every other integer of the IR, so a bundle
+	// cannot state a comparison against a value no checked expression could ever
+	// produce.
+	if s.Constant != nil && (*s.Constant < limits.MinConstant || *s.Constant > limits.MaxConstant) {
+		return fail("constant %d is outside the accepted range %d..%d",
+			*s.Constant, limits.MinConstant, limits.MaxConstant)
 	}
 	if err := checkMessageKey(s.MessageKey, fail); err != nil {
 		return err
