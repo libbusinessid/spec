@@ -30,7 +30,7 @@ jobs:
           cache: true
       - name: Fuzz for 20 minutes
         run: go test -run '^$' -fuzz ${{ matrix.target.fuzz }} -fuzztime 20m ${{ matrix.target.package }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: fuzz-corpus-${{ matrix.target.fuzz }}
