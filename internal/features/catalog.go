@@ -475,7 +475,7 @@ var ops = []Op{
 		Category: CategoryCanonicalization, Code: int32(irv1.CanonicalizationOpKind_CANONICALIZATION_OP_KIND_LEFT_PAD),
 		Symbol: "CANONICALIZATION_OP_KIND_LEFT_PAD", HCL: "left_pad(length, char)", Output: tStep,
 		Required: []Param{ParamLength, ParamText}, Features: []uint32{CoreGraphV1, CanonicalizationBasicV1},
-		Doc: "Prepends copies of the single code point `text` until the value holds `length` code points. A longer value is never truncated.",
+		Doc: "Prepends copies of the single code point `text` until the value holds `length` code points. A longer value is never truncated. `length` is at least 1 and bounded like every other slice bound, so an engine that sizes a buffer from it has a static maximum.",
 	},
 	{
 		Category: CategoryCanonicalization, Code: int32(irv1.CanonicalizationOpKind_CANONICALIZATION_OP_KIND_PREPEND_COUNTRY_IF_MISSING),
