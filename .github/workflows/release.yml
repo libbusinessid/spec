@@ -129,3 +129,4 @@ jobs:
     with:
       rules_version: ${{ needs.build.outputs.rules_version }}
       tag: ${{ github.ref_name }}
+      dry_run: false
