@@ -102,6 +102,37 @@ release mode `SOURCE_DATE_EPOCH` is mandatory and the manifest is marked
 sub-graphs, which is useful when debugging an IR graph; an equivalence test
 proves that both modes execute identically.
 
+## Proving an engine conformant
+
+An engine is not expected to interpret the bundle. It compiles it to native code
+with a generator of its own, written in whatever language suits it — this
+repository hosts no generator and knows no target language.
+
+Conformance is therefore checked through a protocol rather than a shared test
+suite. `conformance-runner` is the only program that reads expected results. The
+engine supplies a **testee**: a small executable reading requests on stdin,
+calling its public API, and writing responses on stdout, each message preceded by
+its length as a 32-bit little-endian integer.
+
+```sh
+make conformance   # runs the whole corpus against the reference testee
+```
+
+To qualify your own engine:
+
+```sh
+conformance-runner --corpus businessid-conformance-<version>.binpb -- ./your-testee
+```
+
+Because the testee never sees an expected result, it cannot declare itself
+conformant by comparing too weakly — the failure mode of a suite reimplemented in
+each engine. `cmd/conformance-testee` is a worked example of the protocol, built
+on the reference interpreter.
+
+This is also how a third-party engine, in a language this project does not
+publish, qualifies without any change here. Section 8.7 of the specification is
+normative; `proto/libbusinessid/testee/v1/testee.proto` carries the schema.
+
 ## Published artifacts
 
 ```text

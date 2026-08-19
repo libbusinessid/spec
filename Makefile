@@ -101,6 +101,16 @@ verify:
 check-generated:
 	$(GO) run ./cmd/businessidc check-generated
 
+# conformance runs the whole corpus against the reference testee through the
+# same protocol an external engine uses. The unit tests only exercise a subset;
+# this target is what states conformance.
+.PHONY: conformance
+conformance: release
+	$(GO) build -o $(BIN)/conformance-testee ./cmd/conformance-testee
+	$(GO) run ./cmd/conformance-runner \
+		--corpus $(DIST)/businessid-conformance-$$(cat RULES_VERSION).binpb \
+		-- $(BIN)/conformance-testee --bundle $(DIST)/businessid-rules-$$(cat RULES_VERSION).binpb
+
 .PHONY: sbom
 sbom: compile
 	@echo "SBOM written to $(DIST)/SBOM.spdx.json"
@@ -110,4 +120,4 @@ clean:
 	rm -rf $(DIST) $(BIN) coverage.out coverage.html coverage-branch.json
 
 .PHONY: ci
-ci: fmt-check proto-lint vet lint test race cover check-generated verify
+ci: fmt-check proto-lint vet lint test race cover check-generated verify conformance

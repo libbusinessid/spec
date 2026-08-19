@@ -129,6 +129,23 @@ Instead, in the same pull request:
   `protoc-gen-go` bump normally leaves the wire bytes untouched, but that is
   something to verify, not to assume.
 
+## Conformance of an engine
+
+Never reimplement the conformance suite inside an engine. An engine that reads
+the corpus and interprets the expectations itself can pass by comparing too
+weakly, and that failure is invisible.
+
+Run `make conformance`, which drives the reference testee through the protocol of
+specification section 8.7. To qualify another engine, point the runner at its
+testee:
+
+```sh
+go run ./cmd/conformance-runner --corpus dist/businessid-conformance-<version>.binpb -- ./testee
+```
+
+A run restricted with `--operation` is a diagnosis aid and never a verdict; the
+runner says so and exits non-zero even when every selected case matches.
+
 ## Commit and review
 
 - Keep the change minimal and reviewable.
