@@ -28,6 +28,7 @@ type Manifest struct {
 	MinimumEngineCapabilities []uint32          `json:"minimumEngineCapabilities"`
 	RulesProtoSha256          string            `json:"rulesProtoSha256"`
 	ConformanceProtoSha256    string            `json:"conformanceProtoSha256"`
+	TesteeProtoSha256         string            `json:"testeeProtoSha256"`
 	IrDocSha256               string            `json:"irDocSha256"`
 	FeaturesDocSha256         string            `json:"featuresDocSha256"`
 	Reproducible              bool              `json:"reproducible"`

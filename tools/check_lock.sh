@@ -31,6 +31,7 @@ expect_sha rules_sha256 "${dir}/businessid-rules-${version}.binpb"
 expect_sha conformance_sha256 "${dir}/businessid-conformance-${version}.binpb"
 expect_sha rules_proto_sha256 "${dir}/rules.proto"
 expect_sha conformance_proto_sha256 "${dir}/conformance.proto"
+expect_sha testee_proto_sha256 "${dir}/testee.proto"
 expect_sha ir_doc_sha256 "${dir}/ir.md"
 expect_sha features_doc_sha256 "${dir}/features.md"
 

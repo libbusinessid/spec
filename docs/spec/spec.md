@@ -410,6 +410,16 @@ impossibles statiquement.
 La canonicalisation doit être idempotente. `businessidc lint` DOIT vérifier cette
 propriété sur tous les cas de conformité et sur des valeurs générées.
 
+L'idempotence est énoncée sur les entrées valides, c'est-à-dire sur de l'UTF-8
+bien formé. Elle ne vaut pas sur une suite d'octets arbitraire, et ne peut pas
+valoir : retirer un espace peut recoller deux fragments malformés en un code
+point valide que la passe suivante retirerait à son tour. C'est pourquoi une
+entrée qui n'est pas de l'UTF-8 valide est refusée avant toute canonicalisation,
+avec `invalid_encoding` — un identifiant est une suite de points de code, et des
+octets qui n'en forment pas n'en ont aucun à évaluer. Un moteur n'a donc jamais à
+canonicaliser une valeur malformée, et la propriété tient sur tout le domaine où
+elle est énoncée.
+
 ### 6.7 Expressions de chaîne et captures
 
 Constructeurs V1 :
@@ -1460,6 +1470,7 @@ rules_sha256 = "..."
 conformance_sha256 = "..."
 rules_proto_sha256 = "..."
 conformance_proto_sha256 = "..."
+testee_proto_sha256 = "..."
 ir_doc_sha256 = "..."
 features_doc_sha256 = "..."
 source_commit = "..."

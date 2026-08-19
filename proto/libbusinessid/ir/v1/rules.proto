@@ -236,6 +236,9 @@ enum ReasonCode {
   REASON_CODE_INCOMPATIBLE_RULESET = 18;
   REASON_CODE_INVALID_RULESET = 19;
   REASON_CODE_INPUT_TOO_LONG = 20;
+  // The input is not valid UTF-8. Like INPUT_TOO_LONG this is a safety bound
+  // reported before any rule runs, never a business verdict.
+  REASON_CODE_INVALID_ENCODING = 21;
 }
 
 // StringOpKind enumerates the V1 string constructors.

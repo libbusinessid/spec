@@ -40,7 +40,7 @@ func TestAnswerEveryOperation(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			resp := answer(e, &testeev1.TesteeRequest{
 				CaseId: "c", Operation: op, Input: "552100554",
-				Profile: "compatible", Kind: proto.String("siren"),
+				Profile: proto.String("compatible"), Kind: proto.String("siren"),
 			})
 			if resp.GetCaseId() != "c" {
 				t.Fatal("the case identifier must be echoed")
@@ -114,7 +114,7 @@ func TestRunAnswersFramedRequests(t *testing.T) {
 	var in bytes.Buffer
 	raw, err := proto.Marshal(&testeev1.TesteeRequest{
 		CaseId: "c1", Operation: conformancev1.Operation_OPERATION_VALIDATE,
-		Input: "552100554", Profile: "compatible", Kind: proto.String("siren"),
+		Input: "552100554", Profile: proto.String("compatible"), Kind: proto.String("siren"),
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -185,7 +185,7 @@ func (brokenWriter) Write([]byte) (int, error) { return 0, os.ErrClosed }
 func TestAnswerReportsAnUnknownKind(t *testing.T) {
 	resp := answer(loadEngine(t), &testeev1.TesteeRequest{
 		CaseId: "c", Operation: conformancev1.Operation_OPERATION_VALIDATE,
-		Input: "x", Profile: "compatible", Kind: proto.String("not-a-kind"),
+		Input: "x", Profile: proto.String("compatible"), Kind: proto.String("not-a-kind"),
 	})
 	if resp.GetValidationReport() == nil && resp.GetFailure() == nil {
 		t.Fatal("an unknown kind must produce either a report or a typed failure")

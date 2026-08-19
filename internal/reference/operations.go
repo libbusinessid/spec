@@ -1,6 +1,8 @@
 package reference
 
 import (
+	"unicode/utf8"
+
 	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
 	"github.com/libbusinessid/spec/internal/limits"
 )
@@ -37,8 +39,13 @@ func (e *Engine) Canonicalize(in Input, opts Options) (CanonicalizationResult, e
 		result.ReasonCode = irv1.ReasonCode_REASON_CODE_INPUT_TOO_LONG
 		return result, nil
 	}
+	if !utf8.ValidString(in.Value) {
+		result.Status = StatusUnsupported
+		result.ReasonCode = irv1.ReasonCode_REASON_CODE_INVALID_ENCODING
+		return result, nil
+	}
 	m := &machine{rules: e.rules}
-	outcome, err := e.dispatch(m, in, profile)
+	outcome, err := e.dispatch(m, in, opts.Profile)
 	if err != nil {
 		return CanonicalizationResult{}, err
 	}
@@ -113,9 +120,23 @@ func (e *Engine) run(in Input, opts Options, op operation) (ValidationReport, er
 		report.Checksum = notRun(irv1.ReasonCode_REASON_CODE_NOT_RUN_FORMAT_UNSUPPORTED)
 		return report, nil
 	}
+	// 2: an identifier is a sequence of code points. Bytes that do not form one
+	// have no code points to evaluate, and every canonicalization step that
+	// filters by code point would otherwise substitute U+FFFD for them, growing
+	// the value threefold and making two engines disagree on the canonical
+	// value they report.
+	if !utf8.ValidString(in.Value) {
+		report.Format = StepResult{
+			Level:      LevelFormat,
+			Status:     StatusUnsupported,
+			ReasonCode: irv1.ReasonCode_REASON_CODE_INVALID_ENCODING,
+		}
+		report.Checksum = notRun(irv1.ReasonCode_REASON_CODE_NOT_RUN_FORMAT_UNSUPPORTED)
+		return report, nil
+	}
 
 	m := &machine{rules: e.rules}
-	outcome, err := e.dispatch(m, in, profile)
+	outcome, err := e.dispatch(m, in, opts.Profile)
 	if err != nil {
 		return ValidationReport{}, err
 	}

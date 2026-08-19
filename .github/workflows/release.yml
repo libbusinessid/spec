@@ -103,6 +103,7 @@ jobs:
             dist/businessid-manifest-${{ needs.build.outputs.rules_version }}.json
             dist/rules.proto
             dist/conformance.proto
+            dist/testee.proto
             dist/ir.md
             dist/features.md
             dist/SHA256SUMS

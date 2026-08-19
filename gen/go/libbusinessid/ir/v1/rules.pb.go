@@ -169,6 +169,9 @@ const (
 	ReasonCode_REASON_CODE_INCOMPATIBLE_RULESET       ReasonCode = 18
 	ReasonCode_REASON_CODE_INVALID_RULESET            ReasonCode = 19
 	ReasonCode_REASON_CODE_INPUT_TOO_LONG             ReasonCode = 20
+	// The input is not valid UTF-8. Like INPUT_TOO_LONG this is a safety bound
+	// reported before any rule runs, never a business verdict.
+	ReasonCode_REASON_CODE_INVALID_ENCODING ReasonCode = 21
 )
 
 // Enum value maps for ReasonCode.
@@ -195,6 +198,7 @@ var (
 		18: "REASON_CODE_INCOMPATIBLE_RULESET",
 		19: "REASON_CODE_INVALID_RULESET",
 		20: "REASON_CODE_INPUT_TOO_LONG",
+		21: "REASON_CODE_INVALID_ENCODING",
 	}
 	ReasonCode_value = map[string]int32{
 		"REASON_CODE_UNSPECIFIED":                0,
@@ -218,6 +222,7 @@ var (
 		"REASON_CODE_INCOMPATIBLE_RULESET":       18,
 		"REASON_CODE_INVALID_RULESET":            19,
 		"REASON_CODE_INPUT_TOO_LONG":             20,
+		"REASON_CODE_INVALID_ENCODING":           21,
 	}
 )
 
@@ -2410,7 +2415,7 @@ const file_libbusinessid_ir_v1_rules_proto_rawDesc = "" +
 	"\x18PROGRAM_KIND_UNSPECIFIED\x10\x00\x12!\n" +
 	"\x1dPROGRAM_KIND_CANONICALIZATION\x10\x01\x12\x17\n" +
 	"\x13PROGRAM_KIND_FORMAT\x10\x02\x12\x19\n" +
-	"\x15PROGRAM_KIND_CHECKSUM\x10\x03*\xde\x05\n" +
+	"\x15PROGRAM_KIND_CHECKSUM\x10\x03*\x80\x06\n" +
 	"\n" +
 	"ReasonCode\x12\x1b\n" +
 	"\x17REASON_CODE_UNSPECIFIED\x10\x00\x12\x12\n" +
@@ -2434,7 +2439,8 @@ const file_libbusinessid_ir_v1_rules_proto_rawDesc = "" +
 	"#REASON_CODE_REGISTRY_NOT_CONFIGURED\x10\x11\x12$\n" +
 	" REASON_CODE_INCOMPATIBLE_RULESET\x10\x12\x12\x1f\n" +
 	"\x1bREASON_CODE_INVALID_RULESET\x10\x13\x12\x1e\n" +
-	"\x1aREASON_CODE_INPUT_TOO_LONG\x10\x14*\xf5\x02\n" +
+	"\x1aREASON_CODE_INPUT_TOO_LONG\x10\x14\x12 \n" +
+	"\x1cREASON_CODE_INVALID_ENCODING\x10\x15*\xf5\x02\n" +
 	"\fStringOpKind\x12\x1e\n" +
 	"\x1aSTRING_OP_KIND_UNSPECIFIED\x10\x00\x12\x1b\n" +
 	"\x17STRING_OP_KIND_CONSTANT\x10\x01\x12\x18\n" +

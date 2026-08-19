@@ -319,17 +319,27 @@ func TestCompileReportsMissingInputs(t *testing.T) {
 			mkdirAll(t, filepath.Join(root, "proto", "libbusinessid", "ir", "v1"))
 			writeFile(t, filepath.Join(root, "proto", "libbusinessid", "ir", "v1", "rules.proto"), "x")
 		}, "cannot read conformance.proto"},
+		{"missing testee.proto", func(root string) {
+			mkdirAll(t, filepath.Join(root, "proto", "libbusinessid", "ir", "v1"))
+			writeFile(t, filepath.Join(root, "proto", "libbusinessid", "ir", "v1", "rules.proto"), "x")
+			mkdirAll(t, filepath.Join(root, "proto", "libbusinessid", "conformance", "v1"))
+			writeFile(t, filepath.Join(root, "proto", "libbusinessid", "conformance", "v1", "conformance.proto"), "x")
+		}, "cannot read testee.proto"},
 		{"missing go.mod", func(root string) {
 			mkdirAll(t, filepath.Join(root, "proto", "libbusinessid", "ir", "v1"))
 			writeFile(t, filepath.Join(root, "proto", "libbusinessid", "ir", "v1", "rules.proto"), "x")
 			mkdirAll(t, filepath.Join(root, "proto", "libbusinessid", "conformance", "v1"))
 			writeFile(t, filepath.Join(root, "proto", "libbusinessid", "conformance", "v1", "conformance.proto"), "x")
+			mkdirAll(t, filepath.Join(root, "proto", "libbusinessid", "testee", "v1"))
+			writeFile(t, filepath.Join(root, "proto", "libbusinessid", "testee", "v1", "testee.proto"), "x")
 		}, "cannot read go.mod"},
 		{"unparseable go.mod", func(root string) {
 			mkdirAll(t, filepath.Join(root, "proto", "libbusinessid", "ir", "v1"))
 			writeFile(t, filepath.Join(root, "proto", "libbusinessid", "ir", "v1", "rules.proto"), "x")
 			mkdirAll(t, filepath.Join(root, "proto", "libbusinessid", "conformance", "v1"))
 			writeFile(t, filepath.Join(root, "proto", "libbusinessid", "conformance", "v1", "conformance.proto"), "x")
+			mkdirAll(t, filepath.Join(root, "proto", "libbusinessid", "testee", "v1"))
+			writeFile(t, filepath.Join(root, "proto", "libbusinessid", "testee", "v1", "testee.proto"), "x")
 			writeFile(t, filepath.Join(root, "go.mod"), "go 1.24.0\n")
 		}, "cannot parse go.mod"},
 	}
