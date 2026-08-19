@@ -170,6 +170,21 @@ func TestBundleRejections(t *testing.T) {
 				}},
 			}
 		}, artifact.ErrInvalid, "at least 1"},
+		// An engine that compiles the rules ahead of time sizes its buffer from
+		// this number, so an unbounded length is an allocation primitive.
+		{"left_pad length above the limit", func(b *irv1.RuleBundle) {
+			b.Programs[0].Nodes[0] = &irv1.Node{
+				OutputType: irv1.ValueType_VALUE_TYPE_CANONICALIZATION_STEP,
+				Operation: &irv1.Node_CanonicalizationOperation{CanonicalizationOperation: &irv1.CanonicalizationOperation{
+					Kind:   irv1.CanonicalizationOpKind_CANONICALIZATION_OP_KIND_LEFT_PAD,
+					Text:   str("0"),
+					Length: u32(4_097),
+				}},
+			}
+		}, artifact.ErrInvalid, "exceeds the limit"},
+		{"empty message key", func(b *irv1.RuleBundle) {
+			b.Programs[1].Nodes[2].GetAssertionOperation().MessageKey = str("")
+		}, artifact.ErrInvalid, "must not be empty"},
 		{"index above the limit", func(b *irv1.RuleBundle) {
 			b.Programs[1].Nodes[1].GetPredicateOperation().Length = u32(9999)
 		}, artifact.ErrInvalid, "exceeds the limit"},
