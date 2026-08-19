@@ -1,0 +1,199 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+env:
+  BUF_VERSION: "1.72.0"
+  GOLANGCI_LINT_VERSION: "v2.12.2"
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  format:
+    name: format and generated code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - uses: bufbuild/buf-setup-action@v1
+        with:
+          version: ${{ env.BUF_VERSION }}
+          github_token: ${{ github.token }}
+      - name: Build the locked tools
+        run: make tools
+      - name: Check the formatting
+        run: make fmt-check
+      - name: Check the generated Protobuf code
+        run: |
+          make generate
+          git diff --exit-code -- gen proto testdata
+
+  proto:
+    name: protobuf lint and compatibility
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: bufbuild/buf-setup-action@v1
+        with:
+          version: ${{ env.BUF_VERSION }}
+          github_token: ${{ github.token }}
+      - name: buf lint
+        run: buf lint
+      - name: buf breaking
+        if: github.event_name == 'pull_request'
+        run: buf breaking --against "https://github.com/${{ github.repository }}.git#branch=${{ github.base_ref }}"
+
+  lint:
+    name: go lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: go vet
+        run: go vet ./...
+      - uses: golangci/golangci-lint-action@v6
+        with:
+          version: ${{ env.GOLANGCI_LINT_VERSION }}
+      - name: businessidc lint
+        run: go run ./cmd/businessidc lint
+
+  test:
+    name: tests and coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: Unit and integration tests
+        run: go test ./...
+      - name: Race tests
+        run: go test -race ./...
+      - name: Conformance suite
+        run: go run ./cmd/businessidc verify
+      - name: Coverage thresholds
+        run: make cover
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage
+          path: |
+            coverage.out
+            coverage-branch.json
+          if-no-files-found: ignore
+
+  fuzz:
+    name: fuzz smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: Fuzz smoke tests
+        run: make fuzz-smoke
+
+  reproducible:
+    name: reproducible build and generated documents
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: Compile from two distinct absolute paths
+        run: |
+          set -euo pipefail
+          export SOURCE_DATE_EPOCH="$(git log -1 --pretty=%ct)"
+          root="$PWD"
+          for suffix in alpha beta-longer-path; do
+            target="${RUNNER_TEMP}/build-${suffix}"
+            cp -a "$root" "$target"
+            ( cd "$target" && go run ./cmd/businessidc compile --out "$target/dist" --release )
+          done
+          diff -r "${RUNNER_TEMP}/build-alpha/dist" "${RUNNER_TEMP}/build-beta-longer-path/dist"
+      - name: check-generated
+        run: |
+          export SOURCE_DATE_EPOCH="$(git log -1 --pretty=%ct)"
+          go run ./cmd/businessidc check-generated
+      - name: Cross-check the canonical digests with the independent implementation
+        run: |
+          set -euo pipefail
+          export SOURCE_DATE_EPOCH="$(git log -1 --pretty=%ct)"
+          go run ./cmd/businessidc compile --out dist --release >/dev/null
+          version="$(cat RULES_VERSION)"
+          manifest="dist/businessid-manifest-${version}.json"
+          rules="$(python3 tools/canonical_stream.py rules rules/=rules)"
+          conformance="$(python3 tools/canonical_stream.py conformance conformance/=conformance fixtures/=testdata)"
+          test "${rules}" = "$(jq -r .sourceDigest "$manifest")"
+          test "${conformance}" = "$(jq -r .conformanceSourceDigest "$manifest")"
+          echo "the canonical stream matches an implementation written from the specification alone"
+
+  audit:
+    name: vulnerability audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: govulncheck
+        run: go run golang.org/x/vuln/cmd/govulncheck@v1.1.4 ./...
+
+  provenance:
+    name: rule provenance and data policy
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: Every changed rule must carry a source and a diff
+        run: ./tools/check_provenance.sh "origin/${{ github.base_ref }}"
+      - name: Data policy of the conformance corpus
+        run: go run ./cmd/businessidc lint
+
+  codeql:
+    name: CodeQL
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: go
+      - uses: github/codeql-action/autobuild@v3
+      - uses: github/codeql-action/analyze@v3
