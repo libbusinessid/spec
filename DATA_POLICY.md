@@ -35,16 +35,46 @@ processing of personal data.
 
 ## 3. Accepted data
 
-Only three categories are accepted:
+Only four categories are accepted:
 
 1. **`official_public_example`** - an example intentionally published by the
    authority owning the format, with a verified right of redistribution. The
    case keeps its source id, its URL, its access date and the applicable terms.
 2. **`synthetic`** - a value entirely produced by the documented generator of
    section 4, derived from no real data set.
-3. Synthetic mutations of the two categories above, used as negative cases.
+3. **`public_business_identifier`** - a real identifier of a legal person,
+   already published by the entity itself or by a public register, used to
+   verify that a rule matches what a register actually issues.
+4. Synthetic mutations of the categories above, used as negative cases.
 
 Every case declares `dataClassification` and a non empty `redistributionBasis`.
+
+### Why the third category exists
+
+A synthetic value proves an algorithm. A Luhn check does not know where its
+digits came from, so `123456782` exercises it exactly as a real SIREN would.
+
+What a synthetic value cannot prove is that the **rule describes the format a
+register actually issues**. When twenty six national registers are ported at
+once, that is the failing mode that matters: a rule can compute a perfect
+checksum over a shape no register ever emits, and every synthetic case will
+pass. A handful of real identifiers is the only thing that catches it.
+
+The category is therefore for **verification of shape**, not for coverage. It
+carries three conditions:
+
+- the identifier must designate a **legal person**, never a natural person. Sole
+  traders and self-employed identifiers are excluded, because such an identifier
+  designates an individual;
+- the value must already be published by the entity itself - legal notices,
+  terms of service, filings - or by a public register that permits
+  redistribution;
+- `redistributionBasis` states where it was published and under which terms.
+
+The project holds no name, address, officer, activity or any other attribute.
+A case carries the identifier, the expected outcome, and nothing that would make
+the corpus a directory. That distinction is what keeps this a test of an
+algorithm rather than a republication of a register.
 
 ## 4. The synthetic generator
 

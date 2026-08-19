@@ -192,12 +192,12 @@ func validateTags(bag *diagnostics.Bag, pos diagnostics.Position, c *Case) {
 
 func validateDataPolicy(bag *diagnostics.Bag, pos diagnostics.Position, c *Case) {
 	switch c.DataClassification {
-	case "official_public_example", "synthetic":
+	case "official_public_example", "synthetic", "public_business_identifier":
 	case "":
 		bag.Errorf(pos, CodeMissingField, "a case must declare dataClassification")
 	default:
 		bag.Suggestf(pos, CodeDataPolicy,
-			"accepted classifications are official_public_example and synthetic",
+			"accepted classifications are official_public_example, synthetic and public_business_identifier",
 			"unknown dataClassification %q", c.DataClassification)
 	}
 	if strings.TrimSpace(c.RedistributionBasis) == "" {
@@ -211,7 +211,8 @@ func validateDataPolicy(bag *diagnostics.Bag, pos diagnostics.Position, c *Case)
 				"the corpus must never mention %q: no production data can enter it", phrase)
 		}
 	}
-	if c.DataClassification == "official_public_example" && len(c.SourceIDs) == 0 {
+	if (c.DataClassification == "official_public_example" ||
+		c.DataClassification == "public_business_identifier") && len(c.SourceIDs) == 0 {
 		bag.Errorf(pos, CodeDataPolicy,
 			"an official example must reference at least one source id")
 	}

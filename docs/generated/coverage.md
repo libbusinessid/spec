@@ -8,13 +8,14 @@ Rules version `2026.08.0`, IR format version `1`.
 
 | Kind | Country | Canonicalizer | Format | Checksum | Default profile | Sources |
 |---|---|---:|---:|---:|---|---:|
-| `euid` | `FR` | 3 | 16 | 10 | `compatible` | 2 |
-| `lei` | `GLOBAL` | 5 | 18 | 12 | `compatible` | 1 |
-| `siren` | `FR` | 4 | 17 | 11 | `compatible` | 1 |
-| `vat` | `BE` | 6 | 19 | 13 | `compatible` | 2 |
-| `vat` | `DE` | 7 | 20 | - | `compatible` | 2 |
-| `vat` | `FR` | 8 | 21 | 14 | `compatible` | 2 |
-| `vat` | `GR` | 9 | 22 | 15 | `compatible` | 2 |
+| `euid` | `FR` | 3 | 18 | 11 | `compatible` | 2 |
+| `lei` | `GLOBAL` | 6 | 21 | 14 | `compatible` | 1 |
+| `siren` | `FR` | 4 | 19 | 12 | `compatible` | 1 |
+| `siret` | `FR` | 5 | 20 | 13 | `compatible` | 1 |
+| `vat` | `BE` | 7 | 22 | 15 | `compatible` | 2 |
+| `vat` | `DE` | 8 | 23 | - | `compatible` | 2 |
+| `vat` | `FR` | 9 | 24 | 16 | `compatible` | 2 |
+| `vat` | `GR` | 10 | 25 | 17 | `compatible` | 2 |
 
 ## Dispatch tables
 
@@ -42,6 +43,14 @@ Kind aliases: `fr_siren`.
 |---|---|---|---|
 | `FR` | - | - | yes |
 
+### `siret`
+
+Kind aliases: `fr_siret`.
+
+| Country | Accepted prefixes | Canonical prefix | Implicit |
+|---|---|---|---|
+| `FR` | - | - | yes |
+
 ### `vat`
 
 Kind aliases: `vat_id`, `vat_number`.
@@ -59,27 +68,28 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 
 | Operation | Programs |
 |---|---:|
-| `ASSERTION_OP_KIND_REQUIRE` | 7 |
-| `ASSERTION_OP_KIND_SEQUENCE` | 7 |
+| `ASSERTION_OP_KIND_REQUIRE` | 8 |
+| `ASSERTION_OP_KIND_SEQUENCE` | 8 |
 | `CALL_OP_KIND_CHECKSUM` | 2 |
 | `CALL_OP_KIND_FORMAT` | 2 |
 | `CANONICALIZATION_OP_KIND_INSERT` | 1 |
 | `CANONICALIZATION_OP_KIND_PREPEND_COUNTRY_IF_MISSING` | 5 |
-| `CANONICALIZATION_OP_KIND_REMOVE_CHARS` | 7 |
-| `CANONICALIZATION_OP_KIND_REMOVE_WHITESPACE` | 9 |
+| `CANONICALIZATION_OP_KIND_REMOVE_CHARS` | 8 |
+| `CANONICALIZATION_OP_KIND_REMOVE_WHITESPACE` | 10 |
 | `CANONICALIZATION_OP_KIND_REPLACE_PREFIX` | 1 |
-| `CANONICALIZATION_OP_KIND_SEQUENCE` | 9 |
-| `CANONICALIZATION_OP_KIND_TRIM_WHITESPACE` | 9 |
-| `CANONICALIZATION_OP_KIND_UPPERCASE_ASCII` | 9 |
+| `CANONICALIZATION_OP_KIND_SEQUENCE` | 10 |
+| `CANONICALIZATION_OP_KIND_TRIM_WHITESPACE` | 10 |
+| `CANONICALIZATION_OP_KIND_UPPERCASE_ASCII` | 10 |
 | `CANONICALIZATION_OP_KIND_WHEN` | 1 |
 | `CHECKSUM_OP_KIND_ALL_CHECKS` | 1 |
-| `CHECKSUM_OP_KIND_CHOOSE` | 1 |
+| `CHECKSUM_OP_KIND_ANY_CHECK` | 1 |
+| `CHECKSUM_OP_KIND_CHOOSE` | 2 |
 | `CHECKSUM_OP_KIND_COMPARE_DIGIT` | 1 |
 | `CHECKSUM_OP_KIND_COMPARE_SLICE` | 2 |
 | `CHECKSUM_OP_KIND_ISO7064_MOD97_10` | 1 |
-| `CHECKSUM_OP_KIND_LUHN` | 1 |
-| `CHECKSUM_OP_KIND_UNSUPPORTED` | 1 |
-| `CHECKSUM_OP_KIND_WHEN` | 1 |
+| `CHECKSUM_OP_KIND_LUHN` | 2 |
+| `CHECKSUM_OP_KIND_UNSUPPORTED` | 2 |
+| `CHECKSUM_OP_KIND_WHEN` | 2 |
 | `INTEGER_OP_KIND_COMPLEMENT` | 1 |
 | `INTEGER_OP_KIND_MODULO` | 1 |
 | `INTEGER_OP_KIND_MOD_DIGITS` | 2 |
@@ -88,21 +98,21 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 | `PREDICATE_OP_KIND_ALL` | 2 |
 | `PREDICATE_OP_KIND_ANY` | 1 |
 | `PREDICATE_OP_KIND_ASCII_ALPHANUMERIC` | 3 |
-| `PREDICATE_OP_KIND_ASCII_DIGITS` | 8 |
+| `PREDICATE_OP_KIND_ASCII_DIGITS` | 9 |
 | `PREDICATE_OP_KIND_CHAR_AT_IN` | 1 |
 | `PREDICATE_OP_KIND_CONTAINS` | 1 |
 | `PREDICATE_OP_KIND_IS_ABSENT` | 1 |
-| `PREDICATE_OP_KIND_IS_EMPTY` | 7 |
+| `PREDICATE_OP_KIND_IS_EMPTY` | 8 |
 | `PREDICATE_OP_KIND_LENGTH_BETWEEN` | 1 |
-| `PREDICATE_OP_KIND_LENGTH_EQ` | 7 |
-| `PREDICATE_OP_KIND_NOT` | 7 |
+| `PREDICATE_OP_KIND_LENGTH_EQ` | 8 |
+| `PREDICATE_OP_KIND_NOT` | 8 |
 | `PREDICATE_OP_KIND_PROFILE_IS` | 1 |
-| `PREDICATE_OP_KIND_STARTS_WITH` | 5 |
+| `PREDICATE_OP_KIND_STARTS_WITH` | 6 |
 | `STRING_OP_KIND_AFTER_FIRST` | 2 |
 | `STRING_OP_KIND_BEFORE_FIRST` | 1 |
 | `STRING_OP_KIND_SLICE` | 5 |
 | `STRING_OP_KIND_SLICE_FROM` | 6 |
-| `STRING_OP_KIND_SUBJECT` | 13 |
+| `STRING_OP_KIND_SUBJECT` | 15 |
 | `STRING_OP_KIND_VALUE` | 1 |
 
 ## Rules without a published checksum
@@ -143,7 +153,7 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 
 ## Conformance statistics
 
-Total cases: **220**.
+Total cases: **234**.
 
 | Kind | Cases |
 |---|---:|
@@ -154,6 +164,7 @@ Total cases: **220**.
 | `fr_siren` | 2 |
 | `lei` | 30 |
 | `siren` | 40 |
+| `siret` | 14 |
 | `unknown_kind` | 2 |
 | `vat` | 94 |
 | `vat_number` | 1 |
@@ -163,26 +174,28 @@ Total cases: **220**.
 | `alias` | 5 |
 | `arithmetic` | 2 |
 | `boundary` | 19 |
+| `canonicalization` | 1 |
 | `canonicalize` | 13 |
 | `capabilities` | 2 |
-| `characters` | 11 |
-| `checksum` | 82 |
+| `characters` | 12 |
+| `checksum` | 83 |
 | `composition` | 17 |
 | `country` | 13 |
 | `cycle` | 1 |
 | `decoder` | 23 |
+| `derogation` | 2 |
 | `digest` | 1 |
 | `dispatch` | 16 |
-| `empty` | 7 |
+| `empty` | 8 |
 | `enum` | 1 |
 | `format` | 3 |
 | `global` | 2 |
 | `graph` | 5 |
 | `implicit` | 1 |
-| `invalid` | 119 |
+| `invalid` | 123 |
 | `iso7064` | 2 |
 | `legacy` | 3 |
-| `length` | 15 |
+| `length` | 16 |
 | `limits` | 3 |
 | `luhn` | 3 |
 | `mod97` | 5 |
@@ -191,20 +204,23 @@ Total cases: **220**.
 | `parameters` | 1 |
 | `prefix` | 2 |
 | `profile` | 8 |
+| `real` | 5 |
 | `reason-code` | 1 |
 | `security` | 25 |
+| `shape` | 4 |
 | `strict` | 6 |
 | `structure` | 2 |
-| `synthetic` | 197 |
+| `synthetic` | 206 |
 | `truncation` | 1 |
 | `types` | 1 |
 | `unknown-field` | 1 |
-| `unsupported` | 17 |
-| `valid` | 48 |
+| `unsupported` | 18 |
+| `valid` | 57 |
 | `version` | 3 |
 | `weighted` | 4 |
 
 | Data classification | Cases |
 |---|---:|
-| `synthetic` | 220 |
+| `public_business_identifier` | 5 |
+| `synthetic` | 229 |
 
