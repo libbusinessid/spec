@@ -101,12 +101,18 @@ func (FailureKind) EnumDescriptor() ([]byte, []int) {
 type TesteeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Identifier of the conformance case, echoed back in the response.
-	CaseId      string       `protobuf:"bytes,1,opt,name=case_id,json=caseId,proto3" json:"case_id,omitempty"`
-	Operation   v1.Operation `protobuf:"varint,2,opt,name=operation,proto3,enum=libbusinessid.conformance.v1.Operation" json:"operation,omitempty"`
-	Input       string       `protobuf:"bytes,3,opt,name=input,proto3" json:"input,omitempty"`
-	Profile     string       `protobuf:"bytes,4,opt,name=profile,proto3" json:"profile,omitempty"`
-	Kind        *string      `protobuf:"bytes,5,opt,name=kind,proto3,oneof" json:"kind,omitempty"`
-	CountryCode *string      `protobuf:"bytes,6,opt,name=country_code,json=countryCode,proto3,oneof" json:"country_code,omitempty"`
+	CaseId    string       `protobuf:"bytes,1,opt,name=case_id,json=caseId,proto3" json:"case_id,omitempty"`
+	Operation v1.Operation `protobuf:"varint,2,opt,name=operation,proto3,enum=libbusinessid.conformance.v1.Operation" json:"operation,omitempty"`
+	Input     string       `protobuf:"bytes,3,opt,name=input,proto3" json:"input,omitempty"`
+	// Absent when the caller expresses no preference. Section 5.2 of ir.md makes
+	// that absence meaningful: it is what lets a definition's default_profile
+	// apply, so it must never be conflated with a profile named "". The field
+	// carries explicit presence rather than relying on a convention, because a
+	// protocol between independent implementations is exactly where an implied
+	// convention gets read differently on each side.
+	Profile     *string `protobuf:"bytes,4,opt,name=profile,proto3,oneof" json:"profile,omitempty"`
+	Kind        *string `protobuf:"bytes,5,opt,name=kind,proto3,oneof" json:"kind,omitempty"`
+	CountryCode *string `protobuf:"bytes,6,opt,name=country_code,json=countryCode,proto3,oneof" json:"country_code,omitempty"`
 	// Bundle to load, present only for OPERATION_LOAD_RULESET. A testee that
 	// generates code ahead of time answers these through its generator.
 	RulesPayload  []byte `protobuf:"bytes,7,opt,name=rules_payload,json=rulesPayload,proto3,oneof" json:"rules_payload,omitempty"`
@@ -166,8 +172,8 @@ func (x *TesteeRequest) GetInput() string {
 }
 
 func (x *TesteeRequest) GetProfile() string {
-	if x != nil {
-		return x.Profile
+	if x != nil && x.Profile != nil {
+		return *x.Profile
 	}
 	return ""
 }
@@ -640,15 +646,17 @@ var File_libbusinessid_testee_v1_testee_proto protoreflect.FileDescriptor
 
 const file_libbusinessid_testee_v1_testee_proto_rawDesc = "" +
 	"\n" +
-	"$libbusinessid/testee/v1/testee.proto\x12\x17libbusinessid.testee.v1\x1a.libbusinessid/conformance/v1/conformance.proto\x1a\x1flibbusinessid/ir/v1/rules.proto\"\xb6\x02\n" +
+	"$libbusinessid/testee/v1/testee.proto\x12\x17libbusinessid.testee.v1\x1a.libbusinessid/conformance/v1/conformance.proto\x1a\x1flibbusinessid/ir/v1/rules.proto\"\xc7\x02\n" +
 	"\rTesteeRequest\x12\x17\n" +
 	"\acase_id\x18\x01 \x01(\tR\x06caseId\x12E\n" +
 	"\toperation\x18\x02 \x01(\x0e2'.libbusinessid.conformance.v1.OperationR\toperation\x12\x14\n" +
-	"\x05input\x18\x03 \x01(\tR\x05input\x12\x18\n" +
-	"\aprofile\x18\x04 \x01(\tR\aprofile\x12\x17\n" +
-	"\x04kind\x18\x05 \x01(\tH\x00R\x04kind\x88\x01\x01\x12&\n" +
-	"\fcountry_code\x18\x06 \x01(\tH\x01R\vcountryCode\x88\x01\x01\x12(\n" +
-	"\rrules_payload\x18\a \x01(\fH\x02R\frulesPayload\x88\x01\x01B\a\n" +
+	"\x05input\x18\x03 \x01(\tR\x05input\x12\x1d\n" +
+	"\aprofile\x18\x04 \x01(\tH\x00R\aprofile\x88\x01\x01\x12\x17\n" +
+	"\x04kind\x18\x05 \x01(\tH\x01R\x04kind\x88\x01\x01\x12&\n" +
+	"\fcountry_code\x18\x06 \x01(\tH\x02R\vcountryCode\x88\x01\x01\x12(\n" +
+	"\rrules_payload\x18\a \x01(\fH\x03R\frulesPayload\x88\x01\x01B\n" +
+	"\n" +
+	"\b_profileB\a\n" +
 	"\x05_kindB\x0f\n" +
 	"\r_country_codeB\x10\n" +
 	"\x0e_rules_payload\"\xf7\x02\n" +

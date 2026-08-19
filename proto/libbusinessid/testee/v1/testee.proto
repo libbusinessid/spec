@@ -34,7 +34,13 @@ message TesteeRequest {
   string case_id = 1;
   libbusinessid.conformance.v1.Operation operation = 2;
   string input = 3;
-  string profile = 4;
+  // Absent when the caller expresses no preference. Section 5.2 of ir.md makes
+  // that absence meaningful: it is what lets a definition's default_profile
+  // apply, so it must never be conflated with a profile named "". The field
+  // carries explicit presence rather than relying on a convention, because a
+  // protocol between independent implementations is exactly where an implied
+  // convention gets read differently on each side.
+  optional string profile = 4;
   optional string kind = 5;
   optional string country_code = 6;
   // Bundle to load, present only for OPERATION_LOAD_RULESET. A testee that

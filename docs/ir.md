@@ -961,6 +961,7 @@ Runs the checksum program `program_id` with `input` as its subject and propagate
 | `input_too_long` | `unsupported` |
 | `invalid_characters` | `invalid` |
 | `invalid_checksum` | `invalid` |
+| `invalid_encoding` | unspecified |
 | `invalid_format` | `invalid` |
 | `invalid_length` | `invalid` |
 | `invalid_ruleset` | `unsupported` |
@@ -987,23 +988,30 @@ token matches `[a-z][a-z0-9_-]{0,63}` after trim and lower casing, a country
 token matches `[A-Z]{2}` after trim and upper casing, and a declared prefix is 1
 to 8 ASCII alphanumeric characters compared case sensitively.
 
-1. Normalize the kind by trim ASCII, lower case ASCII and the `kind_aliases` table.
-2. If no dispatcher matches, return `unsupported_kind` without running any program.
-3. Run the `pre_canonicalization_program` exactly once on the raw value. It
+1. Refuse an input that is not valid UTF-8: the step is `unsupported` with
+   `invalid_encoding`, and the value is reported verbatim. An identifier is a
+   sequence of code points, and bytes that do not form one have none to
+   evaluate. This check is also what keeps canonicalization non growing: a
+   step that filters by code point would otherwise substitute U+FFFD for each
+   malformed byte, tripling the value and making two engines disagree on the
+   canonical value they report.
+2. Normalize the kind by trim ASCII, lower case ASCII and the `kind_aliases` table.
+3. If no dispatcher matches, return `unsupported_kind` without running any program.
+4. Run the `pre_canonicalization_program` exactly once on the raw value. It
    runs as soon as the dispatcher is resolved, before any country decision,
-   so a result that stops at step 4 still carries the pre-canonical value.
-4. Normalize an explicit country by trim ASCII, upper case ASCII and the
+   so a result that stops at step 5 still carries the pre-canonical value.
+5. Normalize an explicit country by trim ASCII, upper case ASCII and the
    `country_aliases` table. A syntactically invalid token returns
    `unsupported_country`; in a country specific dispatcher a country without
    target also returns `unsupported_country`. An empty token behaves like an
    absent context.
-5. Select the target owning the longest exactly matching `accepted_prefix`.
-6. If an explicit country and a recognized prefix designate two different
+6. Select the target owning the longest exactly matching `accepted_prefix`.
+7. If an explicit country and a recognized prefix designate two different
    targets, return `country_mismatch`.
-7. Select, in this order, the country target, the prefix target, the GLOBAL
+8. Select, in this order, the country target, the prefix target, the GLOBAL
    target, then the single `allow_unprefixed_without_country` target.
-8. If nothing is selectable, return `missing_country_code`.
-9. Run the canonicalization program of the selected definition exactly once on
+9. If nothing is selectable, return `missing_country_code`.
+10. Run the canonicalization program of the selected definition exactly once on
    the pre-canonical value.
 
 A pre-canonicalization program is restricted to `SEQUENCE`, `TRIM_WHITESPACE`,
@@ -1041,9 +1049,15 @@ none. This is the profile `PROFILE_IS` observes in a pre-canonicalization
 program.
 
 Once a definition is selected, its `default_profile` applies when, and only
-when, the caller supplied no profile. That resolved profile governs the format
-and checksum programs, and is the profile reported in the result. A caller who
-passes a profile explicitly always overrides the default.
+when, the caller supplied no profile. A caller who passes a profile explicitly
+always overrides the default.
+
+The rule that follows is worth stating as ownership: everything owned by the
+dispatcher runs under the dispatch profile, everything owned by the definition
+runs under the resolved one. So the pre-canonicalization program uses the
+dispatch profile, while the canonicalization, format and checksum programs of
+the selected definition use the resolved profile, which is also the one
+reported in the result.
 
 All current definitions declare `compatible`, so no conformance case separates
 these rules today. They are normative regardless.

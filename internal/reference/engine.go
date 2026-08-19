@@ -47,8 +47,21 @@ type dispatchOutcome struct {
 
 // dispatch implements the nine normative steps of the dispatch algorithm.
 //
+// dispatch resolves the kind, the country and the definition.
+//
+// callerProfile is what the caller passed, empty when none was given. The
+// dispatcher runs under it, or under compatible, because no definition is
+// selected yet and none can supply its default. Once one is selected, the
+// canonicalization program belongs to that definition and runs under the
+// resolved profile: everything owned by the dispatcher uses the dispatch
+// profile, everything owned by the definition uses the resolved one.
+//
 //nolint:gocyclo,funlen // the normative algorithm is one linear sequence.
-func (e *Engine) dispatch(m *machine, in Input, profile Profile) (dispatchOutcome, error) {
+func (e *Engine) dispatch(m *machine, in Input, callerProfile Profile) (dispatchOutcome, error) {
+	profile := callerProfile
+	if profile == "" {
+		profile = ProfileCompatible
+	}
 	requested := lowerASCII(trimASCII(in.Kind))
 	out := dispatchOutcome{
 		kind:           requested,
@@ -153,7 +166,8 @@ func (e *Engine) dispatch(m *machine, in Input, profile Profile) (dispatchOutcom
 	if err != nil {
 		return out, err
 	}
-	canonFrame := &frame{profile: profile, country: targetCountry, target: target}
+	definitionProfile := profileOf(Options{Profile: callerProfile}, definition)
+	canonFrame := &frame{profile: definitionProfile, country: targetCountry, target: target}
 	canonical, err := m.RunCanonicalization(canonProgram, canonFrame, preValue)
 	if err != nil {
 		return out, err

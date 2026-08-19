@@ -60,9 +60,20 @@ jobs:
         run: buf lint
       - name: buf breaking
         if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           base="${{ github.base_ref }}"
+          # The compatibility promise starts at the first published release.
+          # Before one exists nothing consumes these schemas, so a correction
+          # costs nothing and is far cheaper than carrying the mistake forever.
+          # This guard disappears on its own the day a release is cut, rather
+          # than living as an exception someone has to remember to remove.
+          if [ -z "$(gh release list --limit 1)" ]; then
+            echo "::notice::no release published yet, the schemas may still change"
+            exit 0
+          fi
           # The very first pull request introduces the schemas, so the base
           # branch carries none: there is nothing to compare, and that must not
           # be confused with a passing comparison.

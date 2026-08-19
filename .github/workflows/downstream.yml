@@ -93,6 +93,7 @@ jobs:
             printf 'conformance_sha256 = "%s"\n' "$(jq -r .conformanceSha256 "$manifest")"
             printf 'rules_proto_sha256 = "%s"\n' "$(jq -r .rulesProtoSha256 "$manifest")"
             printf 'conformance_proto_sha256 = "%s"\n' "$(jq -r .conformanceProtoSha256 "$manifest")"
+            printf 'testee_proto_sha256 = "%s"\n' "$(jq -r .testeeProtoSha256 "$manifest")"
             printf 'ir_doc_sha256 = "%s"\n' "$(jq -r .irDocSha256 "$manifest")"
             printf 'features_doc_sha256 = "%s"\n' "$(jq -r .featuresDocSha256 "$manifest")"
             printf 'stability = "%s"\n' "$(jq -r .stability "$manifest")"

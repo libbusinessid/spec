@@ -148,6 +148,7 @@ func build(opts buildOptions) (*buildResult, *diagnostics.Bag) {
 		"businessid-manifest" + suffix + ".json":        manifestBytes,
 		"rules.proto":                                   inputs.rulesProto,
 		"conformance.proto":                             inputs.conformanceProto,
+		"testee.proto":                                  inputs.testeeProto,
 		"ir.md":                                         irDoc,
 		"features.md":                                   featuresDoc,
 		"coverage.md":                                   coverageDoc,
@@ -213,6 +214,7 @@ func resolveStability(bag *diagnostics.Bag, opts buildOptions) (string, bool) {
 type buildInputs struct {
 	rulesProto       []byte
 	conformanceProto []byte
+	testeeProto      []byte
 	referenceBundle  []byte
 	referenceSuite   []byte
 	modulePath       string
@@ -233,6 +235,8 @@ func readBuildInputs(bag *diagnostics.Bag, opts buildOptions) (buildInputs, bool
 		opts.moduleRoot, "proto", "libbusinessid", "ir", "v1", "rules.proto")
 	out.conformanceProto = read("CLI016", "conformance.proto",
 		opts.moduleRoot, "proto", "libbusinessid", "conformance", "v1", "conformance.proto")
+	out.testeeProto = read("CLI023", "testee.proto",
+		opts.moduleRoot, "proto", "libbusinessid", "testee", "v1", "testee.proto")
 	out.referenceBundle = read("CLI021", "the reference bundle",
 		opts.fixtures, "bundles", "minimal_valid.binpb")
 	out.referenceSuite = read("CLI022", "the reference conformance suite",
@@ -298,6 +302,7 @@ func buildManifest(in manifestInput) *artifact.Manifest {
 		CoverageByKind:            artifact.KindCoverageOf(in.coverage),
 		MinimumEngineCapabilities: in.rules.Bundle.GetRequiredFeatureIds(),
 		RulesProtoSha256:          artifact.SHA256Hex(in.inputs.rulesProto),
+		TesteeProtoSha256:         artifact.SHA256Hex(in.inputs.testeeProto),
 		ConformanceProtoSha256:    artifact.SHA256Hex(in.inputs.conformanceProto),
 		IrDocSha256:               artifact.SHA256Hex(in.irDoc),
 		FeaturesDocSha256:         artifact.SHA256Hex(in.featuresDoc),

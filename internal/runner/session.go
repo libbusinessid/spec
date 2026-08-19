@@ -60,11 +60,14 @@ func requestFor(c *conformancev1.ConformanceCase) *testeev1.TesteeRequest {
 		CaseId:      c.GetId(),
 		Operation:   c.GetOperation(),
 		Input:       c.GetInput(),
-		Profile:     c.GetProfile(),
 		CountryCode: c.CountryCode,
 	}
 	if k := c.GetKind(); k != "" {
 		req.Kind = proto.String(k)
+	}
+	// Absence is meaningful and is sent as absence, never as an empty string.
+	if pr := c.GetProfile(); pr != "" {
+		req.Profile = proto.String(pr)
 	}
 	if p := c.GetRulesPayload(); len(p) > 0 {
 		req.RulesPayload = p
