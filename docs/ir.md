@@ -734,7 +734,7 @@ Parameters: `length` (required), `text` (required); any other field present in t
 
 Capabilities: `CORE_GRAPH_V1` (1), `CANONICALIZATION_BASIC_V1` (3).
 
-Prepends copies of the single code point `text` until the value holds `length` code points. A longer value is never truncated.
+Prepends copies of the single code point `text` until the value holds `length` code points. A longer value is never truncated. `length` is at least 1 and bounded like every other slice bound, so an engine that sizes a buffer from it has a static maximum.
 
 #### `CANONICALIZATION_OP_KIND_PREPEND_COUNTRY_IF_MISSING`
 
