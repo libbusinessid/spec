@@ -39,7 +39,7 @@ jobs:
       - name: Check the generated Protobuf code
         run: |
           make generate
-          git diff --exit-code -- gen proto testdata
+          ./tools/check_generated.sh gen proto testdata
 
   proto:
     name: protobuf lint and compatibility

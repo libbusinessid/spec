@@ -100,6 +100,22 @@ A new IR operation requires, in this order: a documented capability ID, its
 implementation in the four engines, conformance cases, the publication of the
 compatible engines, and only then its use by an official rule.
 
+## Bumping a pinned generator
+
+The generated files record which plugin produced them, so a bump of a
+generator pinned in `tools/pinned/go.mod` makes the committed generated code
+stale and the CI refuses it. That refusal is the point: it is what ties the
+committed code to the locked tool versions. Never filter the version comment
+out of the comparison.
+
+Instead, in the same pull request:
+
+- run `make generate` and commit the result;
+- rebuild the artifacts and state in the pull request whether the published
+  digests moved, as section 12.3 of the specification requires. A
+  `protoc-gen-go` bump normally leaves the wire bytes untouched, but that is
+  something to verify, not to assume.
+
 ## Commit and review
 
 - Keep the change minimal and reviewable.
