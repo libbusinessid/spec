@@ -250,6 +250,11 @@ func RenderIRDoc() []byte {
 	w("or a checksum declared by the bundle keeps its message key exactly, including")
 	w("when it is absent.")
 	w("")
+	w("A declared `message_key` is never empty. An empty one is refused at load time,")
+	w("because a present but empty key cannot be told apart from an absent one in an")
+	w("idiomatic API: two engines could then report differently on the same bundle,")
+	w("which 2.4 forbids. Absence is expressed by omitting the field.")
+	w("")
 
 	w("## 7. Character classes")
 	w("")
