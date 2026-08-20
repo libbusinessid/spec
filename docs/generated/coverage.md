@@ -305,7 +305,7 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 
 ## Conformance statistics
 
-Total cases: **367**.
+Total cases: **371**.
 
 | Kind | Cases |
 |---|---:|
@@ -318,7 +318,7 @@ Total cases: **367**.
 | `siren` | 40 |
 | `siret` | 16 |
 | `unknown_kind` | 2 |
-| `vat` | 125 |
+| `vat` | 129 |
 | `vat_number` | 1 |
 
 | Tag | Cases |
@@ -330,7 +330,7 @@ Total cases: **367**.
 | `canonicalization` | 2 |
 | `canonicalize` | 13 |
 | `capabilities` | 2 |
-| `characters` | 18 |
+| `characters` | 20 |
 | `checksum` | 113 |
 | `composition` | 17 |
 | `country` | 14 |
@@ -346,7 +346,7 @@ Total cases: **367**.
 | `graph` | 5 |
 | `hole` | 3 |
 | `implicit` | 1 |
-| `invalid` | 187 |
+| `invalid` | 191 |
 | `iso7064` | 2 |
 | `legacy` | 3 |
 | `length` | 39 |
@@ -364,10 +364,10 @@ Total cases: **367**.
 | `real` | 5 |
 | `reason-code` | 1 |
 | `security` | 25 |
-| `shape` | 9 |
+| `shape` | 13 |
 | `strict` | 6 |
 | `structure` | 2 |
-| `synthetic` | 339 |
+| `synthetic` | 343 |
 | `truncation` | 1 |
 | `types` | 1 |
 | `unknown-field` | 1 |
@@ -379,5 +379,5 @@ Total cases: **367**.
 | Data classification | Cases |
 |---|---:|
 | `public_business_identifier` | 5 |
-| `synthetic` | 362 |
+| `synthetic` | 366 |
 

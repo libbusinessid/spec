@@ -8,6 +8,7 @@ import (
 
 	"github.com/hashicorp/hcl/v2/hclwrite"
 
+	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
 	"github.com/libbusinessid/spec/internal/artifact"
 	"github.com/libbusinessid/spec/internal/conformance"
 	"github.com/libbusinessid/spec/internal/diagnostics"
@@ -106,6 +107,7 @@ func runLint(args []string, stdout, stderr io.Writer) int {
 	lintIdempotence(bag, result)
 	lintFormatting(bag, opts)
 	lintProvenance(bag, result)
+	lintStructuralSeparators(bag, result)
 	return report(bag, opts.json, stdout, stderr)
 }
 
@@ -226,5 +228,71 @@ func lintProvenance(bag *diagnostics.Bag, result *buildResult) {
 		}
 		bag.Errorf(diagnostics.Position{}, "LINT005",
 			"the definition %s/%s carries no source", d.GetKind(), country)
+	}
+}
+
+// lintStructuralSeparators refuses a canonicalizer that removes a character its
+// own format then requires.
+//
+// The EUID rules found this the hard way: three canonicalizers were copied from
+// SIRET, which strips dots, while the dot is what separates the register from
+// the number in an EUID. Every value lost its boundary and failed on the
+// separator assertion. The conformance cases caught it, but only because those
+// countries had cases; the next one added without them would not be caught at
+// all. This makes the contradiction a compile error instead.
+func lintStructuralSeparators(bag *diagnostics.Bag, result *buildResult) {
+	bundle := result.rules.Bundle
+	programs := map[uint32]*irv1.Program{}
+	for _, p := range bundle.GetPrograms() {
+		programs[p.GetId()] = p
+	}
+
+	collect := func(id uint32, kind func(*irv1.Node) (string, bool)) map[rune]bool {
+		out := map[rune]bool{}
+		p := programs[id]
+		if p == nil {
+			return out
+		}
+		for _, n := range p.GetNodes() {
+			if text, ok := kind(n); ok {
+				for _, r := range text {
+					out[r] = true
+				}
+			}
+		}
+		return out
+	}
+
+	removed := func(n *irv1.Node) (string, bool) {
+		op := n.GetCanonicalizationOperation()
+		if op.GetKind() != irv1.CanonicalizationOpKind_CANONICALIZATION_OP_KIND_REMOVE_CHARS {
+			return "", false
+		}
+		return op.GetText(), true
+	}
+	required := func(n *irv1.Node) (string, bool) {
+		op := n.GetPredicateOperation()
+		if op.GetKind() != irv1.PredicateOpKind_PREDICATE_OP_KIND_CONTAINS {
+			return "", false
+		}
+		return op.GetText(), true
+	}
+
+	for _, d := range bundle.GetIdentifiers() {
+		stripped := collect(d.GetCanonicalizationProgram(), removed)
+		if len(stripped) == 0 {
+			continue
+		}
+		country := globalCountry
+		if d.CountryCode != nil {
+			country = d.GetCountryCode()
+		}
+		for r := range collect(d.GetFormatProgram(), required) {
+			if stripped[r] {
+				bag.Errorf(diagnostics.Position{}, "LINT005",
+					"%s/%s: the canonicalizer removes %q while its format requires the value to contain it",
+					d.GetKind(), country, string(r))
+			}
+		}
 	}
 }
