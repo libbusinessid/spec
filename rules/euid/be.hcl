@@ -60,7 +60,7 @@ identifier "euid" "BE" {
 
   source {
     id               = "be-bce-enterprise-number"
-    url              = "https://economie.fgov.be/fr/themes/entreprises/banque-carrefour-des/actualite/structure-du-numero"
+    url              = "https://economie.fgov.be/fr/themes/entreprises/banque-carrefour-des"
     authority        = "Service public federal Economie, P.M.E., Classes moyennes et Energie"
     title            = "Structure du numero d'entreprise"
     accessed_at      = "2026-08-20"

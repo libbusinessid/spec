@@ -76,9 +76,9 @@ identifier "vat" "FR" {
 
   source {
     id               = "fr-dgfip-vat"
-    url              = "https://www.impots.gouv.fr/professionnel/le-numero-de-tva-intracommunautaire"
-    authority        = "Direction generale des Finances publiques (DGFiP)"
-    title            = "Le numero de TVA intracommunautaire"
+    url              = "https://entreprendre.service-public.fr/vosdroits/F23570"
+    authority        = "Direction de l'information legale et administrative, for the DGFiP"
+    title            = "Numero de TVA intracommunautaire d'une entreprise"
     accessed_at      = "2026-08-18"
     jurisdiction     = "FR"
     language         = "fr"

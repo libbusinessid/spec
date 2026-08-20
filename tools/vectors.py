@@ -76,3 +76,42 @@ if __name__ == "__main__":
     print("LEI 000000000000000000 ->", lei_check_digits("000000000000000000"))
     print("LEI 000000ABCDEF123456 ->", lei_check_digits("000000ABCDEF123456"))
     print("LEI 5493001KJTIIGC8Y1R12 ok:", lei_ok("5493001KJTIIGC8Y1R12"))
+
+# National register check algorithms, written from the descriptions recorded in
+# the `source` blocks of the rules. They never consult the Go compiler or the Go
+# reference interpreter, which is what keeps the expected results independent.
+
+
+def ico_check(first7: str) -> str:
+    """Czech and Slovak ICO: weights 8..2, remainder modulo 11."""
+    total = sum(int(c) * w for c, w in zip(first7, (8, 7, 6, 5, 4, 3, 2)))
+    return str([1, 0, 9, 8, 7, 6, 5, 4, 3, 2, 1][total % 11])
+
+
+def dk_ok(cvr: str) -> bool:
+    """Danish CVR: the weighted sum of all eight digits vanishes modulo 11."""
+    total = sum(int(c) * w for c, w in zip(cvr, (2, 7, 6, 5, 4, 3, 2, 1)))
+    return total % 11 == 0
+
+
+def pt_check(first8: str) -> str:
+    """Portuguese NIPC: weights 9..2, a remainder below two yielding zero."""
+    total = sum(int(c) * w for c, w in zip(first8, (9, 8, 7, 6, 5, 4, 3, 2)))
+    return str([0, 0, 9, 8, 7, 6, 5, 4, 3, 2, 1][total % 11])
+
+
+def ee_check(first7: str) -> str:
+    """Estonian registrikood: weights 1..7, recomputed with 3..9 on a ten."""
+    total = sum(int(c) * w for c, w in zip(first7, (1, 2, 3, 4, 5, 6, 7)))
+    if total % 11 == 10:
+        total = sum(int(c) * w for c, w in zip(first7, (3, 4, 5, 6, 7, 8, 9)))
+    return str(total % 11 % 10)
+
+
+def lt_ok(code: str) -> bool:
+    """Lithuanian code: weights 1..9 vanishing, rotated to 3..9,1,2 on a ten."""
+    total = sum(int(c) * w for c, w in zip(code, (1, 2, 3, 4, 5, 6, 7, 8, 9)))
+    if total % 11 == 10:
+        total = sum(int(c) * w for c, w in zip(code, (3, 4, 5, 6, 7, 8, 9, 1, 2)))
+        return total % 11 % 10 == 0
+    return total % 11 == 0

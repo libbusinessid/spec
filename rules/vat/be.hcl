@@ -43,7 +43,7 @@ identifier "vat" "BE" {
 
   source {
     id               = "be-fps-finance-vat"
-    url              = "https://finances.belgium.be/fr/entreprises/tva/assujettissement-a-la-tva/numero-de-tva"
+    url              = "https://finances.belgium.be/fr/entreprises/tva"
     authority        = "Service public federal Finances (SPF Finances)"
     title            = "Numero de TVA belge"
     accessed_at      = "2026-08-18"
