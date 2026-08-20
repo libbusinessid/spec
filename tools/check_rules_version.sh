@@ -12,7 +12,13 @@ set -euo pipefail
 base="${1:-origin/main}"
 git fetch --quiet origin "${base#origin/}" 2>/dev/null || true
 
-changed="$(git diff --name-only "${base}"...HEAD -- rules conformance || true)"
+# What matters is what reaches the bundle, not what sits in the directory. The
+# canonical stream of section 7.2 carries the rule sources, the JSONL cases and
+# the binary fixtures they reference; anything else under those paths is
+# tooling, and demanding a version bump for it would train people to bump the
+# version for nothing - which is exactly how a bump stops meaning anything.
+changed="$(git diff --name-only "${base}"...HEAD \
+  -- 'rules/**/*.hcl' 'conformance/**/*.jsonl' 'testdata/bundles/**' || true)"
 if [[ -z "${changed}" ]]; then
   echo "no business data changed"
   exit 0

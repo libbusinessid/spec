@@ -3,6 +3,7 @@ package runner
 import (
 	"bytes"
 	"io"
+	"slices"
 	"strings"
 	"testing"
 
@@ -74,7 +75,7 @@ func echoAnswer(req *testeev1.TesteeRequest) *testeev1.TesteeResponse {
 
 func TestSessionReportsNoDiffWhenTheTesteeIsCorrect(t *testing.T) {
 	st := &scriptedTestee{answer: echoAnswer, t: t}
-	diffs, err := runSession(st, st, twoCases())
+	diffs, _, err := runSession(st, st, slices.Values(twoCases()), false)
 	if err != nil {
 		t.Fatalf("runSession: %v", err)
 	}
@@ -89,7 +90,7 @@ func TestSessionReportsEveryWrongCase(t *testing.T) {
 		r.CaseId = req.GetCaseId()
 		return r
 	}}
-	diffs, err := runSession(st, st, twoCases())
+	diffs, _, err := runSession(st, st, slices.Values(twoCases()), false)
 	if err != nil {
 		t.Fatalf("runSession: %v", err)
 	}
@@ -106,7 +107,7 @@ func TestSessionRefusesADesynchronizedExchange(t *testing.T) {
 		r.CaseId = "not-the-case-we-sent"
 		return r
 	}}
-	_, err := runSession(st, st, twoCases())
+	_, _, err := runSession(st, st, slices.Values(twoCases()), false)
 	if err == nil || !strings.Contains(err.Error(), "answered") {
 		t.Fatalf("a mismatched case identifier must abort the run, got %v", err)
 	}
@@ -121,7 +122,7 @@ func TestSessionRefusesATesteeThatStopsAnswering(t *testing.T) {
 		}
 		return echoAnswer(req)
 	}}
-	_, err := runSession(st, st, twoCases())
+	_, _, err := runSession(st, st, slices.Values(twoCases()), false)
 	if err == nil {
 		t.Fatal("a testee that stops answering must be reported, not counted as passing")
 	}
