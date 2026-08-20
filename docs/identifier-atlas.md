@@ -84,6 +84,11 @@ refuse numbers Dun & Bradstreet issues.
 
 ### National identifiers
 
+An EU member state appears twice below when its national register number is
+validated in its own right as well as through the EUID. The EUID rule does not
+restate the national algorithm, it applies the national rule to the part after
+the dot, so the two cannot drift apart.
+
 | Country | Identifier | Issuer | Status | Maturity | Cases |
 |---|---|---|---|---|---|
 | France | **SIREN** | INSEE | supported | **register-swept** (Luhn) | 40 |
@@ -93,6 +98,7 @@ refuse numbers Dun & Bradstreet issues.
 | China | **USCC** | State Administration for Market Regulation | supported | checked (GB 32100-2015, mod 31 over a 31 code point alphabet) | 19 |
 | Japan | **Corporate Number** | National Tax Agency | supported | checked (mod 9 over alternating weights) | 14 |
 | Brazil | **CNPJ** | Receita Federal | supported | checked (two rounds of mod 11, alphanumeric form of 2026 included) | 19 |
+| Belgium | **Enterprise number** | Banque-Carrefour des Entreprises | supported | checked (mod 97) | 12 |
 
 Three rules have been swept against their issuer's complete register, through
 the same testee protocol an engine is judged by:
@@ -155,7 +161,7 @@ which country issues what, and whether we cover it.
 |---|---|---|---|---|---|
 | 21 | Poland | **KRS** (10) / **REGON** (9 or 14) | National Court Register / GUS | EUID, NIP | supported via EUID and VAT |
 | 22 | Taiwan | **UBN**, 8 digits, check digit | Ministry of Economic Affairs | — | none |
-| 23 | Belgium | **Ondernemingsnummer**, 10 digits, mod 97 | Crossroads Bank for Enterprises | EUID, BTW/TVA | **supported** |
+| 23 | Belgium | **Ondernemingsnummer**, 10 digits, mod 97 | Crossroads Bank for Enterprises | EUID, BTW/TVA | **supported**, nationally and through EUID |
 | 24 | Argentina | **CUIT**, 11 digits, check digit | AFIP | — | planned |
 | 25 | Sweden | **Organisationsnummer**, 10 digits, Luhn | Bolagsverket | EUID, moms | supported via EUID and VAT |
 | 26 | Ireland | **CRO number** | Companies Registration Office | EUID, VAT | supported via EUID and VAT |
