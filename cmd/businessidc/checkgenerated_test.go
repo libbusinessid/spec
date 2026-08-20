@@ -10,12 +10,23 @@ import (
 
 // copyRepo clones the working tree into a temporary directory so that a test
 // can corrupt a generated document without touching the repository.
+// copyRepo copies what the compiler reads, and only that.
+//
+// It used to copy the whole repository, which pulled in .git, dist and
+// coverage.out - the last of them being written by the very `make cover` run
+// that drives these tests. Copying a file whose size is changing underneath is
+// a race, and CI lost it. The compiler is called in process, so the sources it
+// needs are the data directories and the version, nothing else.
 func copyRepo(t *testing.T) string {
 	t.Helper()
 	dst := t.TempDir()
-	cmd := osexec.CommandContext(t.Context(), "cp", "-a", repoRoot(t)+"/.", dst)
-	if out, err := cmd.CombinedOutput(); err != nil {
-		t.Fatalf("cannot copy the repository: %v\n%s", err, out)
+	root := repoRoot(t)
+	for _, entry := range []string{"rules", "conformance", "testdata", "docs", "RULES_VERSION", "RULES_STABILITY", "go.mod", "go.sum", "proto"} {
+		cmd := osexec.CommandContext(t.Context(), "cp", "-a",
+			filepath.Join(root, entry), dst)
+		if out, err := cmd.CombinedOutput(); err != nil {
+			t.Fatalf("cannot copy %s: %v\n%s", entry, err, out)
+		}
 	}
 	return dst
 }
