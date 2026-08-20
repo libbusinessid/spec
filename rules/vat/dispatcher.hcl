@@ -200,4 +200,32 @@ dispatcher "vat" {
     canonical_prefix  = "RO"
     identifier        = identifier.vat.RO
   }
+
+  target {
+    country_code      = "GB"
+    accepted_prefixes = ["GB"]
+    canonical_prefix  = "GB"
+    identifier        = identifier.vat.GB
+  }
+
+  target {
+    country_code      = "IE"
+    accepted_prefixes = ["IE"]
+    canonical_prefix  = "IE"
+    identifier        = identifier.vat.IE
+  }
+
+  target {
+    country_code      = "IS"
+    accepted_prefixes = ["IS"]
+    canonical_prefix  = "IS"
+    identifier        = identifier.vat.IS
+  }
+
+  target {
+    country_code      = "XI"
+    accepted_prefixes = ["XI"]
+    canonical_prefix  = "XI"
+    identifier        = identifier.vat.XI
+  }
 }
