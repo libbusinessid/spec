@@ -50,6 +50,12 @@ paths covered.
 
 A rule pull request is only admissible when it contains:
 
+- **an entry in [`docs/identifier-atlas.md`](docs/identifier-atlas.md)**, moving
+  the identifier from whatever status it held to `supported` with its maturity
+  and case count. `businessidc lint` refuses a definition the atlas does not
+  name (LINT006), because a rule nobody can find is a rule that does not help
+  anyone;
+
 - **the official source**, or a documented justification when no official source
   exists, recorded in a `source` block with its URL, authority, title, access
   date, jurisdiction, language, notes and applicable terms;
