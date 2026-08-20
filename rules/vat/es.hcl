@@ -1,12 +1,26 @@
 # Spain - VAT identification number (NIF)
 #
-# The CIF form, which designates a legal person: a leading letter, seven digits
-# and a check character.
+# The NIF covers three shapes, and all three identify someone carrying on an
+# economic activity:
 #
-# The DNI and NIE forms identify natural persons and are not accepted, as in the
-# register rule. Where the check is a letter it encodes the same digit through
-# the alphabet JABCDEFGHI, and turning it back into a digit needs a mapping the
-# IR does not have, so those numbers report unsupported.
+#   - the CIF, a leading letter then seven digits and a check character, for a
+#     legal person;
+#   - the DNI, eight digits and a letter, which a self employed worker uses as
+#     their tax number - the tax agency states that for Spanish nationals the
+#     tax identification number is the number of their identity document;
+#   - the NIE, X, Y or Z then seven digits and a letter, the same for a foreign
+#     national.
+#
+# All three are accepted. A sole trader invoices under their DNI, so refusing it
+# would refuse a real business identifier - the false negative section 1.2 calls
+# the most serious defect of the project. Nothing in the shape distinguishes the
+# number of a trader from that of a private individual; the caller knows the
+# context, the format does not.
+#
+# The check is a Luhn wherever it is a digit. Where it is a letter it encodes a
+# value through an alphabet - JABCDEFGHI for a CIF, TRWAGMYFPDXBNJZSQVHLCKE for
+# a DNI - and turning a letter back into a number needs a mapping the IR does
+# not have, so those report unsupported.
 
 canonicalizer "vat" "es" {
   steps = [
@@ -24,15 +38,38 @@ format "vat" "es" {
     require(length_eq(subject(), 11), "invalid_length", "vat.es.length"),
     require(starts_with(subject(), "ES"), "invalid_format", "vat.es.prefix"),
     require(ascii_alphanumeric(slice_from(subject(), 2)), "invalid_characters", "vat.es.characters"),
-    require(char_at_in(subject(), 2, "ABCDEFGHJNPQRSUVW"), "invalid_format", "vat.es.legal_entity"),
-    require(ascii_digits(slice(subject(), 3, 10)), "invalid_characters", "vat.es.body"),
+    require(
+      any(
+        // A legal person: letter, seven digits, check character.
+        all(
+          char_at_in(subject(), 2, "ABCDEFGHJNPQRSUVW"),
+          ascii_digits(slice(subject(), 3, 10)),
+        ),
+        // A resident sole trader: eight digits then a letter.
+        all(
+          ascii_digits(slice(subject(), 2, 10)),
+          char_at_in(subject(), 10, "TRWAGMYFPDXBNJZSQVHLCKE"),
+        ),
+        // A foreign sole trader: X, Y or Z then seven digits and a letter.
+        all(
+          char_at_in(subject(), 2, "XYZ"),
+          ascii_digits(slice(subject(), 3, 10)),
+          char_at_in(subject(), 10, "TRWAGMYFPDXBNJZSQVHLCKE"),
+        ),
+      ),
+      "invalid_format",
+      "vat.es.shape",
+    ),
   ]
 }
 
 checksum "vat" "es" {
   rule = choose(
     when_checksum(
-      char_at_in(subject(), 10, "0123456789"),
+      all(
+        char_at_in(subject(), 2, "ABCDEFGHJNPQRSUVW"),
+        char_at_in(subject(), 10, "0123456789"),
+      ),
       luhn(slice(subject(), 3, 11)),
     ),
     unsupported_checksum("checksum_not_published"),
@@ -60,14 +97,14 @@ identifier "vat" "ES" {
 
   source {
     id               = "es-vat-check"
-    url              = "https://en.wikipedia.org/wiki/VAT_identification_number"
-    authority        = "Wikipedia"
-    title            = "VAT identification number - national check algorithms"
+    url              = "https://sede.agenciatributaria.gob.es/Sede/censos-nif-domicilio-fiscal/solicitar-nif.html"
+    authority        = "Agencia Estatal de Administracion Tributaria (AEAT)"
+    title            = "Como solicitar un NIF"
     accessed_at      = "2026-08-20"
     jurisdiction     = "ES"
-    language         = "en"
-    notes            = "The check doubles the odd positions of the body and sums the digits of each result, which is the Luhn computation. A letter check encodes the same digit through the alphabet JABCDEFGHI."
-    license_or_terms = "CC BY-SA 4.0, cited as a description and not redistributed"
-    tier             = "secondary"
+    language         = "es"
+    notes            = "Anyone carrying on a business or professional activity must hold a NIF. For a Spanish national that number is the one on their identity document, so a sole trader trades under a DNI."
+    license_or_terms = "Spanish public sector information"
+    tier             = "primary"
   }
 }

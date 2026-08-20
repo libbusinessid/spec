@@ -1,9 +1,12 @@
 # Latvia - VAT identification number (PVN)
 #
-# Eleven digits whose first is four or above, marking a legal person.
+# Eleven digits. A first digit of four or above marks a legal person; below
+# that, the number is the personal code of someone carrying on an economic
+# activity, who registers for VAT under it.
 #
-# A number starting below four is a personal code. It is refused here as it is
-# in the register rule: an identifier of a person is not a company identifier.
+# Both are business identifiers. The check applies to the legal person form; a
+# personal code closes on its own algorithm, which is not published as a VAT
+# check, so it reports unsupported.
 
 canonicalizer "vat" "lv" {
   steps = [
@@ -21,14 +24,22 @@ format "vat" "lv" {
     require(length_eq(subject(), 13), "invalid_length", "vat.lv.length"),
     require(starts_with(subject(), "LV"), "invalid_format", "vat.lv.prefix"),
     require(ascii_digits(slice_from(subject(), 2)), "invalid_characters", "vat.lv.characters"),
-    require(char_at_in(slice_from(subject(), 2), 0, "456789"), "invalid_format", "vat.lv.legal_entity"),
   ]
 }
 
 checksum "vat" "lv" {
-  rule = compare_digit(
-    remainder_map(modulo(weighted_sum(slice(slice_from(subject(), 2), 0, 10), [9, 1, 4, 8, 3, 10, 2, 5, 7, 6], "left", "digit_value"), 11), [3, 2, 1, 0, 10, 9, 8, 7, 6, 5, 4]),
-    slice_from(subject(), 2), 10,
+  rule = choose(
+    when_checksum(
+      not(char_at_in(slice_from(subject(), 2), 0, "456789")),
+      unsupported_checksum("checksum_not_published"),
+    ),
+    compare_digit(
+      remainder_map(
+        modulo(weighted_sum(slice(slice_from(subject(), 2), 0, 10), [9, 1, 4, 8, 3, 10, 2, 5, 7, 6], "left", "digit_value"), 11),
+        [3, 2, 1, 0, 10, 9, 8, 7, 6, 5, 4],
+      ),
+      slice_from(subject(), 2), 10,
+    ),
   )
 }
 
