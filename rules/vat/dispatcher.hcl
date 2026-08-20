@@ -39,4 +39,67 @@ dispatcher "vat" {
     canonical_prefix  = "EL"
     identifier        = identifier.vat.GR
   }
+
+  target {
+    country_code      = "IT"
+    accepted_prefixes = ["IT"]
+    canonical_prefix  = "IT"
+    identifier        = identifier.vat.IT
+  }
+
+  target {
+    country_code      = "DK"
+    accepted_prefixes = ["DK"]
+    canonical_prefix  = "DK"
+    identifier        = identifier.vat.DK
+  }
+
+  target {
+    country_code      = "FI"
+    accepted_prefixes = ["FI"]
+    canonical_prefix  = "FI"
+    identifier        = identifier.vat.FI
+  }
+
+  target {
+    country_code      = "SI"
+    accepted_prefixes = ["SI"]
+    canonical_prefix  = "SI"
+    identifier        = identifier.vat.SI
+  }
+
+  target {
+    country_code      = "PT"
+    accepted_prefixes = ["PT"]
+    canonical_prefix  = "PT"
+    identifier        = identifier.vat.PT
+  }
+
+  target {
+    country_code      = "PL"
+    accepted_prefixes = ["PL"]
+    canonical_prefix  = "PL"
+    identifier        = identifier.vat.PL
+  }
+
+  target {
+    country_code      = "EE"
+    accepted_prefixes = ["EE"]
+    canonical_prefix  = "EE"
+    identifier        = identifier.vat.EE
+  }
+
+  target {
+    country_code      = "MT"
+    accepted_prefixes = ["MT"]
+    canonical_prefix  = "MT"
+    identifier        = identifier.vat.MT
+  }
+
+  target {
+    country_code      = "LU"
+    accepted_prefixes = ["LU"]
+    canonical_prefix  = "LU"
+    identifier        = identifier.vat.LU
+  }
 }

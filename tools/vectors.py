@@ -161,3 +161,49 @@ def es_cif_digit(body7: str) -> str:
 
 def es_cif_letter(body7: str) -> str:
     return "JABCDEFGHI"[int(es_cif_digit(body7))]
+
+
+# VAT check algorithms, from the descriptions recorded in the source blocks.
+
+
+def _weighted(body, weights):
+    return sum(int(c) * w for c, w in zip(body, weights))
+
+
+def vat_fi_check(first7: str):
+    m = _weighted(first7, (7, 9, 10, 5, 8, 4, 2)) % 11
+    return None if m == 1 else str(0 if m == 0 else 11 - m)
+
+
+def vat_si_check(first7: str):
+    m = _weighted(first7, (8, 7, 6, 5, 4, 3, 2)) % 11
+    c = 11 - m
+    if c == 10:
+        return None
+    return str(0 if c == 11 else c)
+
+
+def vat_pt_check(first8: str) -> str:
+    m = _weighted(first8, (9, 8, 7, 6, 5, 4, 3, 2)) % 11
+    return str(11 - m if m >= 2 else 0)
+
+
+def vat_pl_check(first9: str):
+    m = _weighted(first9, (6, 5, 7, 2, 3, 4, 5, 6, 7)) % 11
+    return None if m == 10 else str(m)
+
+
+def vat_ee_check(first8: str) -> str:
+    return str((10 - _weighted(first8, (3, 7, 1, 3, 7, 1, 3, 7)) % 10) % 10)
+
+
+def vat_mt_check(first6: str) -> str:
+    return f"{37 - _weighted(first6, (3, 4, 6, 7, 8, 9)) % 37:02d}"
+
+
+def vat_lu_check(first6: str) -> str:
+    return f"{int(first6) % 89:02d}"
+
+
+def vat_dk_ok(body8: str) -> bool:
+    return _weighted(body8, (2, 7, 6, 5, 4, 3, 2, 1)) % 11 == 0
