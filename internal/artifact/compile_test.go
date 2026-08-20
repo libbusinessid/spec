@@ -142,9 +142,17 @@ func TestCoverageDocumentDescribesThePilot(t *testing.T) {
 	if len(coverage) == 0 {
 		t.Fatal("the coverage table is empty")
 	}
+	// The coverage table must account for every definition, and the vat kind is
+	// the one holding both sorts. Pinning an exact count made the test a census
+	// of the rules rather than a check of the document, and it broke each time a
+	// country was added.
 	for _, entry := range coverage {
-		if entry.Kind == "vat" && entry.WithoutChecksum != 1 {
-			t.Fatalf("the vat kind must hold exactly one definition without checksum: %+v", entry)
+		if entry.WithChecksum+entry.WithoutChecksum == 0 {
+			t.Fatalf("kind %q counts no definition: %+v", entry.Kind, entry)
+		}
+		if entry.Kind == "vat" && entry.WithoutChecksum == 0 {
+			t.Fatalf("the vat kind holds definitions whose checksum is not expressible, "+
+				"and the table must show them: %+v", entry)
 		}
 	}
 }

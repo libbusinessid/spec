@@ -171,6 +171,32 @@ when there is one, and that the entry records where the algorithm was read
 rather than an authority for it. A definition whose algorithm cannot be
 established at all declares `absent_checksum_reason` instead of guessing.
 
+## When a defect is found
+
+Write the test that proves it first, watch it fail, then fix it. A fix landed
+before its test has never been shown to fix anything.
+
+**And put the offending value in the conformance corpus, not only in a Go
+test.** A unit test protects this repository; a conformance case protects every
+engine, in every language, including implementations this project does not
+publish. The corpus is the contract between the specification and the engines,
+so a defect proven only in Go leaves the others free to repeat it.
+
+Where the value belongs depends on what it broke:
+
+- a rule accepting or refusing the wrong identifier: a case under
+  `conformance/`, carrying the exact input;
+- a bundle that should have been refused: a fixture under `testdata/bundles/`
+  with a `load_ruleset` case;
+- a defect the corpus format genuinely cannot express - JSONL cannot hold
+  invalid UTF-8, for instance - a Go test that says in its own comment why it
+  stands in for a case.
+
+The reasoning is worth keeping in mind: several defects found while porting the
+historical rules were caught by a conformance case belonging to one country,
+and would have shipped unnoticed in a country that happened to have no case
+covering that shape.
+
 ## Commit and review
 
 - Keep the change minimal and reviewable.
