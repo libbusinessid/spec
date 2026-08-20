@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sort"
 
 	"google.golang.org/protobuf/proto"
 
@@ -143,6 +144,7 @@ func minimalBundle() *irv1.RuleBundle {
 			Language:       "en",
 			Notes:          "Synthetic demonstration rule: four ASCII digits closed by a Luhn check digit.",
 			LicenseOrTerms: "Apache-2.0",
+			Tier:           irv1.SourceTier_SOURCE_TIER_PRIMARY,
 		}},
 	}
 	dispatcher := &irv1.IdentifierDispatcher{
@@ -159,6 +161,7 @@ func minimalBundle() *irv1.RuleBundle {
 			features.CoreGraphV1, features.AsciiAndWhitespaceV1, features.CanonicalizationBasicV1,
 			features.IdentifierDispatchV1, features.FormatAssertionsV1, features.ProfilesV1,
 			features.ChecksumTristateV1, features.ChecksumLuhnV1, features.ProvenanceV1,
+			features.ProvenanceTierV1,
 		},
 		SourceDigest: make([]byte, 32),
 		Identifiers:  []*irv1.IdentifierDefinition{definition},
@@ -490,6 +493,43 @@ func main() {
 		panic("genfixtures: the base bundle holds no assertion to give an empty message key")
 	}
 	write(filepath.Join(root, "empty_message_key.binpb"), marshal(emptyKey))
+
+	// A predicate comparing against a constant beyond the accepted range. The
+	// checksum side of COMPARE_CONSTANT was bounded when the two opcodes landed;
+	// the predicate side was not.
+	wideConstant := clone(base)
+	wideConstant.Programs[2].Nodes = append(wideConstant.Programs[2].Nodes,
+		&irv1.Node{
+			OutputType: irv1.ValueType_VALUE_TYPE_INTEGER,
+			InputNodes: []uint32{0},
+			Operation: &irv1.Node_IntegerOperation{IntegerOperation: &irv1.IntegerOperation{
+				Kind:    irv1.IntegerOpKind_INTEGER_OP_KIND_MOD_DIGITS,
+				Modulus: int64Ptr(97),
+			}},
+		},
+		&irv1.Node{
+			OutputType: irv1.ValueType_VALUE_TYPE_BOOLEAN,
+			InputNodes: []uint32{uint32(len(wideConstant.Programs[2].Nodes))},
+			Operation: &irv1.Node_PredicateOperation{PredicateOperation: &irv1.PredicateOperation{
+				Kind:     irv1.PredicateOpKind_PREDICATE_OP_KIND_INTEGER_IS,
+				Constant: int64Ptr(limits.MaxConstant + 1),
+			}},
+		})
+	// The bundle must declare what it uses, or the refusal comes from the
+	// undeclared capability rather than from the bound under test.
+	wideConstant.RequiredFeatureIds = append(wideConstant.RequiredFeatureIds,
+		features.ChecksumIntegerPredicateV1)
+	sort.Slice(wideConstant.RequiredFeatureIds, func(i, j int) bool {
+		return wideConstant.RequiredFeatureIds[i] < wideConstant.RequiredFeatureIds[j]
+	})
+	write(filepath.Join(root, "predicate_constant.binpb"), marshal(wideConstant))
+
+	// A rules_version carrying a control character. The Go engine found this by
+	// fuzzing: the version is interpolated into generated sources, and a NUL is
+	// not valid Go. Only emptiness was refused.
+	badVersion := clone(base)
+	badVersion.RulesVersion = "2026.08.0\x00"
+	write(filepath.Join(root, "rules_version_shape.binpb"), marshal(badVersion))
 
 	// A WHEN branch outside a CHOOSE.
 	strayWhen := clone(base)

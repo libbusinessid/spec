@@ -306,6 +306,12 @@ func validateWeightedSum(s *irv1.IntegerOperation, operandBound int, fail func(s
 
 func validatePredicateNode(n *irv1.Node, fail func(string, ...any) error) error {
 	s := n.GetPredicateOperation()
+	// INTEGER_IS carries a constant, like COMPARE_CONSTANT does. Only the
+	// checksum side was bounded when the two opcodes landed, which left a bundle
+	// free to state a comparison no checked expression could ever reach.
+	if err := checkConstant(s.Constant, fail); err != nil {
+		return err
+	}
 	if err := validatePredicateBounds(s, fail); err != nil {
 		return err
 	}
@@ -412,12 +418,8 @@ func validateChecksumNode(p *irv1.Program, n *irv1.Node, fail func(string, ...an
 	if err := checkIndex(s.End, fail); err != nil {
 		return err
 	}
-	// The constant is bounded like every other integer of the IR, so a bundle
-	// cannot state a comparison against a value no checked expression could ever
-	// produce.
-	if s.Constant != nil && (*s.Constant < limits.MinConstant || *s.Constant > limits.MaxConstant) {
-		return fail("constant %d is outside the accepted range %d..%d",
-			*s.Constant, limits.MinConstant, limits.MaxConstant)
+	if err := checkConstant(s.Constant, fail); err != nil {
+		return err
 	}
 	if err := checkMessageKey(s.MessageKey, fail); err != nil {
 		return err
@@ -495,6 +497,17 @@ func computeMaxLen(n *irv1.Node, shape nodeShape, inputs []uint32, maxLen []int)
 func checkIndex(v *uint32, fail func(string, ...any) error) error {
 	if v != nil && *v > limits.MaxIndex {
 		return fail("index %d exceeds the limit of %d", *v, limits.MaxIndex)
+	}
+	return nil
+}
+
+// checkConstant bounds the literal a comparison is written against, so a bundle
+// cannot state one no checked expression could ever produce. Both COMPARE_CONSTANT
+// and INTEGER_IS carry it.
+func checkConstant(v *int64, fail func(string, ...any) error) error {
+	if v != nil && (*v < limits.MinConstant || *v > limits.MaxConstant) {
+		return fail("constant %d is outside the accepted range %d..%d",
+			*v, limits.MinConstant, limits.MaxConstant)
 	}
 	return nil
 }

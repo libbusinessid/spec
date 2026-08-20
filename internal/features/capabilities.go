@@ -26,6 +26,7 @@ const (
 	ChecksumCompareConstantV1     uint32 = 34
 	ChecksumIntegerPredicateV1    uint32 = 35
 	ProvenanceV1                  uint32 = 40
+	ProvenanceTierV1              uint32 = 41
 )
 
 // Capability describes one immutable capability ID.
@@ -205,6 +206,15 @@ var capabilities = []Capability{
 		Content: []string{
 			"`Source` and `IdentifierDefinition.sources`, sorted by source id.",
 			"Every rule able to reject an input carries at least one source.",
+		},
+	},
+	{
+		ID:      ProvenanceTierV1,
+		Name:    "PROVENANCE_TIER_V1",
+		Summary: "how close a source sits to the authority",
+		Content: []string{
+			"`Source.tier` and the `SourceTier` enumeration.",
+			"It is a capability of its own rather than an addition to `PROVENANCE_V1`, whose content is frozen: a field added to a frozen capability reaches an engine as an unknown field, which reads as a forged bundle rather than as the version gap it is.",
 		},
 	},
 }

@@ -26,14 +26,24 @@ func LoadRuleset(raw []byte) (*Ruleset, error) {
 	if err := (proto.UnmarshalOptions{DiscardUnknown: false}).Unmarshal(raw, bundle); err != nil {
 		return nil, invalidf("protobuf decoding failed: %v", err)
 	}
-	if path, bad := findUnknownFields(bundle); bad {
-		return nil, invalidf("unknown Protobuf field at %s", path)
-	}
+	// The version checks come before the unknown field scan, and the order
+	// matters. A bundle built against a later version carries fields this
+	// runtime has never heard of, and reporting those as unknown fields calls a
+	// legitimate version gap a forged bundle. Asking first whether the bundle
+	// announces something unsupported gives the accurate answer:
+	// incompatible_ruleset, which tells the operator to upgrade rather than to
+	// suspect the file.
+	//
+	// It stays safe: the message is fully decoded by now, and both checks read
+	// declared scalars rather than following anything the bundle controls.
 	if bundle.GetFormatVersion() != SupportedFormatVersion {
 		return nil, incompatiblef("unsupported format_version %d", bundle.GetFormatVersion())
 	}
 	if err := validateFeatureIDs(bundle.GetRequiredFeatureIds()); err != nil {
 		return nil, err
+	}
+	if path, bad := findUnknownFields(bundle); bad {
+		return nil, invalidf("unknown Protobuf field at %s", path)
 	}
 	if err := validateRulesVersion(bundle.GetRulesVersion()); err != nil {
 		return nil, err
@@ -78,12 +88,31 @@ func validateFeatureIDs(ids []uint32) error {
 	return nil
 }
 
+// validateRulesVersion bounds the shape of the version, not only its emptiness.
+//
+// The value travels far beyond the loader: engines put it in generated sources,
+// in manifests and in logs. The Go engine found by fuzzing that a version
+// holding a NUL produced source code that would not compile - accepted by the
+// loader, fatal three steps later. Restricting it to the characters a version
+// actually uses removes that class of divergence for every engine at once.
 func validateRulesVersion(v string) error {
 	if v == "" {
 		return invalidf("rules_version must not be empty")
 	}
 	if !utf8.ValidString(v) {
 		return invalidf("rules_version is not valid UTF-8")
+	}
+	if len(v) > limits.MaxRulesVersionBytes {
+		return invalidf("rules_version exceeds %d bytes", limits.MaxRulesVersionBytes)
+	}
+	for _, r := range v {
+		switch {
+		case r >= '0' && r <= '9', r >= 'a' && r <= 'z', r >= 'A' && r <= 'Z':
+		case r == '.' || r == '-' || r == '_':
+		default:
+			return invalidf("rules_version holds %q, outside the accepted set of "+
+				"ASCII letters, digits, dot, dash and underscore", r)
+		}
 	}
 	return nil
 }
