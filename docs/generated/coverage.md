@@ -8,60 +8,63 @@ Rules version `2026.08.0`, IR format version `1`.
 
 | Kind | Country | Canonicalizer | Format | Checksum | Default profile | Sources |
 |---|---|---:|---:|---:|---|---:|
-| `euid` | `AT` | 3 | 95 | - | `compatible` | 1 |
-| `euid` | `BE` | 4 | 96 | 57 | `compatible` | 1 |
-| `euid` | `BG` | 5 | 97 | 58 | `compatible` | 2 |
-| `euid` | `CY` | 6 | 98 | - | `compatible` | 1 |
-| `euid` | `CZ` | 7 | 99 | 59 | `compatible` | 2 |
-| `euid` | `DE` | 8 | 100 | - | `compatible` | 1 |
-| `euid` | `DK` | 9 | 101 | 60 | `compatible` | 2 |
-| `euid` | `EE` | 10 | 102 | 61 | `compatible` | 2 |
-| `euid` | `EL` | 11 | 103 | - | `compatible` | 1 |
-| `euid` | `ES` | 12 | 104 | 62 | `compatible` | 2 |
-| `euid` | `FI` | 13 | 105 | 63 | `compatible` | 2 |
-| `euid` | `FR` | 14 | 106 | 64 | `compatible` | 2 |
-| `euid` | `HR` | 15 | 107 | - | `compatible` | 1 |
-| `euid` | `HU` | 16 | 108 | - | `compatible` | 1 |
-| `euid` | `IE` | 17 | 109 | - | `compatible` | 1 |
-| `euid` | `IT` | 18 | 110 | 65 | `compatible` | 1 |
-| `euid` | `LT` | 19 | 111 | 66 | `compatible` | 2 |
-| `euid` | `LU` | 20 | 112 | - | `compatible` | 1 |
-| `euid` | `LV` | 21 | 113 | 67 | `compatible` | 2 |
-| `euid` | `MT` | 22 | 114 | - | `compatible` | 1 |
-| `euid` | `NL` | 23 | 115 | - | `compatible` | 1 |
-| `euid` | `PL` | 24 | 116 | - | `compatible` | 1 |
-| `euid` | `PT` | 25 | 117 | 68 | `compatible` | 2 |
-| `euid` | `RO` | 26 | 118 | 69 | `compatible` | 2 |
-| `euid` | `SE` | 27 | 119 | 70 | `compatible` | 2 |
-| `euid` | `SI` | 28 | 120 | - | `compatible` | 1 |
-| `euid` | `SK` | 29 | 121 | 71 | `compatible` | 2 |
-| `lei` | `GLOBAL` | 32 | 124 | 74 | `compatible` | 1 |
-| `siren` | `FR` | 30 | 122 | 72 | `compatible` | 1 |
-| `siret` | `FR` | 31 | 123 | 73 | `compatible` | 1 |
-| `vat` | `AT` | 33 | 125 | - | `compatible` | 1 |
-| `vat` | `BE` | 34 | 126 | 75 | `compatible` | 2 |
-| `vat` | `BG` | 35 | 127 | 76 | `compatible` | 2 |
-| `vat` | `CY` | 36 | 128 | - | `compatible` | 1 |
-| `vat` | `CZ` | 37 | 129 | 77 | `compatible` | 2 |
-| `vat` | `DE` | 38 | 130 | - | `compatible` | 2 |
-| `vat` | `DK` | 39 | 131 | 78 | `compatible` | 2 |
-| `vat` | `EE` | 40 | 132 | 79 | `compatible` | 2 |
-| `vat` | `FI` | 41 | 133 | 80 | `compatible` | 2 |
-| `vat` | `FR` | 42 | 134 | 81 | `compatible` | 2 |
-| `vat` | `GR` | 43 | 135 | 82 | `compatible` | 2 |
-| `vat` | `HR` | 44 | 136 | - | `compatible` | 1 |
-| `vat` | `HU` | 45 | 137 | 83 | `compatible` | 2 |
-| `vat` | `IT` | 46 | 138 | 84 | `compatible` | 2 |
-| `vat` | `LU` | 47 | 139 | 85 | `compatible` | 2 |
-| `vat` | `LV` | 48 | 140 | 86 | `compatible` | 2 |
-| `vat` | `MT` | 49 | 141 | 87 | `compatible` | 2 |
-| `vat` | `NL` | 50 | 142 | 88 | `compatible` | 2 |
-| `vat` | `NO` | 51 | 143 | 89 | `compatible` | 2 |
-| `vat` | `PL` | 52 | 144 | 90 | `compatible` | 2 |
-| `vat` | `PT` | 53 | 145 | 91 | `compatible` | 2 |
-| `vat` | `SE` | 54 | 146 | 92 | `compatible` | 2 |
-| `vat` | `SI` | 55 | 147 | 93 | `compatible` | 2 |
-| `vat` | `SK` | 56 | 148 | 94 | `compatible` | 2 |
+| `euid` | `AT` | 3 | 100 | - | `compatible` | 1 |
+| `euid` | `BE` | 4 | 101 | 60 | `compatible` | 1 |
+| `euid` | `BG` | 5 | 102 | 61 | `compatible` | 2 |
+| `euid` | `CY` | 6 | 103 | - | `compatible` | 1 |
+| `euid` | `CZ` | 7 | 104 | 62 | `compatible` | 2 |
+| `euid` | `DE` | 8 | 105 | - | `compatible` | 1 |
+| `euid` | `DK` | 9 | 106 | 63 | `compatible` | 2 |
+| `euid` | `EE` | 10 | 107 | 64 | `compatible` | 2 |
+| `euid` | `EL` | 11 | 108 | - | `compatible` | 1 |
+| `euid` | `ES` | 12 | 109 | 65 | `compatible` | 2 |
+| `euid` | `FI` | 13 | 110 | 66 | `compatible` | 2 |
+| `euid` | `FR` | 14 | 111 | 67 | `compatible` | 2 |
+| `euid` | `HR` | 15 | 112 | - | `compatible` | 1 |
+| `euid` | `HU` | 16 | 113 | - | `compatible` | 1 |
+| `euid` | `IE` | 17 | 114 | - | `compatible` | 1 |
+| `euid` | `IT` | 18 | 115 | 68 | `compatible` | 1 |
+| `euid` | `LT` | 19 | 116 | 69 | `compatible` | 2 |
+| `euid` | `LU` | 20 | 117 | - | `compatible` | 1 |
+| `euid` | `LV` | 21 | 118 | 70 | `compatible` | 2 |
+| `euid` | `MT` | 22 | 119 | - | `compatible` | 1 |
+| `euid` | `NL` | 23 | 120 | - | `compatible` | 1 |
+| `euid` | `PL` | 24 | 121 | - | `compatible` | 1 |
+| `euid` | `PT` | 25 | 122 | 71 | `compatible` | 2 |
+| `euid` | `RO` | 26 | 123 | 72 | `compatible` | 2 |
+| `euid` | `SE` | 27 | 124 | 73 | `compatible` | 2 |
+| `euid` | `SI` | 28 | 125 | - | `compatible` | 1 |
+| `euid` | `SK` | 29 | 126 | 74 | `compatible` | 2 |
+| `lei` | `GLOBAL` | 32 | 129 | 77 | `compatible` | 1 |
+| `siren` | `FR` | 30 | 127 | 75 | `compatible` | 1 |
+| `siret` | `FR` | 31 | 128 | 76 | `compatible` | 1 |
+| `vat` | `AT` | 33 | 130 | - | `compatible` | 1 |
+| `vat` | `BE` | 34 | 131 | 78 | `compatible` | 2 |
+| `vat` | `BG` | 35 | 132 | 79 | `compatible` | 2 |
+| `vat` | `CY` | 36 | 133 | - | `compatible` | 1 |
+| `vat` | `CZ` | 37 | 134 | 80 | `compatible` | 2 |
+| `vat` | `DE` | 38 | 135 | - | `compatible` | 2 |
+| `vat` | `DK` | 39 | 136 | 81 | `compatible` | 2 |
+| `vat` | `EE` | 40 | 137 | 82 | `compatible` | 2 |
+| `vat` | `ES` | 41 | 138 | 83 | `compatible` | 2 |
+| `vat` | `FI` | 42 | 139 | 84 | `compatible` | 2 |
+| `vat` | `FR` | 43 | 140 | 85 | `compatible` | 2 |
+| `vat` | `GR` | 44 | 141 | 86 | `compatible` | 2 |
+| `vat` | `HR` | 45 | 142 | - | `compatible` | 1 |
+| `vat` | `HU` | 46 | 143 | 87 | `compatible` | 2 |
+| `vat` | `IT` | 47 | 144 | 88 | `compatible` | 2 |
+| `vat` | `LI` | 48 | 145 | - | `compatible` | 1 |
+| `vat` | `LU` | 49 | 146 | 89 | `compatible` | 2 |
+| `vat` | `LV` | 50 | 147 | 90 | `compatible` | 2 |
+| `vat` | `MT` | 51 | 148 | 91 | `compatible` | 2 |
+| `vat` | `NL` | 52 | 149 | 92 | `compatible` | 2 |
+| `vat` | `NO` | 53 | 150 | 93 | `compatible` | 2 |
+| `vat` | `PL` | 54 | 151 | 94 | `compatible` | 2 |
+| `vat` | `PT` | 55 | 152 | 95 | `compatible` | 2 |
+| `vat` | `RO` | 56 | 153 | 96 | `compatible` | 2 |
+| `vat` | `SE` | 57 | 154 | 97 | `compatible` | 2 |
+| `vat` | `SI` | 58 | 155 | 98 | `compatible` | 2 |
+| `vat` | `SK` | 59 | 156 | 99 | `compatible` | 2 |
 
 ## Dispatch tables
 
@@ -139,12 +142,14 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 | `DE` | `DE` | `DE` | no |
 | `DK` | `DK` | `DK` | no |
 | `EE` | `EE` | `EE` | no |
+| `ES` | `ES` | `ES` | no |
 | `FI` | `FI` | `FI` | no |
 | `FR` | `FR` | `FR` | no |
 | `GR` | `EL`, `GR` | `EL` | no |
 | `HR` | `HR` | `HR` | no |
 | `HU` | `HU` | `HU` | no |
 | `IT` | `IT` | `IT` | no |
+| `LI` | `LI` | `LI` | no |
 | `LU` | `LU` | `LU` | no |
 | `LV` | `LV` | `LV` | no |
 | `MT` | `MT` | `MT` | no |
@@ -152,6 +157,7 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 | `NO` | `NO` | `NO` | no |
 | `PL` | `PL` | `PL` | no |
 | `PT` | `PT` | `PT` | no |
+| `RO` | `RO` | `RO` | no |
 | `SE` | `SE` | `SE` | no |
 | `SI` | `SI` | `SI` | no |
 | `SK` | `SK` | `SK` | no |
@@ -160,54 +166,54 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 
 | Operation | Programs |
 |---|---:|
-| `ASSERTION_OP_KIND_REQUIRE` | 54 |
-| `ASSERTION_OP_KIND_SEQUENCE` | 54 |
+| `ASSERTION_OP_KIND_REQUIRE` | 57 |
+| `ASSERTION_OP_KIND_SEQUENCE` | 57 |
 | `CALL_OP_KIND_CHECKSUM` | 2 |
 | `CALL_OP_KIND_FORMAT` | 2 |
 | `CANONICALIZATION_OP_KIND_INSERT` | 1 |
-| `CANONICALIZATION_OP_KIND_PREPEND_COUNTRY_IF_MISSING` | 51 |
-| `CANONICALIZATION_OP_KIND_REMOVE_CHARS` | 29 |
-| `CANONICALIZATION_OP_KIND_REMOVE_WHITESPACE` | 56 |
+| `CANONICALIZATION_OP_KIND_PREPEND_COUNTRY_IF_MISSING` | 54 |
+| `CANONICALIZATION_OP_KIND_REMOVE_CHARS` | 32 |
+| `CANONICALIZATION_OP_KIND_REMOVE_WHITESPACE` | 59 |
 | `CANONICALIZATION_OP_KIND_REPLACE_PREFIX` | 1 |
-| `CANONICALIZATION_OP_KIND_SEQUENCE` | 56 |
-| `CANONICALIZATION_OP_KIND_TRIM_WHITESPACE` | 56 |
-| `CANONICALIZATION_OP_KIND_UPPERCASE_ASCII` | 56 |
+| `CANONICALIZATION_OP_KIND_SEQUENCE` | 59 |
+| `CANONICALIZATION_OP_KIND_TRIM_WHITESPACE` | 59 |
+| `CANONICALIZATION_OP_KIND_UPPERCASE_ASCII` | 59 |
 | `CANONICALIZATION_OP_KIND_WHEN` | 1 |
 | `CHECKSUM_OP_KIND_ALL_CHECKS` | 1 |
 | `CHECKSUM_OP_KIND_ANY_CHECK` | 1 |
-| `CHECKSUM_OP_KIND_CHOOSE` | 8 |
+| `CHECKSUM_OP_KIND_CHOOSE` | 10 |
 | `CHECKSUM_OP_KIND_COMPARE_CONSTANT` | 5 |
-| `CHECKSUM_OP_KIND_COMPARE_DIGIT` | 20 |
+| `CHECKSUM_OP_KIND_COMPARE_DIGIT` | 21 |
 | `CHECKSUM_OP_KIND_COMPARE_SLICE` | 5 |
 | `CHECKSUM_OP_KIND_ISO7064_MOD97_10` | 1 |
-| `CHECKSUM_OP_KIND_LUHN` | 7 |
-| `CHECKSUM_OP_KIND_UNSUPPORTED` | 2 |
-| `CHECKSUM_OP_KIND_WHEN` | 8 |
+| `CHECKSUM_OP_KIND_LUHN` | 8 |
+| `CHECKSUM_OP_KIND_UNSUPPORTED` | 3 |
+| `CHECKSUM_OP_KIND_WHEN` | 10 |
 | `INTEGER_OP_KIND_COMPLEMENT` | 3 |
 | `INTEGER_OP_KIND_DIGITS_TO_INTEGER` | 2 |
-| `INTEGER_OP_KIND_MODULO` | 27 |
+| `INTEGER_OP_KIND_MODULO` | 28 |
 | `INTEGER_OP_KIND_MOD_DIGITS` | 3 |
-| `INTEGER_OP_KIND_REMAINDER_MAP` | 22 |
-| `INTEGER_OP_KIND_WEIGHTED_SUM` | 25 |
+| `INTEGER_OP_KIND_REMAINDER_MAP` | 23 |
+| `INTEGER_OP_KIND_WEIGHTED_SUM` | 26 |
 | `PREDICATE_OP_KIND_ALL` | 4 |
 | `PREDICATE_OP_KIND_ANY` | 4 |
-| `PREDICATE_OP_KIND_ASCII_ALPHANUMERIC` | 29 |
-| `PREDICATE_OP_KIND_ASCII_DIGITS` | 54 |
-| `PREDICATE_OP_KIND_CHAR_AT_IN` | 11 |
+| `PREDICATE_OP_KIND_ASCII_ALPHANUMERIC` | 30 |
+| `PREDICATE_OP_KIND_ASCII_DIGITS` | 57 |
+| `PREDICATE_OP_KIND_CHAR_AT_IN` | 13 |
 | `PREDICATE_OP_KIND_CONTAINS` | 27 |
 | `PREDICATE_OP_KIND_INTEGER_IS` | 4 |
 | `PREDICATE_OP_KIND_IS_ABSENT` | 27 |
-| `PREDICATE_OP_KIND_IS_EMPTY` | 54 |
-| `PREDICATE_OP_KIND_LENGTH_BETWEEN` | 27 |
-| `PREDICATE_OP_KIND_LENGTH_EQ` | 50 |
-| `PREDICATE_OP_KIND_NOT` | 54 |
+| `PREDICATE_OP_KIND_IS_EMPTY` | 57 |
+| `PREDICATE_OP_KIND_LENGTH_BETWEEN` | 28 |
+| `PREDICATE_OP_KIND_LENGTH_EQ` | 53 |
+| `PREDICATE_OP_KIND_NOT` | 57 |
 | `PREDICATE_OP_KIND_PROFILE_IS` | 1 |
-| `PREDICATE_OP_KIND_STARTS_WITH` | 52 |
+| `PREDICATE_OP_KIND_STARTS_WITH` | 55 |
 | `STRING_OP_KIND_AFTER_FIRST` | 42 |
 | `STRING_OP_KIND_BEFORE_FIRST` | 27 |
-| `STRING_OP_KIND_SLICE` | 38 |
-| `STRING_OP_KIND_SLICE_FROM` | 44 |
-| `STRING_OP_KIND_SUBJECT` | 92 |
+| `STRING_OP_KIND_SLICE` | 41 |
+| `STRING_OP_KIND_SLICE_FROM` | 48 |
+| `STRING_OP_KIND_SUBJECT` | 97 |
 | `STRING_OP_KIND_VALUE` | 1 |
 
 ## Rules without a published checksum
@@ -228,6 +234,7 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 - `vat` / `CY`: reports `unsupported_checksum`.
 - `vat` / `DE`: reports `unsupported_checksum`.
 - `vat` / `HR`: reports `unsupported_checksum`.
+- `vat` / `LI`: reports `checksum_not_published`.
 
 ## Required capabilities
 
@@ -275,6 +282,7 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 | [`el-gemi-number`](https://www.businessportal.gr) | Geniko Emporiko Mitroo (GEMI) | GR | 2026-08-20 | Greek public sector information |
 | [`es-aeat-nif`](https://sede.agenciatributaria.gob.es) | Agencia Estatal de Administracion Tributaria (AEAT) | ES | 2026-08-20 | Spanish public sector information |
 | [`es-cif-check`](https://en.wikipedia.org/wiki/VAT_identification_number) | Wikipedia | ES | 2026-08-20 | CC BY-SA 4.0, cited as a description and not redistributed |
+| [`es-vat-check`](https://en.wikipedia.org/wiki/VAT_identification_number) | Wikipedia | ES | 2026-08-20 | CC BY-SA 4.0, cited as a description and not redistributed |
 | [`eu-2015-884-euid`](https://eur-lex.europa.eu/eli/reg_impl/2015/884/oj) | European Commission | EU | 2026-08-18 | EUR-Lex reuse policy, Decision 2011/833/EU |
 | [`eu-vies-number-structure`](https://ec.europa.eu/taxation_customs/vies/) | European Commission, Directorate-General for Taxation and Customs Union | EU | 2026-08-20 | European Commission reuse policy, Decision 2011/833/EU |
 | [`fi-prh-ytunnus`](https://www.prh.fi) | Patentti- ja rekisterihallitus (PRH) | FI | 2026-08-20 | Finnish public sector information |
@@ -309,6 +317,7 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 | [`pt-vat-check`](https://en.wikipedia.org/wiki/VAT_identification_number) | Wikipedia | PT | 2026-08-20 | CC BY-SA 4.0, cited as a description and not redistributed |
 | [`ro-cui-mod11`](https://en.wikipedia.org/wiki/VAT_identification_number) | Wikipedia | RO | 2026-08-20 | CC BY-SA 4.0, cited as a description and not redistributed |
 | [`ro-onrc-cui`](https://www.onrc.ro) | Oficiul National al Registrului Comertului (ONRC) | RO | 2026-08-20 | Romanian public sector information |
+| [`ro-vat-check`](https://en.wikipedia.org/wiki/VAT_identification_number) | Wikipedia | RO | 2026-08-20 | CC BY-SA 4.0, cited as a description and not redistributed |
 | [`se-organisationsnummer-luhn`](https://sv.wikipedia.org/wiki/Organisationsnummer) | Wikipedia | SE | 2026-08-20 | CC BY-SA 4.0, cited as a description and not redistributed |
 | [`se-skatteverket-organisationsnummer`](https://docs.swedenconnect.se/technical-framework/mirror/skv/skv709-8.pdf) | Skatteverket (Swedish Tax Agency) | SE | 2026-08-20 | Swedish public sector information |
 | [`se-vat-check`](https://en.wikipedia.org/wiki/VAT_identification_number) | Wikipedia | SE | 2026-08-20 | CC BY-SA 4.0, cited as a description and not redistributed |
@@ -320,7 +329,7 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 
 ## Conformance statistics
 
-Total cases: **387**.
+Total cases: **403**.
 
 | Kind | Cases |
 |---|---:|
@@ -333,7 +342,7 @@ Total cases: **387**.
 | `siren` | 40 |
 | `siret` | 16 |
 | `unknown_kind` | 2 |
-| `vat` | 143 |
+| `vat` | 159 |
 | `vat_number` | 1 |
 
 | Tag | Cases |
@@ -347,7 +356,7 @@ Total cases: **387**.
 | `canonicalize` | 13 |
 | `capabilities` | 2 |
 | `characters` | 20 |
-| `checksum` | 118 |
+| `checksum` | 120 |
 | `composition` | 17 |
 | `country` | 14 |
 | `cycle` | 1 |
@@ -362,11 +371,11 @@ Total cases: **387**.
 | `graph` | 5 |
 | `hole` | 4 |
 | `implicit` | 1 |
-| `invalid` | 199 |
+| `invalid` | 203 |
 | `iso7064` | 2 |
 | `legacy` | 3 |
-| `length` | 39 |
-| `letter` | 1 |
+| `length` | 49 |
+| `letter` | 2 |
 | `limits` | 3 |
 | `luhn` | 3 |
 | `message_key` | 1 |
@@ -375,7 +384,7 @@ Total cases: **387**.
 | `mutation` | 77 |
 | `normalization` | 15 |
 | `parameters` | 1 |
-| `person` | 5 |
+| `person` | 6 |
 | `prefix` | 2 |
 | `profile` | 8 |
 | `real` | 5 |
@@ -384,17 +393,17 @@ Total cases: **387**.
 | `shape` | 13 |
 | `strict` | 6 |
 | `structure` | 2 |
-| `synthetic` | 357 |
+| `synthetic` | 373 |
 | `truncation` | 1 |
 | `types` | 1 |
 | `unknown-field` | 1 |
-| `unsupported` | 22 |
-| `valid` | 128 |
+| `unsupported` | 24 |
+| `valid` | 138 |
 | `version` | 3 |
 | `weighted` | 4 |
 
 | Data classification | Cases |
 |---|---:|
 | `public_business_identifier` | 5 |
-| `synthetic` | 382 |
+| `synthetic` | 398 |
 

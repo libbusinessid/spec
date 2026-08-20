@@ -179,4 +179,25 @@ dispatcher "vat" {
     canonical_prefix  = "NO"
     identifier        = identifier.vat.NO
   }
+
+  target {
+    country_code      = "ES"
+    accepted_prefixes = ["ES"]
+    canonical_prefix  = "ES"
+    identifier        = identifier.vat.ES
+  }
+
+  target {
+    country_code      = "LI"
+    accepted_prefixes = ["LI"]
+    canonical_prefix  = "LI"
+    identifier        = identifier.vat.LI
+  }
+
+  target {
+    country_code      = "RO"
+    accepted_prefixes = ["RO"]
+    canonical_prefix  = "RO"
+    identifier        = identifier.vat.RO
+  }
 }
