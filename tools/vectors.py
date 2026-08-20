@@ -240,3 +240,18 @@ def vat_no_check(first8: str):
     if c == 10:
         return None
     return str(0 if c == 11 else c)
+
+
+def gb_ok(nine: str) -> bool:
+    """UK VAT: the last two digits folded into the weighted sum, modulo 97."""
+    ws = sum(int(c) * w for c, w in zip(nine, (8, 7, 6, 5, 4, 3, 2, 10, 1)))
+    return ws % 97 in (0, 42)
+
+
+def is_check(first8: str):
+    """Icelandic ten digit form, the same shape as the Norwegian check."""
+    m = sum(int(c) * w for c, w in zip(first8, (3, 2, 7, 6, 5, 4, 3, 2))) % 11
+    c = 11 - m
+    if c == 10:
+        return None
+    return str(0 if c == 11 else c)

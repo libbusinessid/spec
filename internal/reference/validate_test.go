@@ -142,7 +142,7 @@ func TestPilotValidate(t *testing.T) {
 			"BE0123456749", step{reference.StatusInvalid, countryMismatch, ""}, step{reference.StatusNotRun, notRunInvalid, ""}},
 		{"missing country", reference.Input{Kind: "vat", Value: "0123456749"}, "",
 			"0123456749", step{reference.StatusUnsupported, missingCountry, ""}, step{reference.StatusNotRun, notRunUnsup, ""}},
-		{"unsupported country", reference.Input{Kind: "vat", Value: "0123456749", CountryCode: ptr("UK")}, "",
+		{"unsupported country", reference.Input{Kind: "vat", Value: "0123456749", CountryCode: ptr("JP")}, "",
 			"0123456749", step{reference.StatusUnsupported, unsupCountryCode, ""}, step{reference.StatusNotRun, notRunUnsup, ""}},
 	}
 	for _, tc := range tests {
