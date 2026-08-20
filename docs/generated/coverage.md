@@ -2,7 +2,7 @@
 
 # Rule coverage
 
-Rules version `2026.08.5`, IR format version `1`.
+Rules version `2026.08.6`, IR format version `1`.
 
 ## Country by kind matrix
 
@@ -252,8 +252,9 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 | `PREDICATE_OP_KIND_LENGTH_BETWEEN` | 31 |
 | `PREDICATE_OP_KIND_LENGTH_EQ` | 62 |
 | `PREDICATE_OP_KIND_NOT` | 69 |
+| `PREDICATE_OP_KIND_PREFIX_IN` | 1 |
 | `PREDICATE_OP_KIND_PROFILE_IS` | 1 |
-| `PREDICATE_OP_KIND_STARTS_WITH` | 60 |
+| `PREDICATE_OP_KIND_STARTS_WITH` | 59 |
 | `STRING_OP_KIND_AFTER_FIRST` | 42 |
 | `STRING_OP_KIND_BEFORE_FIRST` | 27 |
 | `STRING_OP_KIND_SLICE` | 46 |

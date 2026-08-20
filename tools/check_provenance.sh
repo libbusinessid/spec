@@ -27,10 +27,24 @@ for file in ${changed_rules}; do
 done
 
 # A rule change must also change the conformance corpus.
+#
+# A change that leaves behaviour untouched is the one exception, and it needs a
+# way out that is not "add a case until the job goes green": a case written to
+# silence CI teaches nothing and makes the corpus worse. The way out is a
+# trailer naming the reason, so the exception is stated in the history rather
+# than hidden in a filler case. `businessidc diff` cannot settle this on its
+# own - it reports that the program changed, which is true and says nothing
+# about behaviour.
+exempt="$(git log --format=%B "${base}"...HEAD | sed -n 's/^No-Behaviour-Change:[[:space:]]*//p' | head -1)"
 changed_cases="$(git diff --name-only "${base}"...HEAD -- 'conformance/**/*.jsonl' || true)"
 if [[ -z "${changed_cases}" ]]; then
-  echo "::error::a rule change must come with conformance cases"
-  status=1
+  if [[ -n "${exempt}" ]]; then
+    echo "::notice::no conformance case changed, declared as behaviour preserving: ${exempt}"
+  else
+    echo "::error::a rule change must come with conformance cases, or a commit"
+    echo "::error::trailer 'No-Behaviour-Change: <reason>' when behaviour is preserved"
+    status=1
+  fi
 fi
 
 # Publish the classified diff between the base bundle and the new one.
@@ -57,6 +71,10 @@ go run ./cmd/businessidc diff \
 
 if grep -q '^restriction' "${tmp}/diff.txt"; then
   echo "::warning::this pull request restricts an existing rule and requires a reinforced review"
+  if [[ -n "${exempt}" ]]; then
+    echo "::error::a restriction is a change of behaviour; No-Behaviour-Change does not apply"
+    status=1
+  fi
 fi
 
 exit "${status}"
