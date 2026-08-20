@@ -30,45 +30,14 @@ format "euid" "at" {
     require(not(is_absent(capture.register)), "invalid_format", "euid.at.register"),
     require(length_between(capture.register, 1, 8), "invalid_length", "euid.at.register_length"),
     require(ascii_alphanumeric(capture.register), "invalid_characters", "euid.at.register_characters"),
-    require(length_between(capture.registration, 2, 7), "invalid_length", "euid.at.registration_length"),
-    require(ascii_alphanumeric(capture.registration), "invalid_characters", "euid.at.registration_characters"),
-    require(
-      any(
-        all(
-          length_eq(capture.registration, 2),
-          ascii_digits(slice(capture.registration, 0, 1)),
-          char_at_in(capture.registration, 1, "ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
-        ),
-        all(
-          length_eq(capture.registration, 3),
-          ascii_digits(slice(capture.registration, 0, 2)),
-          char_at_in(capture.registration, 2, "ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
-        ),
-        all(
-          length_eq(capture.registration, 4),
-          ascii_digits(slice(capture.registration, 0, 3)),
-          char_at_in(capture.registration, 3, "ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
-        ),
-        all(
-          length_eq(capture.registration, 5),
-          ascii_digits(slice(capture.registration, 0, 4)),
-          char_at_in(capture.registration, 4, "ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
-        ),
-        all(
-          length_eq(capture.registration, 6),
-          ascii_digits(slice(capture.registration, 0, 5)),
-          char_at_in(capture.registration, 5, "ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
-        ),
-        all(
-          length_eq(capture.registration, 7),
-          ascii_digits(slice(capture.registration, 0, 6)),
-          char_at_in(capture.registration, 6, "ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
-        ),
-      ),
-      "invalid_format",
-      "euid.at.registration_shape",
-    ),
   ]
+
+  # The registration part is the national number, so the national rule is
+  # applied to it rather than restated here.
+  use_format {
+    rule  = format.at.firmenbuchnummer
+    input = capture.registration
+  }
 }
 
 identifier "euid" "AT" {

@@ -48,25 +48,18 @@ format "euid" "es" {
     require(not(is_absent(capture.register)), "invalid_format", "euid.es.register"),
     require(length_between(capture.register, 1, 8), "invalid_length", "euid.es.register_length"),
     require(ascii_alphanumeric(capture.register), "invalid_characters", "euid.es.register_characters"),
-    require(length_eq(capture.registration, 9), "invalid_length", "euid.es.registration_length"),
-    require(ascii_alphanumeric(capture.registration), "invalid_characters", "euid.es.registration_characters"),
-    require(
-      char_at_in(capture.registration, 0, "ABCDEFGHJNPQRSUVW"),
-      "invalid_format",
-      "euid.es.registration_legal_entity",
-    ),
-    require(ascii_digits(slice(capture.registration, 1, 8)), "invalid_characters", "euid.es.registration_body"),
   ]
+
+  # The registration part is the national number, so the national rule is
+  # applied to it rather than restated here.
+  use_format {
+    rule  = format.es.nif
+    input = capture.registration
+  }
 }
 
 checksum "euid" "es" {
-  rule = choose(
-    when_checksum(
-      char_at_in(after_first(subject(), "."), 8, "0123456789"),
-      luhn(slice(after_first(subject(), "."), 1, 9)),
-    ),
-    unsupported_checksum("checksum_not_published"),
-  )
+  rule = apply_checksum(checksum.es.nif, after_first(subject(), "."))
 }
 
 identifier "euid" "ES" {

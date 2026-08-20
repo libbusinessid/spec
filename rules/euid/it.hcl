@@ -33,13 +33,18 @@ format "euid" "it" {
     require(not(is_absent(capture.register)), "invalid_format", "euid.it.register"),
     require(length_between(capture.register, 1, 8), "invalid_length", "euid.it.register_length"),
     require(ascii_alphanumeric(capture.register), "invalid_characters", "euid.it.register_characters"),
-    require(length_eq(capture.registration, 11), "invalid_length", "euid.it.registration_length"),
-    require(ascii_digits(capture.registration), "invalid_characters", "euid.it.registration_characters"),
   ]
+
+  # The registration part is the national number, so the national rule is
+  # applied to it rather than restated here.
+  use_format {
+    rule  = format.it.codice_fiscale_impresa
+    input = capture.registration
+  }
 }
 
 checksum "euid" "it" {
-  rule = luhn(after_first(subject(), "."))
+  rule = apply_checksum(checksum.it.codice_fiscale_impresa, after_first(subject(), "."))
 }
 
 identifier "euid" "IT" {

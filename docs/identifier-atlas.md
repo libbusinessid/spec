@@ -99,6 +99,14 @@ the dot, so the two cannot drift apart.
 | Japan | **Corporate Number** | National Tax Agency | supported | checked (mod 9 over alternating weights) | 14 |
 | Brazil | **CNPJ** | Receita Federal | supported | checked (two rounds of mod 11, alphanumeric form of 2026 included) | 19 |
 | Belgium | **Enterprise number** | Banque-Carrefour des Entreprises | supported | checked (mod 97) | 12 |
+| Austria | **Firmenbuchnummer (`firmenbuchnummer`)** | Firmenbuch | supported | format | 4 |
+| Cyprus | **HE number (`he_number`)** | Registrar of Companies | supported | format | 3 |
+| Germany | **Handelsregisternummer (`handelsregisternummer`)** | Registry courts | supported | format | 1 |
+| Ireland | **CRO number (`cro_number`)** | Companies Registration Office | supported | format | 4 |
+| Italy | **Codice fiscale (`codice_fiscale_impresa`)** | Registro Imprese | supported | checked (Luhn) | 4 |
+| Luxembourg | **RCS number (`rcs_number`)** | RCS | supported | format | 4 |
+| Malta | **MBR number (`mbr_number`)** | Malta Business Registry | supported | format | 4 |
+| Spain | **NIF (`nif`)** | Agencia Tributaria | supported | checked (Luhn or letter) | 4 |
 | Bulgaria | **EIK** | Registry Agency | supported | checked (mod 11) | 4 |
 | Croatia | **MBS** | Sudski registar | supported | format | 3 |
 | Czechia | **IČO** | Czech Statistical Office | supported | checked (mod 11) | 5 |

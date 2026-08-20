@@ -28,10 +28,14 @@ format "euid" "lu" {
     require(not(is_absent(capture.register)), "invalid_format", "euid.lu.register"),
     require(length_between(capture.register, 1, 8), "invalid_length", "euid.lu.register_length"),
     require(ascii_alphanumeric(capture.register), "invalid_characters", "euid.lu.register_characters"),
-    require(length_between(capture.registration, 5, 7), "invalid_length", "euid.lu.registration_length"),
-    require(starts_with(capture.registration, "B"), "invalid_format", "euid.lu.registration_prefix"),
-    require(ascii_digits(slice_from(capture.registration, 1)), "invalid_characters", "euid.lu.registration_characters"),
   ]
+
+  # The registration part is the national number, so the national rule is
+  # applied to it rather than restated here.
+  use_format {
+    rule  = format.lu.rcs_number
+    input = capture.registration
+  }
 }
 
 identifier "euid" "LU" {
