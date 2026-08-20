@@ -149,7 +149,7 @@ func sweepFixture(t *testing.T, rows string) (string, string) {
 // A register holds only identifiers that exist, so a rule that refuses none of
 // them is the whole claim a sweep makes.
 func TestRunSweepAcceptsEveryIdentifierOfTheRegister(t *testing.T) {
-	m, d := sweepFixture(t, "siren\n012345674\n112345674\n022345674\n")
+	m, d := sweepFixture(t, "siren\n012345674\n123456782\n000000000\n")
 	ok, err := runSweep("fr-test="+d, testeeCommand(t), 0, m)
 	if err != nil {
 		t.Fatal(err)
