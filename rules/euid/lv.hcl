@@ -11,6 +11,10 @@
 # The check digit is three minus the weighted sum, modulo eleven. A result of
 # ten is not issued, and the remainder table maps it to ten so that no single
 # digit can match it.
+#
+# Note on scope. The VAT rule of this country accepts the identifier of a sole
+# trader, because such a person invoices under it and refusing it would refuse a
+# real business identifier. The register rule stays restricted to legal entities for the same reason: the EUID comes from the register of companies, which a person carrying on an activity does not enter. If that proves wrong for some Member State, the restriction should be revisited.
 
 canonicalizer "euid" "lv" {
   steps = [

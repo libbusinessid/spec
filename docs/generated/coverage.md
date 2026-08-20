@@ -2,7 +2,7 @@
 
 # Rule coverage
 
-Rules version `2026.08.1`, IR format version `1`.
+Rules version `2026.08.2`, IR format version `1`.
 
 ## Country by kind matrix
 
@@ -208,22 +208,22 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 | `CANONICALIZATION_OP_KIND_WHEN` | 1 |
 | `CHECKSUM_OP_KIND_ALL_CHECKS` | 1 |
 | `CHECKSUM_OP_KIND_ANY_CHECK` | 1 |
-| `CHECKSUM_OP_KIND_CHOOSE` | 10 |
+| `CHECKSUM_OP_KIND_CHOOSE` | 12 |
 | `CHECKSUM_OP_KIND_COMPARE_CONSTANT` | 5 |
 | `CHECKSUM_OP_KIND_COMPARE_DIGIT` | 21 |
 | `CHECKSUM_OP_KIND_COMPARE_SLICE` | 5 |
 | `CHECKSUM_OP_KIND_ISO7064_MOD97_10` | 1 |
 | `CHECKSUM_OP_KIND_LUHN` | 8 |
-| `CHECKSUM_OP_KIND_UNSUPPORTED` | 3 |
-| `CHECKSUM_OP_KIND_WHEN` | 10 |
+| `CHECKSUM_OP_KIND_UNSUPPORTED` | 6 |
+| `CHECKSUM_OP_KIND_WHEN` | 12 |
 | `INTEGER_OP_KIND_COMPLEMENT` | 3 |
 | `INTEGER_OP_KIND_DIGITS_TO_INTEGER` | 2 |
 | `INTEGER_OP_KIND_MODULO` | 28 |
 | `INTEGER_OP_KIND_MOD_DIGITS` | 3 |
 | `INTEGER_OP_KIND_REMAINDER_MAP` | 23 |
 | `INTEGER_OP_KIND_WEIGHTED_SUM` | 26 |
-| `PREDICATE_OP_KIND_ALL` | 4 |
-| `PREDICATE_OP_KIND_ANY` | 4 |
+| `PREDICATE_OP_KIND_ALL` | 6 |
+| `PREDICATE_OP_KIND_ANY` | 6 |
 | `PREDICATE_OP_KIND_ASCII_ALPHANUMERIC` | 31 |
 | `PREDICATE_OP_KIND_ASCII_DIGITS` | 59 |
 | `PREDICATE_OP_KIND_ASCII_UPPER_LETTERS` | 1 |
@@ -232,9 +232,9 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 | `PREDICATE_OP_KIND_INTEGER_IS` | 4 |
 | `PREDICATE_OP_KIND_IS_ABSENT` | 27 |
 | `PREDICATE_OP_KIND_IS_EMPTY` | 60 |
-| `PREDICATE_OP_KIND_LENGTH_BETWEEN` | 29 |
-| `PREDICATE_OP_KIND_LENGTH_EQ` | 55 |
-| `PREDICATE_OP_KIND_NOT` | 60 |
+| `PREDICATE_OP_KIND_LENGTH_BETWEEN` | 30 |
+| `PREDICATE_OP_KIND_LENGTH_EQ` | 56 |
+| `PREDICATE_OP_KIND_NOT` | 63 |
 | `PREDICATE_OP_KIND_PROFILE_IS` | 1 |
 | `PREDICATE_OP_KIND_STARTS_WITH` | 55 |
 | `STRING_OP_KIND_AFTER_FIRST` | 42 |
@@ -313,7 +313,7 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 | [`el-gemi-number`](https://www.businessportal.gr) | Geniko Emporiko Mitroo (GEMI) | GR | 2026-08-20 | Greek public sector information |
 | [`es-aeat-nif`](https://sede.agenciatributaria.gob.es) | Agencia Estatal de Administracion Tributaria (AEAT) | ES | 2026-08-20 | Spanish public sector information |
 | [`es-cif-check`](https://en.wikipedia.org/wiki/VAT_identification_number) | Wikipedia | ES | 2026-08-20 | CC BY-SA 4.0, cited as a description and not redistributed |
-| [`es-vat-check`](https://en.wikipedia.org/wiki/VAT_identification_number) | Wikipedia | ES | 2026-08-20 | CC BY-SA 4.0, cited as a description and not redistributed |
+| [`es-vat-check`](https://sede.agenciatributaria.gob.es/Sede/censos-nif-domicilio-fiscal/solicitar-nif.html) | Agencia Estatal de Administracion Tributaria (AEAT) | ES | 2026-08-20 | Spanish public sector information |
 | [`eu-2015-884-euid`](https://eur-lex.europa.eu/eli/reg_impl/2015/884/oj) | European Commission | EU | 2026-08-18 | EUR-Lex reuse policy, Decision 2011/833/EU |
 | [`eu-eori-number`](https://taxation-customs.ec.europa.eu/customs-4/customs-procedures-import-and-export/customs-procedures/economic-operators-registration-and-identification-number-eori_en) | European Commission, Directorate-General for Taxation and Customs Union | EU | 2026-08-20 | European Commission reuse policy, Decision 2011/833/EU |
 | [`eu-vies-number-structure`](https://ec.europa.eu/taxation_customs/vies/) | European Commission, Directorate-General for Taxation and Customs Union | EU | 2026-08-20 | European Commission reuse policy, Decision 2011/833/EU |
@@ -363,7 +363,7 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 
 ## Conformance statistics
 
-Total cases: **413**.
+Total cases: **414**.
 
 | Kind | Cases |
 |---|---:|
@@ -379,7 +379,7 @@ Total cases: **413**.
 | `siren` | 40 |
 | `siret` | 16 |
 | `unknown_kind` | 2 |
-| `vat` | 159 |
+| `vat` | 160 |
 | `vat_number` | 1 |
 
 | Tag | Cases |
@@ -408,7 +408,7 @@ Total cases: **413**.
 | `graph` | 5 |
 | `hole` | 4 |
 | `implicit` | 1 |
-| `invalid` | 207 |
+| `invalid` | 204 |
 | `iso7064` | 2 |
 | `legacy` | 3 |
 | `length` | 51 |
@@ -427,20 +427,21 @@ Total cases: **413**.
 | `real` | 5 |
 | `reason-code` | 1 |
 | `security` | 27 |
-| `shape` | 13 |
+| `shape` | 14 |
+| `sole_trader` | 4 |
 | `strict` | 6 |
 | `structure` | 2 |
-| `synthetic` | 383 |
+| `synthetic` | 384 |
 | `truncation` | 1 |
 | `types` | 1 |
 | `unknown-field` | 1 |
 | `unsupported` | 24 |
-| `valid` | 144 |
+| `valid` | 148 |
 | `version` | 3 |
 | `weighted` | 4 |
 
 | Data classification | Cases |
 |---|---:|
 | `public_business_identifier` | 5 |
-| `synthetic` | 408 |
+| `synthetic` | 409 |
 

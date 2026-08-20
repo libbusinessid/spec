@@ -1,10 +1,12 @@
 # Czechia - VAT identification number (DIC)
 #
-# Eight digits, the ICO of the register of legal entities.
+# Eight digits for a legal person, the ICO of the register, and nine or ten for
+# a self employed person, whose tax number is built on their birth number. All
+# three are business identifiers, and a sole trader invoices under one of them.
 #
-# The nine and ten digit forms are rodne cislo, the birth numbers of natural
-# persons. They are not accepted, for the reason Bulgaria is restricted the same
-# way.
+# The check applies to the eight digit form. The longer ones close on the birth
+# number algorithm, which is not published as a tax number check, so they report
+# unsupported.
 
 canonicalizer "vat" "cz" {
   steps = [
@@ -19,16 +21,25 @@ canonicalizer "vat" "cz" {
 format "vat" "cz" {
   checks = [
     require(not(is_empty(subject())), "empty", "vat.cz.empty"),
-    require(length_eq(subject(), 10), "invalid_length", "vat.cz.length"),
+    require(length_between(subject(), 10, 12), "invalid_length", "vat.cz.length"),
     require(starts_with(subject(), "CZ"), "invalid_format", "vat.cz.prefix"),
     require(ascii_digits(slice_from(subject(), 2)), "invalid_characters", "vat.cz.characters"),
   ]
 }
 
 checksum "vat" "cz" {
-  rule = compare_digit(
-    remainder_map(modulo(weighted_sum(slice(slice_from(subject(), 2), 0, 7), [8, 7, 6, 5, 4, 3, 2], "left", "digit_value"), 11), [1, 0, 9, 8, 7, 6, 5, 4, 3, 2, 1]),
-    slice_from(subject(), 2), 7,
+  rule = choose(
+    when_checksum(
+      not(length_eq(subject(), 10)),
+      unsupported_checksum("checksum_not_published"),
+    ),
+    compare_digit(
+      remainder_map(
+        modulo(weighted_sum(slice(slice_from(subject(), 2), 0, 7), [8, 7, 6, 5, 4, 3, 2], "left", "digit_value"), 11),
+        [1, 0, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+      ),
+      slice_from(subject(), 2), 7,
+    ),
   )
 }
 

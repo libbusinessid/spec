@@ -18,6 +18,10 @@
 # IR does not have, so those numbers report `unsupported` rather than a verdict.
 # The leading letters that require the letter form - P, Q, R, S and W - therefore
 # always land there, and the others are checked.
+#
+# Note on scope. The VAT rule of this country accepts the identifier of a sole
+# trader, because such a person invoices under it and refusing it would refuse a
+# real business identifier. The register rule stays restricted to the CIF: a sole trader is not entered in the register of companies that feeds the EUID, so no EUID is issued against a DNI. If a Member State does register sole traders under this scheme, that restriction becomes wrong and should be revisited.
 
 canonicalizer "euid" "es" {
   steps = [
