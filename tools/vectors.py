@@ -121,3 +121,27 @@ def ro_check(body: str) -> str:
     """Romanian CUI: weights aligned on the right of the digits before the check."""
     w = (7, 5, 3, 2, 1, 7, 5, 3, 2)[-len(body):]
     return str(sum(int(c) * x for c, x in zip(body, w)) * 10 % 11 % 10)
+
+
+def bg_check(first8: str) -> str:
+    """Bulgarian BULSTAT: weights 1..8, sent through 3..10 on a ten."""
+    total = sum(int(c) * w for c, w in zip(first8, range(1, 9)))
+    if total % 11 == 10:
+        total = sum(int(c) * w for c, w in zip(first8, range(3, 11)))
+    return str(total % 11 % 10)
+
+
+def fi_check(first7: str):
+    """Finnish Y-tunnus: a remainder of one is never issued."""
+    total = sum(int(c) * w for c, w in zip(first7, (7, 9, 10, 5, 8, 4, 2)))
+    m = total % 11
+    if m == 1:
+        return None
+    return str(0 if m == 0 else 11 - m)
+
+
+def lv_check(first10: str):
+    """Latvian legal entity: three minus the sum, a ten never being issued."""
+    total = sum(int(c) * w for c, w in zip(first10, (9, 1, 4, 8, 3, 10, 2, 5, 7, 6)))
+    c = (3 - total) % 11
+    return None if c == 10 else str(c)

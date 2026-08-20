@@ -167,4 +167,25 @@ dispatcher "euid" {
     canonical_prefix  = "DE"
     identifier        = identifier.euid.DE
   }
+
+  target {
+    country_code      = "BG"
+    accepted_prefixes = ["BG"]
+    canonical_prefix  = "BG"
+    identifier        = identifier.euid.BG
+  }
+
+  target {
+    country_code      = "FI"
+    accepted_prefixes = ["FI"]
+    canonical_prefix  = "FI"
+    identifier        = identifier.euid.FI
+  }
+
+  target {
+    country_code      = "LV"
+    accepted_prefixes = ["LV"]
+    canonical_prefix  = "LV"
+    identifier        = identifier.euid.LV
+  }
 }
