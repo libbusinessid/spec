@@ -8,23 +8,24 @@ Rules version `2026.08.0`, IR format version `1`.
 
 | Kind | Country | Canonicalizer | Format | Checksum | Default profile | Sources |
 |---|---|---:|---:|---:|---|---:|
-| `euid` | `BE` | 3 | 36 | 20 | `compatible` | 1 |
-| `euid` | `CZ` | 4 | 37 | 21 | `compatible` | 2 |
-| `euid` | `DK` | 5 | 38 | 22 | `compatible` | 2 |
-| `euid` | `EE` | 6 | 39 | 23 | `compatible` | 2 |
-| `euid` | `FR` | 7 | 40 | 24 | `compatible` | 2 |
-| `euid` | `IT` | 8 | 41 | 25 | `compatible` | 1 |
-| `euid` | `LT` | 9 | 42 | 26 | `compatible` | 2 |
-| `euid` | `PT` | 10 | 43 | 27 | `compatible` | 2 |
-| `euid` | `SE` | 11 | 44 | 28 | `compatible` | 2 |
-| `euid` | `SK` | 12 | 45 | 29 | `compatible` | 2 |
-| `lei` | `GLOBAL` | 15 | 48 | 32 | `compatible` | 1 |
-| `siren` | `FR` | 13 | 46 | 30 | `compatible` | 1 |
-| `siret` | `FR` | 14 | 47 | 31 | `compatible` | 1 |
-| `vat` | `BE` | 16 | 49 | 33 | `compatible` | 2 |
-| `vat` | `DE` | 17 | 50 | - | `compatible` | 2 |
-| `vat` | `FR` | 18 | 51 | 34 | `compatible` | 2 |
-| `vat` | `GR` | 19 | 52 | 35 | `compatible` | 2 |
+| `euid` | `BE` | 3 | 38 | 21 | `compatible` | 1 |
+| `euid` | `CZ` | 4 | 39 | 22 | `compatible` | 2 |
+| `euid` | `DK` | 5 | 40 | 23 | `compatible` | 2 |
+| `euid` | `EE` | 6 | 41 | 24 | `compatible` | 2 |
+| `euid` | `FR` | 7 | 42 | 25 | `compatible` | 2 |
+| `euid` | `IT` | 8 | 43 | 26 | `compatible` | 1 |
+| `euid` | `LT` | 9 | 44 | 27 | `compatible` | 2 |
+| `euid` | `PT` | 10 | 45 | 28 | `compatible` | 2 |
+| `euid` | `RO` | 11 | 46 | 29 | `compatible` | 2 |
+| `euid` | `SE` | 12 | 47 | 30 | `compatible` | 2 |
+| `euid` | `SK` | 13 | 48 | 31 | `compatible` | 2 |
+| `lei` | `GLOBAL` | 16 | 51 | 34 | `compatible` | 1 |
+| `siren` | `FR` | 14 | 49 | 32 | `compatible` | 1 |
+| `siret` | `FR` | 15 | 50 | 33 | `compatible` | 1 |
+| `vat` | `BE` | 17 | 52 | 35 | `compatible` | 2 |
+| `vat` | `DE` | 18 | 53 | - | `compatible` | 2 |
+| `vat` | `FR` | 19 | 54 | 36 | `compatible` | 2 |
+| `vat` | `GR` | 20 | 55 | 37 | `compatible` | 2 |
 
 ## Dispatch tables
 
@@ -42,6 +43,7 @@ Kind aliases: none.
 | `IT` | `IT` | `IT` | no |
 | `LT` | `LT` | `LT` | no |
 | `PT` | `PT` | `PT` | no |
+| `RO` | `RO` | `RO` | no |
 | `SE` | `SE` | `SE` | no |
 | `SK` | `SK` | `SK` | no |
 
@@ -86,53 +88,53 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 
 | Operation | Programs |
 |---|---:|
-| `ASSERTION_OP_KIND_REQUIRE` | 17 |
-| `ASSERTION_OP_KIND_SEQUENCE` | 17 |
+| `ASSERTION_OP_KIND_REQUIRE` | 18 |
+| `ASSERTION_OP_KIND_SEQUENCE` | 18 |
 | `CALL_OP_KIND_CHECKSUM` | 2 |
 | `CALL_OP_KIND_FORMAT` | 2 |
 | `CANONICALIZATION_OP_KIND_INSERT` | 1 |
-| `CANONICALIZATION_OP_KIND_PREPEND_COUNTRY_IF_MISSING` | 14 |
+| `CANONICALIZATION_OP_KIND_PREPEND_COUNTRY_IF_MISSING` | 15 |
 | `CANONICALIZATION_OP_KIND_REMOVE_CHARS` | 8 |
-| `CANONICALIZATION_OP_KIND_REMOVE_WHITESPACE` | 19 |
+| `CANONICALIZATION_OP_KIND_REMOVE_WHITESPACE` | 20 |
 | `CANONICALIZATION_OP_KIND_REPLACE_PREFIX` | 1 |
-| `CANONICALIZATION_OP_KIND_SEQUENCE` | 19 |
-| `CANONICALIZATION_OP_KIND_TRIM_WHITESPACE` | 19 |
-| `CANONICALIZATION_OP_KIND_UPPERCASE_ASCII` | 19 |
+| `CANONICALIZATION_OP_KIND_SEQUENCE` | 20 |
+| `CANONICALIZATION_OP_KIND_TRIM_WHITESPACE` | 20 |
+| `CANONICALIZATION_OP_KIND_UPPERCASE_ASCII` | 20 |
 | `CANONICALIZATION_OP_KIND_WHEN` | 1 |
 | `CHECKSUM_OP_KIND_ALL_CHECKS` | 1 |
 | `CHECKSUM_OP_KIND_ANY_CHECK` | 1 |
-| `CHECKSUM_OP_KIND_CHOOSE` | 4 |
+| `CHECKSUM_OP_KIND_CHOOSE` | 5 |
 | `CHECKSUM_OP_KIND_COMPARE_CONSTANT` | 3 |
-| `CHECKSUM_OP_KIND_COMPARE_DIGIT` | 5 |
+| `CHECKSUM_OP_KIND_COMPARE_DIGIT` | 6 |
 | `CHECKSUM_OP_KIND_COMPARE_SLICE` | 3 |
 | `CHECKSUM_OP_KIND_ISO7064_MOD97_10` | 1 |
 | `CHECKSUM_OP_KIND_LUHN` | 4 |
 | `CHECKSUM_OP_KIND_UNSUPPORTED` | 1 |
-| `CHECKSUM_OP_KIND_WHEN` | 4 |
+| `CHECKSUM_OP_KIND_WHEN` | 5 |
 | `INTEGER_OP_KIND_COMPLEMENT` | 2 |
-| `INTEGER_OP_KIND_MODULO` | 8 |
+| `INTEGER_OP_KIND_MODULO` | 9 |
 | `INTEGER_OP_KIND_MOD_DIGITS` | 3 |
-| `INTEGER_OP_KIND_REMAINDER_MAP` | 7 |
-| `INTEGER_OP_KIND_WEIGHTED_SUM` | 8 |
+| `INTEGER_OP_KIND_REMAINDER_MAP` | 8 |
+| `INTEGER_OP_KIND_WEIGHTED_SUM` | 9 |
 | `PREDICATE_OP_KIND_ALL` | 2 |
 | `PREDICATE_OP_KIND_ANY` | 2 |
-| `PREDICATE_OP_KIND_ASCII_ALPHANUMERIC` | 12 |
-| `PREDICATE_OP_KIND_ASCII_DIGITS` | 18 |
+| `PREDICATE_OP_KIND_ASCII_ALPHANUMERIC` | 13 |
+| `PREDICATE_OP_KIND_ASCII_DIGITS` | 19 |
 | `PREDICATE_OP_KIND_CHAR_AT_IN` | 2 |
-| `PREDICATE_OP_KIND_CONTAINS` | 10 |
+| `PREDICATE_OP_KIND_CONTAINS` | 11 |
 | `PREDICATE_OP_KIND_INTEGER_IS` | 2 |
-| `PREDICATE_OP_KIND_IS_ABSENT` | 10 |
-| `PREDICATE_OP_KIND_IS_EMPTY` | 17 |
-| `PREDICATE_OP_KIND_LENGTH_BETWEEN` | 10 |
-| `PREDICATE_OP_KIND_LENGTH_EQ` | 17 |
-| `PREDICATE_OP_KIND_NOT` | 17 |
+| `PREDICATE_OP_KIND_IS_ABSENT` | 11 |
+| `PREDICATE_OP_KIND_IS_EMPTY` | 18 |
+| `PREDICATE_OP_KIND_LENGTH_BETWEEN` | 11 |
+| `PREDICATE_OP_KIND_LENGTH_EQ` | 18 |
+| `PREDICATE_OP_KIND_NOT` | 18 |
 | `PREDICATE_OP_KIND_PROFILE_IS` | 1 |
-| `PREDICATE_OP_KIND_STARTS_WITH` | 15 |
-| `STRING_OP_KIND_AFTER_FIRST` | 20 |
-| `STRING_OP_KIND_BEFORE_FIRST` | 10 |
-| `STRING_OP_KIND_SLICE` | 13 |
+| `PREDICATE_OP_KIND_STARTS_WITH` | 16 |
+| `STRING_OP_KIND_AFTER_FIRST` | 22 |
+| `STRING_OP_KIND_BEFORE_FIRST` | 11 |
+| `STRING_OP_KIND_SLICE` | 14 |
 | `STRING_OP_KIND_SLICE_FROM` | 6 |
-| `STRING_OP_KIND_SUBJECT` | 33 |
+| `STRING_OP_KIND_SUBJECT` | 35 |
 | `STRING_OP_KIND_VALUE` | 1 |
 
 ## Rules without a published checksum
@@ -184,6 +186,8 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 | [`lt-registrucentras-kodas`](https://www.registrucentras.lt) | Valstybes imone Registru centras | LT | 2026-08-20 | Lithuanian public sector information |
 | [`pt-justica-nipc`](https://www2.gov.pt) | Republica Portuguesa - Governo | PT | 2026-08-20 | Portuguese public sector information |
 | [`pt-nipc-mod11`](https://en.wikipedia.org/wiki/VAT_identification_number) | Wikipedia | PT | 2026-08-20 | CC BY-SA 4.0, cited as a description and not redistributed |
+| [`ro-cui-mod11`](https://en.wikipedia.org/wiki/VAT_identification_number) | Wikipedia | RO | 2026-08-20 | CC BY-SA 4.0, cited as a description and not redistributed |
+| [`ro-onrc-cui`](https://www.onrc.ro) | Oficiul National al Registrului Comertului (ONRC) | RO | 2026-08-20 | Romanian public sector information |
 | [`se-organisationsnummer-luhn`](https://sv.wikipedia.org/wiki/Organisationsnummer) | Wikipedia | SE | 2026-08-20 | CC BY-SA 4.0, cited as a description and not redistributed |
 | [`se-skatteverket-organisationsnummer`](https://docs.swedenconnect.se/technical-framework/mirror/skv/skv709-8.pdf) | Skatteverket (Swedish Tax Agency) | SE | 2026-08-20 | Swedish public sector information |
 | [`sk-ico-mod11`](https://en.wikipedia.org/wiki/VAT_identification_number) | Wikipedia | SK | 2026-08-20 | CC BY-SA 4.0, cited as a description and not redistributed |
@@ -191,14 +195,14 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 
 ## Conformance statistics
 
-Total cases: **272**.
+Total cases: **283**.
 
 | Kind | Cases |
 |---|---:|
 | `  VAT  ` | 1 |
 | `(loader)` | 23 |
 | `VAT!` | 1 |
-| `euid` | 62 |
+| `euid` | 73 |
 | `fr_siren` | 2 |
 | `lei` | 30 |
 | `siren` | 40 |
@@ -216,7 +220,7 @@ Total cases: **272**.
 | `canonicalize` | 13 |
 | `capabilities` | 2 |
 | `characters` | 12 |
-| `checksum` | 92 |
+| `checksum` | 93 |
 | `composition` | 17 |
 | `country` | 13 |
 | `cycle` | 1 |
@@ -230,10 +234,10 @@ Total cases: **272**.
 | `global` | 2 |
 | `graph` | 5 |
 | `implicit` | 1 |
-| `invalid` | 140 |
+| `invalid` | 142 |
 | `iso7064` | 2 |
 | `legacy` | 3 |
-| `length` | 19 |
+| `length` | 29 |
 | `limits` | 3 |
 | `luhn` | 3 |
 | `mod97` | 5 |
@@ -248,17 +252,17 @@ Total cases: **272**.
 | `shape` | 4 |
 | `strict` | 6 |
 | `structure` | 2 |
-| `synthetic` | 244 |
+| `synthetic` | 255 |
 | `truncation` | 1 |
 | `types` | 1 |
 | `unknown-field` | 1 |
 | `unsupported` | 17 |
-| `valid` | 79 |
+| `valid` | 88 |
 | `version` | 3 |
 | `weighted` | 4 |
 
 | Data classification | Cases |
 |---|---:|
 | `public_business_identifier` | 5 |
-| `synthetic` | 267 |
+| `synthetic` | 278 |
 

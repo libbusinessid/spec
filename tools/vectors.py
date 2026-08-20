@@ -115,3 +115,9 @@ def lt_ok(code: str) -> bool:
         total = sum(int(c) * w for c, w in zip(code, (3, 4, 5, 6, 7, 8, 9, 1, 2)))
         return total % 11 % 10 == 0
     return total % 11 == 0
+
+
+def ro_check(body: str) -> str:
+    """Romanian CUI: weights aligned on the right of the digits before the check."""
+    w = (7, 5, 3, 2, 1, 7, 5, 3, 2)[-len(body):]
+    return str(sum(int(c) * x for c, x in zip(body, w)) * 10 % 11 % 10)

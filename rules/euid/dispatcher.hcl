@@ -76,4 +76,11 @@ dispatcher "euid" {
     canonical_prefix  = "LT"
     identifier        = identifier.euid.LT
   }
+
+  target {
+    country_code      = "RO"
+    accepted_prefixes = ["RO"]
+    canonical_prefix  = "RO"
+    identifier        = identifier.euid.RO
+  }
 }
