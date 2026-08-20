@@ -18,13 +18,13 @@ type Options struct {
 	Command []string
 	// Timeout bounds the whole run. Zero means the default.
 	Timeout time.Duration
-	// FormatStatusOnly restricts every comparison to the status of the format
-	// step. It exists for register sweeps and for nothing else: see the note in
-	// compare. A normal corpus run must leave it false, because a corpus case
-	// states the canonical value, the reason code and the checksum, and letting
-	// a run ignore them would turn conformance into a weaker claim than it
-	// looks.
-	FormatStatusOnly bool
+	// RefusalOnly reduces every comparison to the one question a register can
+	// settle: was this identifier refused. It exists for register sweeps and
+	// for nothing else; see the note in compare. A normal corpus run must leave
+	// it false, because a corpus case states the canonical value, the reason
+	// code and the checksum, and letting a run ignore them would turn
+	// conformance into a weaker claim than it looks.
+	RefusalOnly bool
 }
 
 // Result is the verdict of a run.
@@ -94,7 +94,7 @@ func RunStream(ctx context.Context, cases iter.Seq[*conformancev1.ConformanceCas
 		return Result{}, fmt.Errorf("cannot start the testee %q: %w", opts.Command[0], err)
 	}
 
-	diffs, sent, sessErr := runSession(stdin, stdout, cases, opts.FormatStatusOnly)
+	diffs, sent, sessErr := runSession(stdin, stdout, cases, opts.RefusalOnly)
 	_ = stdin.Close()
 	waitErr := cmd.Wait()
 

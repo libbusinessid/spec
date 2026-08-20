@@ -25,7 +25,7 @@ func (d Diff) String() string {
 // Every difference is reported, including a missing or misshapen result. An
 // engine is conformant only when this returns nothing: there is no tolerance,
 // no skipping and no partial credit.
-func compare(c *conformancev1.ConformanceCase, resp *testeev1.TesteeResponse, formatStatusOnly bool) []Diff {
+func compare(c *conformancev1.ConformanceCase, resp *testeev1.TesteeResponse, refusalOnly bool) []Diff {
 	var out []Diff
 	add := func(field, want, got string) {
 		out = append(out, Diff{CaseID: c.GetId(), Field: field, Want: want, Got: got})
@@ -79,15 +79,23 @@ func compare(c *conformancev1.ConformanceCase, resp *testeev1.TesteeResponse, fo
 			return out
 		}
 		w := want.ValidationReport
-		if formatStatusOnly {
-			// A register sweep may assert exactly one thing, because exactly
-			// one thing is what the issuer's register establishes: this
-			// identifier exists, therefore it is valid. The register says
-			// nothing about the canonical form of the value, and nothing about
-			// its checksum. Filling those in would mean computing them with the
-			// very interpreter under test, which is the one thing a conformance
-			// expectation may never be derived from.
+		if refusalOnly {
+			// A register sweep asserts one thing, because one thing is what the
+			// issuer's register establishes: this identifier exists, so the
+			// rule must not refuse it. The register says nothing about the
+			// canonical form of the value, and nothing about which of valid or
+			// unsupported the checksum should be - filling those in would mean
+			// computing them with the very interpreter under test, the one
+			// source a conformance expectation may never come from.
+			//
+			// Refusal is not only a format matter. A rule that accepts the
+			// shape and then declares the checksum invalid has refused the
+			// identifier just as firmly. Unsupported is not a refusal: section
+			// 1.2 is explicit that it never turns away a valid identifier.
 			cmpStatus(add, "format.status", w.GetFormat().GetStatus(), got.GetFormat().GetStatus())
+			if got.GetChecksum().GetStatus() == conformancev1.StepStatus_STEP_STATUS_INVALID {
+				add("checksum.status", "anything but invalid", "invalid")
+			}
 			return out
 		}
 		cmpString(add, "kind", w.GetKind(), got.GetKind())

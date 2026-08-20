@@ -231,11 +231,18 @@ The UK register takes about 100 seconds for its 5 695 465 companies and peaks
 under 20 MB, because cases are generated, sent and discarded one at a time.
 Gzipped dumps are read directly.
 
-A sweep asserts **one** thing, and only one: every identifier in an issuer's own
-register is accepted by the rule. It says nothing about the canonical value or
-the checksum, because the register establishes neither — and filling them in
-would mean computing them with the interpreter under test, which is the one
-source a conformance expectation may never come from.
+A sweep asserts **one** thing, and only one: no identifier in an issuer's own
+register is refused. It says nothing about the canonical value, and nothing
+about which of `valid` or `unsupported` the checksum should be — the register
+establishes neither, and filling them in would mean computing them with the
+interpreter under test, the one source a conformance expectation may never come
+from.
+
+Refusal is not only a format matter. A rule that accepts the shape and then
+declares the checksum `invalid` has refused the identifier just as firmly, so a
+sweep runs the whole validation and treats an invalid checksum as a refusal.
+`unsupported` is never a refusal: section 1.2 is explicit that it must not turn
+away a valid identifier.
 
 So a sweep is **not** a conformance verdict and the runner never calls it one.
 Conformance is settled by the corpus, which states what should happen down to

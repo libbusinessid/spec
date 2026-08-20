@@ -25,7 +25,7 @@ import (
 func runSession(
 	w io.Writer, r io.Reader,
 	cases iter.Seq[*conformancev1.ConformanceCase],
-	formatStatusOnly bool,
+	refusalOnly bool,
 ) ([]Diff, int, error) {
 	reader := newFrameReader(r, defaultMaxFrame)
 	var diffs []Diff
@@ -58,7 +58,7 @@ func runSession(
 				"the exchange is desynchronized: %s was sent, the testee answered %q",
 				c.GetId(), resp.GetCaseId())
 		}
-		diffs = append(diffs, compare(c, &resp, formatStatusOnly)...)
+		diffs = append(diffs, compare(c, &resp, refusalOnly)...)
 	}
 	return diffs, sent, nil
 }

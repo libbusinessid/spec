@@ -257,16 +257,19 @@ func TestDiffString(t *testing.T) {
 	}
 }
 
-// FormatStatusOnly exists for register sweeps. A corpus run must never use it:
+// RefusalOnly exists for register sweeps. A corpus run must never use it:
 // a corpus case states the canonical value, the reason code and the checksum,
 // and silently ignoring them would make conformance a weaker claim than it
 // looks while still printing the same verdict.
-func TestFormatStatusOnlyIgnoresOnlyWhatARegisterCannotEstablish(t *testing.T) {
+func TestRefusalOnlyIgnoresOnlyWhatARegisterCannotEstablish(t *testing.T) {
 	c := validationCase(proto.String("FR"))
 	wrong := validationResponse("552100554")
 	wrong.GetValidationReport().CanonicalValue = "not the canonical value"
+	// Unsupported rather than invalid: a register cannot say which of valid and
+	// unsupported a checksum should be, but it does say the identifier exists,
+	// so an invalid checksum is a refusal and is judged.
 	wrong.GetValidationReport().Checksum = &testeev1.ObservedStep{
-		Status: conformancev1.StepStatus_STEP_STATUS_INVALID,
+		Status: conformancev1.StepStatus_STEP_STATUS_UNSUPPORTED,
 	}
 
 	if d := compare(c, wrong, false); len(d) == 0 {
@@ -283,5 +286,37 @@ func TestFormatStatusOnlyIgnoresOnlyWhatARegisterCannotEstablish(t *testing.T) {
 	}
 	if d := compare(c, refused, true); len(d) == 0 {
 		t.Fatal("a sweep must report a refused identifier")
+	}
+}
+
+// A register sweep asks whether an identifier its issuer handed out is
+// refused. Checking only the format status answers half the question: a rule
+// can accept the shape and then declare the checksum invalid, which refuses
+// the identifier just as firmly.
+//
+// What a register cannot settle is the difference between valid and
+// unsupported. An issuer that publishes no algorithm leaves the checksum
+// unsupported, and section 1.2 is explicit that unsupported never refuses a
+// valid identifier. So a sweep refuses invalid and accepts everything else.
+func TestASweepRefusesAnInvalidChecksumToo(t *testing.T) {
+	c := validationCase(proto.String("FR"))
+
+	for name, tc := range map[string]struct {
+		status  conformancev1.StepStatus
+		refused bool
+	}{
+		"a valid checksum":     {conformancev1.StepStatus_STEP_STATUS_VALID, false},
+		"an unsupported one":   {conformancev1.StepStatus_STEP_STATUS_UNSUPPORTED, false},
+		"one that was not run": {conformancev1.StepStatus_STEP_STATUS_NOT_RUN, false},
+		"one declared invalid": {conformancev1.StepStatus_STEP_STATUS_INVALID, true},
+	} {
+		t.Run(name, func(t *testing.T) {
+			resp := validationResponse("552100554")
+			resp.GetValidationReport().Checksum = &testeev1.ObservedStep{Status: tc.status}
+			d := compare(c, resp, true)
+			if got := len(d) > 0; got != tc.refused {
+				t.Fatalf("refused=%v, want %v: %v", got, tc.refused, d)
+			}
+		})
 	}
 }
