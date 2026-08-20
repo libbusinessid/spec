@@ -107,6 +107,38 @@ Two things that are *not* grounds for refusal:
   `checksum_not_published` is for. A format rule with no checksum is still a
   rule, as long as the format itself is published.
 
+### Identifiers that contain other identifiers
+
+When one identifier contains another, build the **inner** validator first, prove
+it, then compose the outer one from it. Never restate the inner rule inside the
+outer one.
+
+- **SIRET** = SIREN (9) + NIC (5). `checksum.fr.siret` applies
+  `checksum.fr.siren` to the nine leading digits and adds the Luhn over
+  fourteen.
+- **EUID** = country code + register identifier + `.` + the national number.
+  `format.euid.fr` reuses `format.fr.siren` through `use_format`, and
+  `checksum.euid.fr` reuses `checksum.fr.siren` through `apply_checksum`.
+
+Two reasons, and the second is the one that is easy to miss.
+
+Two copies of a rule drift, and the drift is silent: the corpus of one
+identifier does not exercise the other, so nothing fails when they diverge.
+
+Composition also **strengthens** what is checked, because the inner check is
+rarely implied by the outer one. Luhn over nine positions and Luhn over fourteen
+double the opposite positions, so a valid SIRET does not mathematically imply a
+valid SIREN: measured on 50 000 random Luhn-valid SIRET, **90.2%** carry nine
+leading digits that fail their own check, and the uncomposed rule accepted every
+one of them.
+
+That is also why composition is a **restriction** and needs the strongest
+evidence available before it is merged. Here the whole INSEE stock was checked
+first — 43 896 818 establishments, none with a SIREN that fails — and then the
+composed rule was swept over the same register. Do the same for any other
+jurisdiction whose number nests one inside another: the inner rule first, with
+its own sources, its own corpus and ideally its own sweep.
+
 ### Which historical variants to accept
 
 Section 2.6 of the specification gives the criterion: usage, never the issuing

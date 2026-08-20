@@ -2,7 +2,7 @@
 
 # Rule coverage
 
-Rules version `2026.08.6`, IR format version `1`.
+Rules version `2026.08.7`, IR format version `1`.
 
 ## Country by kind matrix
 
@@ -212,7 +212,7 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 |---|---:|
 | `ASSERTION_OP_KIND_REQUIRE` | 65 |
 | `ASSERTION_OP_KIND_SEQUENCE` | 65 |
-| `CALL_OP_KIND_CHECKSUM` | 2 |
+| `CALL_OP_KIND_CHECKSUM` | 3 |
 | `CALL_OP_KIND_FORMAT` | 2 |
 | `CANONICALIZATION_OP_KIND_INSERT` | 1 |
 | `CANONICALIZATION_OP_KIND_PREPEND_COUNTRY_IF_MISSING` | 58 |
@@ -223,7 +223,7 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 | `CANONICALIZATION_OP_KIND_TRIM_WHITESPACE` | 67 |
 | `CANONICALIZATION_OP_KIND_UPPERCASE_ASCII` | 65 |
 | `CANONICALIZATION_OP_KIND_WHEN` | 1 |
-| `CHECKSUM_OP_KIND_ALL_CHECKS` | 1 |
+| `CHECKSUM_OP_KIND_ALL_CHECKS` | 2 |
 | `CHECKSUM_OP_KIND_ANY_CHECK` | 3 |
 | `CHECKSUM_OP_KIND_CHOOSE` | 13 |
 | `CHECKSUM_OP_KIND_COMPARE_CONSTANT` | 7 |
@@ -390,7 +390,7 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 
 ## Conformance statistics
 
-Total cases: **494**.
+Total cases: **498**.
 
 | Kind | Cases |
 |---|---:|
@@ -405,7 +405,7 @@ Total cases: **494**.
 | `fr_siren` | 2 |
 | `lei` | 30 |
 | `siren` | 40 |
-| `siret` | 16 |
+| `siret` | 20 |
 | `unknown_kind` | 2 |
 | `vat` | 178 |
 | `vat_number` | 1 |
@@ -422,7 +422,7 @@ Total cases: **494**.
 | `capabilities` | 2 |
 | `characters` | 21 |
 | `checksum` | 124 |
-| `composition` | 17 |
+| `composition` | 21 |
 | `country` | 15 |
 | `cycle` | 1 |
 | `decoder` | 27 |
@@ -439,7 +439,7 @@ Total cases: **494**.
 | `group` | 1 |
 | `hole` | 5 |
 | `implicit` | 1 |
-| `invalid` | 218 |
+| `invalid` | 222 |
 | `iso7064` | 2 |
 | `legacy` | 4 |
 | `length` | 51 |
@@ -466,7 +466,7 @@ Total cases: **494**.
 | `strict` | 6 |
 | `structure` | 2 |
 | `suffix` | 4 |
-| `synthetic` | 418 |
+| `synthetic` | 422 |
 | `truncation` | 1 |
 | `types` | 1 |
 | `unknown-field` | 1 |
@@ -479,5 +479,5 @@ Total cases: **494**.
 | Data classification | Cases |
 |---|---:|
 | `public_business_identifier` | 49 |
-| `synthetic` | 445 |
+| `synthetic` | 449 |
 
