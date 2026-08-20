@@ -34,7 +34,7 @@ func TestRunRejectsIncompleteInvocations(t *testing.T) {
 		"not aBundle": {filepath.Join(fixtures, "rules.binpb"), []string{"x"}, ""},
 	} {
 		t.Run(name, func(t *testing.T) {
-			_, err := run(tc.corpus, tc.command, 0, "")
+			_, err := run(tc.corpus, tc.command, 0, "", "")
 			if err == nil {
 				t.Fatal("an incomplete invocation must fail")
 			}
@@ -61,7 +61,7 @@ func TestOperationByName(t *testing.T) {
 }
 
 func TestUnknownOperationIsRefused(t *testing.T) {
-	_, err := run(filepath.Join(fixtures, "conformance.binpb"), testeeCommand(t), 0, "teleport")
+	_, err := run(filepath.Join(fixtures, "conformance.binpb"), testeeCommand(t), 0, "teleport", "")
 	if err == nil || !strings.Contains(err.Error(), "unknown operation") {
 		t.Fatalf("got %v", err)
 	}
@@ -71,7 +71,7 @@ func TestUnknownOperationIsRefused(t *testing.T) {
 // vacuous success on zero cases.
 // A restricted run answers correctly yet must never claim conformance.
 func TestARestrictedRunIsNeverAVerdict(t *testing.T) {
-	ok, err := run(filepath.Join(fixtures, "conformance.binpb"), testeeCommand(t), 0, "load_ruleset")
+	ok, err := run(filepath.Join(fixtures, "conformance.binpb"), testeeCommand(t), 0, "load_ruleset", "")
 	if err != nil {
 		t.Fatalf("run: %v", err)
 	}
@@ -81,7 +81,7 @@ func TestARestrictedRunIsNeverAVerdict(t *testing.T) {
 }
 
 func TestAFullRunOfTheFixtureIsConformant(t *testing.T) {
-	ok, err := run(filepath.Join(fixtures, "conformance.binpb"), testeeCommand(t), 0, "")
+	ok, err := run(filepath.Join(fixtures, "conformance.binpb"), testeeCommand(t), 0, "", "")
 	if err != nil {
 		t.Fatalf("run: %v", err)
 	}

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"iter"
 
 	"google.golang.org/protobuf/proto"
 
@@ -21,36 +22,45 @@ import (
 //
 // An error here means the run itself is void — a broken exchange, not a wrong
 // answer. It is never a verdict of conformance.
-func runSession(w io.Writer, r io.Reader, cases []*conformancev1.ConformanceCase) ([]Diff, error) {
+func runSession(
+	w io.Writer, r io.Reader,
+	cases iter.Seq[*conformancev1.ConformanceCase],
+	formatStatusOnly bool,
+) ([]Diff, int, error) {
 	reader := newFrameReader(r, defaultMaxFrame)
 	var diffs []Diff
-	for _, c := range cases {
+	sent := 0
+	for c := range cases {
+		sent++
 		raw, err := proto.Marshal(requestFor(c))
 		if err != nil {
-			return nil, fmt.Errorf("case %s: cannot encode the request: %w", c.GetId(), err)
+			return nil, sent, fmt.Errorf("case %s: cannot encode the request: %w", c.GetId(), err)
 		}
 		if err := writeFrame(w, raw); err != nil {
-			return nil, fmt.Errorf("case %s: cannot send the request: %w", c.GetId(), err)
+			return nil, sent, fmt.Errorf("case %s: cannot send the request: %w", c.GetId(), err)
 		}
 		payload, err := reader.next()
 		if errors.Is(err, errEOF) {
-			left := len(cases) - indexOf(cases, c)
-			return nil, fmt.Errorf("the testee stopped answering after %s; %d cases were left unanswered",
-				c.GetId(), left)
+			// The stream cannot say how many cases are left without draining
+			// it, and draining it to write a nicer message would defeat the
+			// reason it is a stream. How far it got is the useful part.
+			return nil, sent, fmt.Errorf("the testee stopped answering after %s, on case %d", c.GetId(), sent)
 		}
 		if err != nil {
-			return nil, fmt.Errorf("case %s: %w", c.GetId(), err)
+			return nil, sent, fmt.Errorf("case %s: %w", c.GetId(), err)
 		}
 		var resp testeev1.TesteeResponse
 		if err := proto.Unmarshal(payload, &resp); err != nil {
-			return nil, fmt.Errorf("case %s: the testee sent an undecodable response: %w", c.GetId(), err)
+			return nil, sent, fmt.Errorf("case %s: the testee sent an undecodable response: %w", c.GetId(), err)
 		}
 		if resp.GetCaseId() != c.GetId() {
-			return nil, fmt.Errorf("the exchange is desynchronized: %s was sent, the testee answered %q", c.GetId(), resp.GetCaseId())
+			return nil, sent, fmt.Errorf(
+				"the exchange is desynchronized: %s was sent, the testee answered %q",
+				c.GetId(), resp.GetCaseId())
 		}
-		diffs = append(diffs, compare(c, &resp)...)
+		diffs = append(diffs, compare(c, &resp, formatStatusOnly)...)
 	}
-	return diffs, nil
+	return diffs, sent, nil
 }
 
 // requestFor projects a case onto the wire, deliberately omitting the expected
@@ -73,13 +83,4 @@ func requestFor(c *conformancev1.ConformanceCase) *testeev1.TesteeRequest {
 		req.RulesPayload = p
 	}
 	return req
-}
-
-func indexOf(cases []*conformancev1.ConformanceCase, target *conformancev1.ConformanceCase) int {
-	for i, c := range cases {
-		if c == target {
-			return i
-		}
-	}
-	return 0
 }

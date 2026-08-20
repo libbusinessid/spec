@@ -3,7 +3,9 @@ package runner
 import (
 	"context"
 	"fmt"
+	"iter"
 	"os/exec"
+	"slices"
 	"strings"
 	"time"
 
@@ -16,6 +18,13 @@ type Options struct {
 	Command []string
 	// Timeout bounds the whole run. Zero means the default.
 	Timeout time.Duration
+	// FormatStatusOnly restricts every comparison to the status of the format
+	// step. It exists for register sweeps and for nothing else: see the note in
+	// compare. A normal corpus run must leave it false, because a corpus case
+	// states the canonical value, the reason code and the checksum, and letting
+	// a run ignore them would turn conformance into a weaker claim than it
+	// looks.
+	FormatStatusOnly bool
 }
 
 // Result is the verdict of a run.
@@ -35,6 +44,18 @@ const defaultTimeout = 10 * time.Minute
 // exchange must never be reported as conformance, nor as a mere set of
 // differences.
 func Run(ctx context.Context, cases []*conformancev1.ConformanceCase, opts Options) (Result, error) {
+	return RunStream(ctx, slices.Values(cases), opts)
+}
+
+// RunStream is Run over a stream of cases.
+//
+// A register sweep confronts an engine with every identifier its issuer has
+// ever handed out - 5695465 of them for Companies House alone - and holding
+// that many decoded cases in memory costs gigabytes for no reason: each one is
+// sent, answered and finished with before the next is needed. The stream form
+// keeps a sweep flat in memory, and the whole corpus is still a slice because
+// it is small and read from a file.
+func RunStream(ctx context.Context, cases iter.Seq[*conformancev1.ConformanceCase], opts Options) (Result, error) {
 	if len(opts.Command) == 0 {
 		return Result{}, fmt.Errorf("no testee command was given")
 	}
@@ -61,7 +82,7 @@ func Run(ctx context.Context, cases []*conformancev1.ConformanceCase, opts Optio
 		return Result{}, fmt.Errorf("cannot start the testee %q: %w", opts.Command[0], err)
 	}
 
-	diffs, sessErr := runSession(stdin, stdout, cases)
+	diffs, sent, sessErr := runSession(stdin, stdout, cases, opts.FormatStatusOnly)
 	_ = stdin.Close()
 	waitErr := cmd.Wait()
 
@@ -71,7 +92,7 @@ func Run(ctx context.Context, cases []*conformancev1.ConformanceCase, opts Optio
 	if waitErr != nil {
 		return Result{}, withStderr(fmt.Errorf("the testee exited with an error: %w", waitErr), stderr.String())
 	}
-	return Result{Cases: len(cases), Diffs: diffs}, nil
+	return Result{Cases: sent, Diffs: diffs}, nil
 }
 
 // withStderr attaches what the testee printed, which is usually where the real

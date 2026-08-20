@@ -1,0 +1,23 @@
+{
+  "_comment": [
+    "Where each issuer publishes its complete register, and how to read it.",
+    "The dumps themselves are never committed: half a gigabyte compressed for",
+    "one country, renewed monthly, and published under the issuer's own terms.",
+    "What is committed is this description, so that anyone can reproduce a",
+    "sweep from the same source the maintainers used.",
+    "Run one with: conformance-runner --register <id>=<file> -- <testee>"
+  ],
+  "registers": [
+    {
+      "id": "gb-companies-house",
+      "kind": "company_number",
+      "country": "GB",
+      "url": "https://download.companieshouse.gov.uk/en_output.html",
+      "archive": "BasicCompanyDataAsOneFile-YYYY-MM-01.zip",
+      "column": "CompanyNumber",
+      "authority": "Companies House",
+      "terms": "Crown copyright, Open Government Licence v3.0",
+      "notes": "Every company on the live register. The 2026-08-01 file carries 5695465 of them, all on exactly eight characters. Dissolved companies are absent, so a prefix with no row is not thereby invalid."
+    }
+  ]
+}

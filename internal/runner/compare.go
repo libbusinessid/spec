@@ -25,7 +25,7 @@ func (d Diff) String() string {
 // Every difference is reported, including a missing or misshapen result. An
 // engine is conformant only when this returns nothing: there is no tolerance,
 // no skipping and no partial credit.
-func compare(c *conformancev1.ConformanceCase, resp *testeev1.TesteeResponse) []Diff {
+func compare(c *conformancev1.ConformanceCase, resp *testeev1.TesteeResponse, formatStatusOnly bool) []Diff {
 	var out []Diff
 	add := func(field, want, got string) {
 		out = append(out, Diff{CaseID: c.GetId(), Field: field, Want: want, Got: got})
@@ -79,6 +79,17 @@ func compare(c *conformancev1.ConformanceCase, resp *testeev1.TesteeResponse) []
 			return out
 		}
 		w := want.ValidationReport
+		if formatStatusOnly {
+			// A register sweep may assert exactly one thing, because exactly
+			// one thing is what the issuer's register establishes: this
+			// identifier exists, therefore it is valid. The register says
+			// nothing about the canonical form of the value, and nothing about
+			// its checksum. Filling those in would mean computing them with the
+			// very interpreter under test, which is the one thing a conformance
+			// expectation may never be derived from.
+			cmpStatus(add, "format.status", w.GetFormat().GetStatus(), got.GetFormat().GetStatus())
+			return out
+		}
 		cmpString(add, "kind", w.GetKind(), got.GetKind())
 		cmpString(add, "canonicalValue", w.GetCanonicalValue(), got.GetCanonicalValue())
 		cmpOptional(add, "countryCode", w.CountryCode, got.CountryCode)

@@ -182,6 +182,40 @@ go run ./cmd/conformance-runner --corpus dist/businessid-conformance-<version>.b
 A run restricted with `--operation` is a diagnosis aid and never a verdict; the
 runner says so and exits non-zero even when every selected case matches.
 
+### Sweeping an issuer's whole register
+
+The corpus is chosen by hand: one case per prefix, one per shape, one per
+boundary. It proves a rule handles the forms someone thought of. A **register
+sweep** proves what the corpus cannot — that the rule refuses nothing the
+issuer has actually handed out.
+
+```sh
+# The dump is never committed: half a gigabyte, renewed monthly, published
+# under the issuer's terms. conformance/registers.json says where to get it.
+conformance-runner --register gb-companies-house=BasicCompanyData.csv -- ./testee
+```
+
+The UK register takes about 100 seconds for its 5 695 465 companies and peaks
+under 20 MB, because cases are generated, sent and discarded one at a time.
+Gzipped dumps are read directly.
+
+A sweep asserts **one** thing, and only one: every identifier in an issuer's own
+register is accepted by the rule. It says nothing about the canonical value or
+the checksum, because the register establishes neither — and filling them in
+would mean computing them with the interpreter under test, which is the one
+source a conformance expectation may never come from.
+
+So a sweep is **not** a conformance verdict and the runner never calls it one.
+Conformance is settled by the corpus, which states what should happen down to
+the reason code, for values that are valid and for values that are not. A sweep
+catches the false refusal, which section 1.2 calls the worst defect this
+project can commit and which a few hundred hand-picked cases can only sample.
+
+A refusal is not automatically a regression. The issuer may have started
+emitting a form the rule does not know, which is exactly as important to learn
+and needs a person either way. When it turns out to be a real gap, the offending
+value belongs in the corpus like any other defect.
+
 ## Keeping the engine checkouts in step
 
 Before the first release the engines carry a local copy of the bundle instead of

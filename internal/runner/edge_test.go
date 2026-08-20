@@ -3,10 +3,10 @@ package runner
 import (
 	"context"
 	"errors"
+	"slices"
 	"strings"
 	"testing"
 
-	conformancev1 "github.com/libbusinessid/spec/gen/go/libbusinessid/conformance/v1"
 	testeev1 "github.com/libbusinessid/spec/gen/go/libbusinessid/testee/v1"
 )
 
@@ -62,13 +62,6 @@ func TestBothCountryCodesAbsentIsAMatch(t *testing.T) {
 	}
 }
 
-func TestIndexOfAnUnknownCaseIsZero(t *testing.T) {
-	cases := []*conformancev1.ConformanceCase{{Id: "a"}}
-	if got := indexOf(cases, &conformancev1.ConformanceCase{Id: "b"}); got != 0 {
-		t.Fatalf("got %d", got)
-	}
-}
-
 // A testee that emits garbage instead of a response must void the run.
 func TestAnUndecodableResponseVoidsTheRun(t *testing.T) {
 	st := &scriptedTestee{t: t, answer: func(*testeev1.TesteeRequest) *testeev1.TesteeResponse { return nil }}
@@ -76,7 +69,7 @@ func TestAnUndecodableResponseVoidsTheRun(t *testing.T) {
 	if err := writeFrame(&st.out, []byte{0xff, 0xff, 0xff, 0xff}); err != nil {
 		t.Fatal(err)
 	}
-	_, err := runSession(st, st, twoCases())
+	_, _, err := runSession(st, st, slices.Values(twoCases()), false)
 	if err == nil || !strings.Contains(err.Error(), "undecodable") {
 		t.Fatalf("got %v", err)
 	}

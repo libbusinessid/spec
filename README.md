@@ -189,6 +189,7 @@ passes the whole conformance suite on a published bundle. Anything other than
 
 | Document | Contents |
 |---|---|
+| [`conformance/registers.json`](conformance/registers.json) | where each issuer publishes its complete register, for `conformance-runner --register` |
 | [`docs/identifier-atlas.md`](docs/identifier-atlas.md) | which identifiers are supported, at what maturity, and what the rest of the world issues |
 | [`docs/language.md`](docs/language.md) | the authoring language, its declarations, expressions and restrictions |
 | [`docs/ir.md`](docs/ir.md) | generated: the exhaustive normative semantics of every opcode, limit and error |
