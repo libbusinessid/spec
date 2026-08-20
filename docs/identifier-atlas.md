@@ -91,6 +91,7 @@ refuse numbers Dun & Bradstreet issues.
 | United Kingdom | **Company number** | Companies House | supported | **register-swept** | 60 |
 | United States | **EIN** | Internal Revenue Service | supported | format | 3 |
 | China | **USCC** | State Administration for Market Regulation | supported | checked (GB 32100-2015, mod 31 over a 31 code point alphabet) | 19 |
+| Japan | **Corporate Number** | National Tax Agency | supported | checked (mod 9 over alternating weights) | 14 |
 
 Three rules have been swept against their issuer's complete register, through
 the same testee protocol an engine is judged by:
@@ -129,7 +130,7 @@ which country issues what, and whether we cover it.
 | 1 | United States | *none nationally* | — | EIN (IRS), state entity numbers, CIK (SEC), UEI (SAM.gov) | **no single register** — EIN supported |
 | 2 | China | **USCC** — Unified Social Credit Code, 18 chars, check character | State Administration for Market Regulation | — | **supported** |
 | 3 | Germany | **Handelsregisternummer** (HRB/HRA + court) | Local registry courts | EUID, USt-IdNr. | supported via EUID and VAT |
-| 4 | Japan | **Corporate Number** (法人番号), 13 digits, check digit | National Tax Agency | — | planned |
+| 4 | Japan | **Corporate Number** (法人番号), 13 digits, check digit | National Tax Agency | — | **supported** |
 | 5 | India | **CIN**, 21 chars | Registrar of Companies (MCA) | GSTIN (15), PAN (10) | planned |
 | 6 | United Kingdom | **Company number**, 8 chars | Companies House | VAT | **supported** |
 | 7 | France | **SIREN** (9) / **SIRET** (14) | INSEE | EUID, TVA | **supported** |
@@ -260,18 +261,14 @@ Ordered by economic weight and by how much the issuer publishes. An issuer that
 publishes a check algorithm and a bulk register is worth more than a larger
 economy that publishes neither, because the rule can be proven.
 
-1. **China — USCC.** Second economy, 18 characters, published check digit over
-   a documented structure. The single highest-value rule not yet written.
-2. **Japan — Corporate Number.** 13 digits with a published check, issued by
-   the National Tax Agency, which also publishes the full register.
-3. **Brazil — CNPJ.** Two check digits, well documented, and a bulk register.
-4. **India — CIN.** 21 structured characters carrying state and year, so the
+1. **Brazil — CNPJ.** Two check digits, well documented, and a bulk register.
+2. **India — CIN.** 21 structured characters carrying state and year, so the
    rule catches far more than a length check would.
-5. **Australia — ABN and ACN.** Both carry a published check.
-6. **Switzerland — UID.** One identifier across commercial register, VAT,
+3. **Australia — ABN and ACN.** Both carry a published check.
+4. **Switzerland — UID.** One identifier across commercial register, VAT,
    customs and social insurance; a check digit; a public register.
-7. **South Korea — BRN.** 10 digits with a published check.
-8. **Canada — Business Number**, then **Mexico RFC**, **Argentina CUIT**,
+5. **South Korea — BRN.** 10 digits with a published check.
+6. **Canada — Business Number**, then **Mexico RFC**, **Argentina CUIT**,
    **Chile RUT**, **Colombia NIT** — the Latin American set shares a family
    resemblance and a check digit each.
 
