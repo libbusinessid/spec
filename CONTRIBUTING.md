@@ -71,6 +71,36 @@ A restriction is a high risk change and requires a reinforced review. A
 documented widening that fixes a false negative can be published as a rule
 patch.
 
+### Which identifiers belong here
+
+An identifier is admissible when an authority issues it and publishes something
+about its form. That is what makes a rule checkable and a source citable, and
+without it there is nothing to be right or wrong about.
+
+A validator with no issuer behind it is not a weak rule, it is a different kind
+of thing: it reports `valid` on the strength of nobody. The caller reads that as
+a verdict from a register, and it is a verdict from a character class. The
+project would rather answer nothing than answer that.
+
+This is why `nationalregistration` was not carried over from the implementation
+this repository replaces. It accepted any value of at most 64 characters drawn
+from `[A-Z0-9./ -+]`, for no named register, and it required a country code
+whose absence it reported through a reason code the specification does not
+define. Adding that reason code would have meant a new frozen capability - a
+permanent commitment - in support of a rule with no source. A national
+registration number is welcome here as a rule per jurisdiction, each with the
+register that issues it.
+
+Two things that are *not* grounds for refusal:
+
+- **The identifier also identifies a natural person.** A sole trader invoices
+  under a personal number in several countries, so refusing that form refuses a
+  legitimate business identifier. What a rule accepts and what the corpus stores
+  are separate questions; the second is settled by `DATA_POLICY.md`.
+- **The issuer publishes no check algorithm.** That is what
+  `checksum_not_published` is for. A format rule with no checksum is still a
+  rule, as long as the format itself is published.
+
 ### Which historical variants to accept
 
 Section 2.6 of the specification gives the criterion: usage, never the issuing
