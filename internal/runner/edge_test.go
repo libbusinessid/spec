@@ -86,7 +86,7 @@ func TestAnUndecodableResponseVoidsTheRun(t *testing.T) {
 func TestATimeoutIsReportedAsATimeout(t *testing.T) {
 	slow := filepath.Join(t.TempDir(), "slow.sh")
 	script := "#!/bin/sh\nsleep 30\n"
-	if err := os.WriteFile(slow, []byte(script), 0o700); err != nil { //nolint:gosec // a script this test runs
+	if err := os.WriteFile(slow, []byte(script), 0o700); err != nil {
 		t.Fatal(err)
 	}
 	_, err := Run(context.Background(), twoCases(), Options{
