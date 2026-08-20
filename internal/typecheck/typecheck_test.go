@@ -483,3 +483,53 @@ func TestStaticLengthBoundsPropagate(t *testing.T) {
 		})
 	}
 }
+
+// CUSTOM_ALPHABET reads the value of a code point from the alphabet the
+// operation carries, so the alphabet has to be there, has to be usable, and
+// has to be absent when another mapping would ignore it.
+func TestCustomAlphabetIsCheckedAtCompileTime(t *testing.T) {
+	const uscc = "0123456789ABCDEFGHJKLMNPQRTUWXY"
+	for name, tc := range map[string]struct {
+		src  string
+		want string
+	}{
+		"accepted": {
+			`checksum "a" "b" { rule = compare_digit(weighted_sum(slice(value(),0,2), [1,3], "left", "custom_alphabet", "` + uscc + `"), value(), 0) }`,
+			"",
+		},
+		"missing alphabet": {
+			`checksum "a" "b" { rule = compare_digit(weighted_sum(slice(value(),0,2), [1,3], "left", "custom_alphabet"), value(), 0) }`,
+			"alphabet",
+		},
+		"alphabet without the mapping that reads it": {
+			`checksum "a" "b" { rule = compare_digit(weighted_sum(slice(value(),0,2), [1,3], "left", "digit_value", "` + uscc + `"), value(), 0) }`,
+			"alphabet",
+		},
+		"empty alphabet": {
+			`checksum "a" "b" { rule = compare_digit(weighted_sum(slice(value(),0,2), [1,3], "left", "custom_alphabet", ""), value(), 0) }`,
+			"alphabet",
+		},
+		// A repeated code point gives one character two values, so the sum it
+		// produces depends on which index the implementation happens to find.
+		"repeated code point": {
+			`checksum "a" "b" { rule = compare_digit(weighted_sum(slice(value(),0,2), [1,3], "left", "custom_alphabet", "0123401234"), value(), 0) }`,
+			"twice",
+		},
+	} {
+		t.Run(name, func(t *testing.T) {
+			_, out := check(t, tc.src)
+			if tc.want == "" {
+				if out != "" {
+					t.Fatalf("expected acceptance, got:\n%s", out)
+				}
+				return
+			}
+			if out == "" {
+				t.Fatal("expected a compile error")
+			}
+			if !strings.Contains(out, tc.want) {
+				t.Fatalf("expected an error mentioning %q, got:\n%s", tc.want, out)
+			}
+		})
+	}
+}

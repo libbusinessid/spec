@@ -86,15 +86,30 @@ refuse numbers Dun & Bradstreet issues.
 
 | Country | Identifier | Issuer | Status | Maturity | Cases |
 |---|---|---|---|---|---|
-| France | **SIREN** | INSEE | supported | checked (Luhn) | 40 |
-| France | **SIRET** | INSEE | supported | checked (Luhn, La Poste derogation) | 16 |
+| France | **SIREN** | INSEE | supported | **register-swept** (Luhn) | 40 |
+| France | **SIRET** | INSEE | supported | **register-swept** (Luhn over the SIREN and over the fourteen, La Poste derogation) | 22 |
 | United Kingdom | **Company number** | Companies House | supported | **register-swept** | 60 |
 | United States | **EIN** | Internal Revenue Service | supported | format | 3 |
+| China | **USCC** | State Administration for Market Regulation | supported | checked (GB 32100-2015, mod 31 over a 31 code point alphabet) | 19 |
 
-The UK company number is the only rule swept against a complete register: all
-5 695 465 companies of the 2026-08-01 *Free Company Data Product*, none
-refused. That is the standard the other rules should reach where the issuer
-publishes a bulk download.
+Three rules have been swept against their issuer's complete register, through
+the same testee protocol an engine is judged by:
+
+| Register | Identifiers | Refused |
+|---|---|---|
+| Companies House, 2026-08-01 | 5 695 465 | 0 |
+| SIRENE legal units, 2026-08-01 | 29 922 486 | 0 |
+| SIRENE establishments, 2026-08-01 | 43 896 818 | 1 |
+
+That one is `58209045200015`, which satisfies neither the Luhn check nor the La
+Poste derogation. No source documents a derogation for the company holding it,
+an ordinary limited company registered in 1958, so it reads as a single bad
+record in forty four million rather than a rule. Inventing an exception for one
+number would be inventing a rule with no source.
+
+`conformance/registers.json` records where each dump comes from; the dumps
+themselves are never committed. That is the standard the other rules should
+reach wherever the issuer publishes a bulk download.
 
 ---
 
@@ -112,7 +127,7 @@ which country issues what, and whether we cover it.
 | # | Country | Primary business identifier | Issuer | Also carries | Status |
 |---|---|---|---|---|---|
 | 1 | United States | *none nationally* | — | EIN (IRS), state entity numbers, CIK (SEC), UEI (SAM.gov) | **no single register** — EIN supported |
-| 2 | China | **USCC** — Unified Social Credit Code, 18 chars, check digit | State Administration for Market Regulation | — | planned |
+| 2 | China | **USCC** — Unified Social Credit Code, 18 chars, check character | State Administration for Market Regulation | — | **supported** |
 | 3 | Germany | **Handelsregisternummer** (HRB/HRA + court) | Local registry courts | EUID, USt-IdNr. | supported via EUID and VAT |
 | 4 | Japan | **Corporate Number** (法人番号), 13 digits, check digit | National Tax Agency | — | planned |
 | 5 | India | **CIN**, 21 chars | Registrar of Companies (MCA) | GSTIN (15), PAN (10) | planned |

@@ -36,7 +36,19 @@ type Result struct {
 // Conformant reports whether the engine matched the corpus on every case.
 func (r Result) Conformant() bool { return len(r.Diffs) == 0 }
 
+// defaultTimeout bounds a corpus run, which is a few seconds of work: a run
+// that takes minutes has hung. A register sweep is a different shape of job -
+// tens of millions of cases, tens of minutes - and carries its own budget.
 const defaultTimeout = 10 * time.Minute
+
+// defaultSweepTimeout bounds a register sweep. The largest register in the
+// manifest, the forty four million SIRET, takes about ten minutes; the budget
+// leaves room for a register several times larger without leaving a hung run
+// to sit forever.
+const defaultSweepTimeout = 2 * time.Hour
+
+// DefaultSweepTimeout is defaultSweepTimeout, for the command line.
+const DefaultSweepTimeout = defaultSweepTimeout
 
 // Run spawns the testee and confronts it with every case.
 //
@@ -86,6 +98,15 @@ func RunStream(ctx context.Context, cases iter.Seq[*conformancev1.ConformanceCas
 	_ = stdin.Close()
 	waitErr := cmd.Wait()
 
+	// A run that outlives its budget kills the testee, and the session then
+	// sees the pipe close and reports that the testee stopped answering. That
+	// reads as a crashed engine and sends the reader hunting a bug that is not
+	// there. Register sweeps made this routine rather than rare: the SIRET
+	// sweep runs for about ten minutes, which is exactly the default budget.
+	if ctx.Err() != nil {
+		return Result{}, fmt.Errorf(
+			"the run outlived its %s budget after %d cases; raise --timeout", timeout, sent)
+	}
 	if sessErr != nil {
 		return Result{}, withStderr(sessErr, stderr.String())
 	}

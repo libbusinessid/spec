@@ -3,9 +3,12 @@ package runner
 import (
 	"context"
 	"errors"
+	"os"
+	"path/filepath"
 	"slices"
 	"strings"
 	"testing"
+	"time"
 
 	testeev1 "github.com/libbusinessid/spec/gen/go/libbusinessid/testee/v1"
 )
@@ -72,5 +75,28 @@ func TestAnUndecodableResponseVoidsTheRun(t *testing.T) {
 	_, _, err := runSession(st, st, slices.Values(twoCases()), false)
 	if err == nil || !strings.Contains(err.Error(), "undecodable") {
 		t.Fatalf("got %v", err)
+	}
+}
+
+// A run that outlives its budget must say so. The session sees the pipe close
+// and reports that the testee stopped answering, which reads as a crashed
+// engine and sends the reader looking for a bug that is not there. Register
+// sweeps made this routine: the SIRET sweep runs for about ten minutes, which
+// is exactly the default budget.
+func TestATimeoutIsReportedAsATimeout(t *testing.T) {
+	slow := filepath.Join(t.TempDir(), "slow.sh")
+	script := "#!/bin/sh\nsleep 30\n"
+	if err := os.WriteFile(slow, []byte(script), 0o700); err != nil { //nolint:gosec // a script this test runs
+		t.Fatal(err)
+	}
+	_, err := Run(context.Background(), twoCases(), Options{
+		Command: []string{slow},
+		Timeout: 100 * time.Millisecond,
+	})
+	if err == nil {
+		t.Fatal("a run that outlives its budget must fail")
+	}
+	if !strings.Contains(err.Error(), "timeout") && !strings.Contains(err.Error(), "budget") {
+		t.Fatalf("the error must name the timeout, got: %v", err)
 	}
 }

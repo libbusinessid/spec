@@ -42,6 +42,9 @@ const (
 	MinWeights = 1
 	// MaxWeights is the largest accepted number of weights.
 	MaxWeights = 256
+
+	// MaxAlphabetRunes bounds the alphabet of CHAR_MAPPING_CUSTOM_ALPHABET.
+	MaxAlphabetRunes = 256
 	// MinRemainderValues is the smallest accepted remainder table size.
 	MinRemainderValues = 1
 	// MaxRemainderValues is the largest accepted remainder table size.

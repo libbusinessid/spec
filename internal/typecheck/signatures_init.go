@@ -31,7 +31,8 @@ func buildSignatures() map[string]signature {
 	register(table, i, int32(irv1.IntegerOpKind_INTEGER_OP_KIND_MOD_DIGITS), operand(), modulusArg())
 	register(table, i, int32(irv1.IntegerOpKind_INTEGER_OP_KIND_WEIGHTED_SUM),
 		operand(), intListArg(features.ParamWeights),
-		enumArg(features.ParamAlignment), enumArg(features.ParamMapping))
+		enumArg(features.ParamAlignment), enumArg(features.ParamMapping),
+		optStrArg(features.ParamAlphabet))
 	register(table, i, int32(irv1.IntegerOpKind_INTEGER_OP_KIND_MODULO), operand(), modulusArg())
 	register(table, i, int32(irv1.IntegerOpKind_INTEGER_OP_KIND_COMPLEMENT), operand(), modulusArg())
 	register(table, i, int32(irv1.IntegerOpKind_INTEGER_OP_KIND_REMAINDER_MAP),

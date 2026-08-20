@@ -48,6 +48,7 @@ const (
 	ParamWeights         Param = "weights"
 	ParamAlignment       Param = "alignment"
 	ParamMapping         Param = "mapping"
+	ParamAlphabet        Param = "alphabet"
 	ParamRemainderValues Param = "remainder_values"
 	ParamReasonCode      Param = "reason_code"
 	ParamMessageKey      Param = "message_key"
@@ -262,10 +263,11 @@ var ops = []Op{
 	},
 	{
 		Category: CategoryInteger, Code: int32(irv1.IntegerOpKind_INTEGER_OP_KIND_WEIGHTED_SUM),
-		Symbol: "INTEGER_OP_KIND_WEIGHTED_SUM", HCL: "weighted_sum(expr, weights, alignment, mapping)", Output: tInt,
+		Symbol: "INTEGER_OP_KIND_WEIGHTED_SUM", HCL: "weighted_sum(expr, weights, alignment, mapping[, alphabet])", Output: tInt,
 		Operands: []Operand{str("expr")}, Required: []Param{ParamWeights, ParamAlignment, ParamMapping},
+		Optional: []Param{ParamAlphabet},
 		Features: []uint32{CoreGraphV1, ChecksumTristateV1, ChecksumWeightedV1},
-		Doc:      "Sums `mapping(expr[i]) * weight(i)` over the paired positions. `LEFT` pairs position `i` with `weights[i]`, `RIGHT` pairs the last position with the last weight, and `CYCLE` pairs position `i` with `weights[i mod len(weights)]`. `LEFT` and `RIGHT` only pair `min(len(expr), len(weights))` positions; the remaining positions of `expr` contribute nothing. Indeterminate when `expr` is absent, empty, or contains a code point outside the mapping domain.",
+		Doc:      "Sums `mapping(expr[i]) * weight(i)` over the paired positions. `LEFT` pairs position `i` with `weights[i]`, `RIGHT` pairs the last position with the last weight, and `CYCLE` pairs position `i` with `weights[i mod len(weights)]`. `LEFT` and `RIGHT` only pair `min(len(expr), len(weights))` positions; the remaining positions of `expr` contribute nothing. Indeterminate when `expr` is absent, empty, or contains a code point outside the mapping domain. `CUSTOM_ALPHABET` takes the value of a code point from its index in `alphabet`, which is required by that mapping and forbidden by the others.",
 	},
 	{
 		Category: CategoryInteger, Code: int32(irv1.IntegerOpKind_INTEGER_OP_KIND_MODULO),

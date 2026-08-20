@@ -27,6 +27,7 @@ const (
 	ChecksumIntegerPredicateV1    uint32 = 35
 	ProvenanceV1                  uint32 = 40
 	ProvenanceTierV1              uint32 = 41
+	ChecksumCustomAlphabetV1      uint32 = 42
 )
 
 // Capability describes one immutable capability ID.
@@ -215,6 +216,16 @@ var capabilities = []Capability{
 		Content: []string{
 			"`Source.tier` and the `SourceTier` enumeration.",
 			"It is a capability of its own rather than an addition to `PROVENANCE_V1`, whose content is frozen: a field added to a frozen capability reaches an engine as an unknown field, which reads as a forged bundle rather than as the version gap it is.",
+		},
+	},
+	{
+		ID:      ChecksumCustomAlphabetV1,
+		Name:    "CHECKSUM_CUSTOM_ALPHABET_V1",
+		Summary: "weighted sums over an issuer's own alphabet",
+		Content: []string{
+			"The `CharMapping` value `CUSTOM_ALPHABET`, and the `alphabet` field of `IntegerOperation` that carries its ordered code points.",
+			"The value of a code point is its index in that alphabet. A code point absent from it makes the sum indeterminate, exactly as a letter does under `DIGIT_VALUE`.",
+			"It exists because an issuer's alphabet is often neither base 10 nor base 36. Letters that are misread as digits get dropped, and every letter after the gap shifts: the Chinese unified social credit code omits I, O, S, V and Z, so its `J` is 18 where `ALNUM_BASE36` makes it 19. Without this, such a checksum cannot be stated at all, and a published algorithm that cannot be stated has to be reported `unsupported`.",
 		},
 	},
 }

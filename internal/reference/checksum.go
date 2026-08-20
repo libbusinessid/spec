@@ -107,7 +107,7 @@ func modDigits(s stringValue, modulus int64) (integerValue, error) {
 	return integerValue{value: r}, nil
 }
 
-func mapChar(r rune, mapping irv1.CharMapping) (int64, bool) {
+func mapChar(r rune, mapping irv1.CharMapping, alphabet string) (int64, bool) {
 	switch mapping {
 	case irv1.CharMapping_CHAR_MAPPING_DIGIT_VALUE:
 		if isASCIIDigit(r) {
@@ -119,6 +119,16 @@ func mapChar(r rune, mapping irv1.CharMapping) (int64, bool) {
 			return int64(r - '0'), true
 		case isASCIIUpper(r):
 			return int64(r-'A') + 10, true
+		}
+	case irv1.CharMapping_CHAR_MAPPING_CUSTOM_ALPHABET:
+		// The value of a code point is its index in the alphabet. A code point
+		// the alphabet does not list is outside the domain, exactly as a letter
+		// is under DIGIT_VALUE, and makes the sum indeterminate rather than
+		// wrong.
+		for i, a := range alphabet {
+			if a == r {
+				return int64(i), true
+			}
 		}
 	default:
 	}
@@ -133,7 +143,7 @@ func weightedSum(s stringValue, op *irv1.IntegerOperation) (integerValue, error)
 	weights := op.GetWeights()
 	values := make([]int64, len(runes))
 	for i, r := range runes {
-		v, ok := mapChar(r, op.GetMapping())
+		v, ok := mapChar(r, op.GetMapping(), op.GetAlphabet())
 		if !ok {
 			return indeterminateInteger, nil
 		}
@@ -209,7 +219,7 @@ func iso7064Mod9710(s stringValue) checksumOutcome {
 	}
 	var r int64
 	for _, c := range runes {
-		v, ok := mapChar(c, irv1.CharMapping_CHAR_MAPPING_ALNUM_BASE36)
+		v, ok := mapChar(c, irv1.CharMapping_CHAR_MAPPING_ALNUM_BASE36, "")
 		if !ok {
 			return checksumUnsupported
 		}
