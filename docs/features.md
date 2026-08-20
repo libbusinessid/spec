@@ -29,6 +29,7 @@ a bundle declaring a single unknown ID.
 | 32 | `CHECKSUM_MOD97_V1` | ISO 7064 / modulo 97 |
 | 33 | `CHECKSUM_WEIGHTED_V1` | weighted sums, alignments and remainders |
 | 34 | `CHECKSUM_COMPARE_CONSTANT_V1` | comparison against a literal constant |
+| 35 | `CHECKSUM_INTEGER_PREDICATE_V1` | branching on the value of an integer |
 | 40 | `PROVENANCE_V1` | sources linked to definitions |
 
 ## 1 - `CORE_GRAPH_V1`
@@ -87,6 +88,7 @@ Operations requiring this capability:
 - `PREDICATE_OP_KIND_CONTAINS`
 - `PREDICATE_OP_KIND_ENDS_WITH`
 - `PREDICATE_OP_KIND_EQUALS`
+- `PREDICATE_OP_KIND_INTEGER_IS`
 - `PREDICATE_OP_KIND_IS_ABSENT`
 - `PREDICATE_OP_KIND_IS_EMPTY`
 - `PREDICATE_OP_KIND_LENGTH_BETWEEN`
@@ -298,6 +300,7 @@ Operations requiring this capability:
 - `INTEGER_OP_KIND_MOD_DIGITS`
 - `INTEGER_OP_KIND_REMAINDER_MAP`
 - `INTEGER_OP_KIND_WEIGHTED_SUM`
+- `PREDICATE_OP_KIND_INTEGER_IS`
 
 ## 31 - `CHECKSUM_LUHN_V1`
 
@@ -349,6 +352,19 @@ Frozen content:
 Operations requiring this capability:
 
 - `CHECKSUM_OP_KIND_COMPARE_CONSTANT`
+
+## 35 - `CHECKSUM_INTEGER_PREDICATE_V1`
+
+Branching on the value of an integer.
+
+Frozen content:
+
+- The `INTEGER_IS` predicate.
+- Every other predicate reads a string, so a checksum could compare a remainder but never branch on it. Registers that recompute their sum with a second set of weights when the first remainder reaches a given value need exactly that.
+
+Operations requiring this capability:
+
+- `PREDICATE_OP_KIND_INTEGER_IS`
 
 ## 40 - `PROVENANCE_V1`
 

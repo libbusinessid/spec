@@ -125,6 +125,13 @@ checksum "probe" "generic" {
             modulo(weighted_sum(slice(subject(), 0, 4), [1], "cycle", "digit_value"), 5),
             0,
           ),
+          choose(
+            when_checksum(
+              integer_is(modulo(weighted_sum(slice(subject(), 0, 4), [1], "cycle", "digit_value"), 11), 10),
+              compare_constant(modulo(digits_to_integer(slice(subject(), 0, 4)), 7), 0),
+            ),
+            compare_constant(modulo(digits_to_integer(slice(subject(), 0, 4)), 3), 0),
+          ),
           compare_digit(
             modulo(digits_to_integer(slice(subject(), 0, 4)), 10),
             subject(), 0,
