@@ -146,6 +146,30 @@ go run ./cmd/conformance-runner --corpus dist/businessid-conformance-<version>.b
 A run restricted with `--operation` is a diagnosis aid and never a verdict; the
 runner says so and exits non-zero even when every selected case matches.
 
+## Keeping the engine checkouts in step
+
+Before the first release the engines carry a local copy of the bundle instead of
+a downloaded, attested one. `tools/sync_engines.sh` writes that copy:
+
+```sh
+go run ./cmd/businessidc compile --out dist --release --write-docs
+./tools/sync_engines.sh
+```
+
+It refreshes the artifacts, rewrites `rules.lock`, and rewrites the header of
+`spec/PROVENANCE.md` so the commit and version it names are the ones the lock
+names. Doing it by hand drifted: three engines carried a lock at `2026.08.2`
+under a header still claiming `2026.08.0`.
+
+The script writes inside the sibling checkouts and stops there. It creates no
+branch, no commit and no pull request, because publishing to another repository
+stays a human decision.
+
+An engine that then refuses the bundle with `incompatible_ruleset` is behaving
+correctly: it is telling you it does not implement a capability the bundle
+declares. That is a task for the engine, never a reason to remove the capability
+here.
+
 ## Sources and their tier
 
 Every rule carries at least one `source`, and every source declares a `tier`.
