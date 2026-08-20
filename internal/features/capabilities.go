@@ -216,6 +216,7 @@ var capabilities = []Capability{
 		Content: []string{
 			"`Source.tier` and the `SourceTier` enumeration.",
 			"It is a capability of its own rather than an addition to `PROVENANCE_V1`, whose content is frozen: a field added to a frozen capability reaches an engine as an unknown field, which reads as a forged bundle rather than as the version gap it is.",
+			"Only a stated tier requires it. `tier` is not `optional` in the schema, so a `Source` that omits the field and one that sets `SOURCE_TIER_UNSPECIFIED` are the same bytes; `UNSPECIFIED` therefore means the source states no tier, and a bundle whose sources all state none does not declare this capability. Refusing `UNSPECIFIED` would make this capability mandatory the moment `PROVENANCE_V1` is, which is the opposite of the independence a separate id exists to give. A value outside the enumeration remains `invalid_ruleset`.",
 		},
 	},
 	{

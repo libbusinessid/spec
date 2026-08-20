@@ -276,8 +276,16 @@ func (l *lowerer) lowerIdentifiers() []*irv1.IdentifierDefinition {
 		def.Sources = lowerSources(id.Sources)
 		if len(def.GetSources()) > 0 {
 			l.used.Add(features.ProvenanceV1)
-			// tier ships under its own capability, PROVENANCE_V1 being frozen
-			l.used.Add(features.ProvenanceTierV1)
+			// tier ships under its own capability, PROVENANCE_V1 being frozen,
+			// and only a stated tier needs it. This compiler requires one on
+			// every source, so every bundle it produces declares 41; a bundle
+			// from elsewhere that states no tier does not have to.
+			for _, src := range def.GetSources() {
+				if src.GetTier() != irv1.SourceTier_SOURCE_TIER_UNSPECIFIED {
+					l.used.Add(features.ProvenanceTierV1)
+					break
+				}
+			}
 		}
 		out = append(out, def)
 	}

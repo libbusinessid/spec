@@ -284,7 +284,7 @@ Parameters: `weights` (required), `alignment` (required), `mapping` (required), 
 
 Capabilities: `CORE_GRAPH_V1` (1), `CHECKSUM_TRISTATE_V1` (30), `CHECKSUM_WEIGHTED_V1` (33).
 
-Sums `mapping(expr[i]) * weight(i)` over the paired positions. `LEFT` pairs position `i` with `weights[i]`, `RIGHT` pairs the last position with the last weight, and `CYCLE` pairs position `i` with `weights[i mod len(weights)]`. `LEFT` and `RIGHT` only pair `min(len(expr), len(weights))` positions; the remaining positions of `expr` contribute nothing. Indeterminate when `expr` is absent, empty, or contains a code point outside the mapping domain. `CUSTOM_ALPHABET` takes the value of a code point from its index in `alphabet`, which is required by that mapping and forbidden by the others.
+Sums `mapping(expr[i]) * weight(i)` over the paired positions. `LEFT` pairs position `i` with `weights[i]`, `RIGHT` pairs the last position with the last weight, and `CYCLE` pairs position `i` with `weights[i mod len(weights)]`. `LEFT` and `RIGHT` only pair `min(len(expr), len(weights))` positions; the remaining positions of `expr` contribute nothing. Indeterminate when `expr` is absent, empty, or contains a code point outside the mapping domain. `CUSTOM_ALPHABET` takes the value of a code point from its index in `alphabet`, which is required by that mapping and forbidden by the others. The alphabet holds between 1 and 256 code points and lists none of them twice: a repeated code point would carry two values, and which one an engine returned would depend on how it searched, which is how two conformant engines disagree without either being wrong.
 
 #### `INTEGER_OP_KIND_MODULO`
 
@@ -1179,6 +1179,7 @@ index / slice bound                  0..4096
 comparison constant                  -1000000000..1000000000
 operands of concat                   1..256
 provable digits of digits_to_integer 1..18
+code points of a custom alphabet     1..256, each one distinct
 ```
 
 ## 9. Serialization order
@@ -1236,7 +1237,7 @@ An engine performs these checks, in this order, before executing anything:
 10. every operation known, with its declared output type
 11. operand count, operand types and strictly lower operand indices
 12. only the parameters the operation declares, and every required parameter
-13. arithmetic bounds: moduli, weights, remainder tables, indices and provable integer widths
+13. arithmetic bounds: moduli, weights, remainder tables, indices, provable integer widths and the alphabet of a custom mapping
 14. root, subject and capture nodes inside the program and correctly typed
 15. program shape: accepted root per kind, `WHEN` only inside `CHOOSE`, and a pre-canonicalization program restricted to its five permitted operations
 16. identifier ids unique, kinds and countries well formed, serialization order respected
@@ -1257,9 +1258,19 @@ never re-serializes a decoded message to verify the published SHA-256.
 An unknown operation is therefore `invalid_ruleset`, not `incompatible_ruleset`,
 and the distinction is deliberate. A bundle that legitimately uses a newer
 operation declares the capability that introduced it, so an engine too old to
-understand it stops at check 5 with `incompatible_ruleset`. Reaching check 10
+understand it stops at check 4 with `incompatible_ruleset`. Reaching check 10
 with an unknown operation means the bundle used one without declaring it, which
 is a forged bundle rather than a version gap.
+
+That distinction only survives if check 2 stays at the wire level. An engine
+that resolves an opcode, an enum value or a capability id while decoding
+reports a newer bundle at check 2, before the capability check can excuse it,
+and the version gap is again reported as a malformed bundle. Decoding proves
+the bytes parse and nothing more: an unresolved opcode is carried to check 10,
+an unknown field to check 5, and an unrecognised enum value to the check that
+owns its field. This is not a hint. Two engines have already been caught by
+it, once on a new field and once on a new opcode, and the second was found
+only because the first had already happened.
 
 The version checks precede the unknown field scan, and the order carries a
 meaning. A bundle built against a later version holds fields this runtime has

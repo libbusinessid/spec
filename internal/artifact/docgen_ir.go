@@ -327,6 +327,7 @@ func RenderIRDoc() []byte {
 	w("comparison constant                  %d..%d", limits.MinConstant, limits.MaxConstant)
 	w("operands of concat                   %d..%d", limits.MinConcatOperands, limits.MaxConcatOperands)
 	w("provable digits of digits_to_integer 1..%d", limits.MaxDigitsToIntegerLength)
+	w("code points of a custom alphabet     1..%d, each one distinct", limits.MaxAlphabetRunes)
 	w("```")
 	w("")
 
@@ -386,9 +387,19 @@ func RenderIRDoc() []byte {
 	w("An unknown operation is therefore `invalid_ruleset`, not `incompatible_ruleset`,")
 	w("and the distinction is deliberate. A bundle that legitimately uses a newer")
 	w("operation declares the capability that introduced it, so an engine too old to")
-	w("understand it stops at check 5 with `incompatible_ruleset`. Reaching check 10")
+	w("understand it stops at check 4 with `incompatible_ruleset`. Reaching check 10")
 	w("with an unknown operation means the bundle used one without declaring it, which")
 	w("is a forged bundle rather than a version gap.")
+	w("")
+	w("That distinction only survives if check 2 stays at the wire level. An engine")
+	w("that resolves an opcode, an enum value or a capability id while decoding")
+	w("reports a newer bundle at check 2, before the capability check can excuse it,")
+	w("and the version gap is again reported as a malformed bundle. Decoding proves")
+	w("the bytes parse and nothing more: an unresolved opcode is carried to check 10,")
+	w("an unknown field to check 5, and an unrecognised enum value to the check that")
+	w("owns its field. This is not a hint. Two engines have already been caught by")
+	w("it, once on a new field and once on a new opcode, and the second was found")
+	w("only because the first had already happened.")
 	w("")
 	w("The version checks precede the unknown field scan, and the order carries a")
 	w("meaning. A bundle built against a later version holds fields this runtime has")
@@ -419,7 +430,7 @@ var loadChecks = []string{
 	"every operation known, with its declared output type",
 	"operand count, operand types and strictly lower operand indices",
 	"only the parameters the operation declares, and every required parameter",
-	"arithmetic bounds: moduli, weights, remainder tables, indices and provable integer widths",
+	"arithmetic bounds: moduli, weights, remainder tables, indices, provable integer widths and the alphabet of a custom mapping",
 	"root, subject and capture nodes inside the program and correctly typed",
 	"program shape: accepted root per kind, `WHEN` only inside `CHOOSE`, and a " +
 		"pre-canonicalization program restricted to its five permitted operations",

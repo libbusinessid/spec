@@ -12,14 +12,15 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 
 	"google.golang.org/protobuf/proto"
 
 	conformancev1 "github.com/libbusinessid/spec/gen/go/libbusinessid/conformance/v1"
 	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
-	"github.com/libbusinessid/spec/internal/limits"
 	"github.com/libbusinessid/spec/internal/artifact"
 	"github.com/libbusinessid/spec/internal/features"
+	"github.com/libbusinessid/spec/internal/limits"
 )
 
 func s(v string) *string { return &v }
@@ -523,6 +524,55 @@ func main() {
 		return wideConstant.RequiredFeatureIds[i] < wideConstant.RequiredFeatureIds[j]
 	})
 	write(filepath.Join(root, "predicate_constant.binpb"), marshal(wideConstant))
+
+	// The alphabet of a custom mapping. Five refusals, one fixture each: the Go
+	// engine implemented all five and pointed out that none of them was in the
+	// corpus, so nothing held the other engines to the same answers. The
+	// repeated code point is the one that matters most: it would give one
+	// character two values, and which one an engine returned would depend on how
+	// it searched.
+	alphabetFixture := func(name string, mapping irv1.CharMapping, alphabet *string) {
+		b := clone(base)
+		b.Programs[2].Nodes = append(b.Programs[2].Nodes,
+			&irv1.Node{
+				OutputType: irv1.ValueType_VALUE_TYPE_INTEGER,
+				InputNodes: []uint32{0},
+				Operation: &irv1.Node_IntegerOperation{IntegerOperation: &irv1.IntegerOperation{
+					Kind:      irv1.IntegerOpKind_INTEGER_OP_KIND_WEIGHTED_SUM,
+					Weights:   []int64{1, 2},
+					Alignment: irv1.WeightAlignment_WEIGHT_ALIGNMENT_LEFT.Enum(),
+					Mapping:   mapping.Enum(),
+					Alphabet:  alphabet,
+				}},
+			})
+		b.RequiredFeatureIds = append(b.RequiredFeatureIds,
+			features.ChecksumWeightedV1, features.ChecksumCustomAlphabetV1)
+		sort.Slice(b.RequiredFeatureIds, func(i, j int) bool {
+			return b.RequiredFeatureIds[i] < b.RequiredFeatureIds[j]
+		})
+		write(filepath.Join(root, name), marshal(b))
+	}
+	repeated := "0123401234"
+	empty := ""
+	tooMany := strings.Builder{}
+	for i := range limits.MaxAlphabetRunes + 1 {
+		tooMany.WriteRune(rune('\u0100' + i))
+	}
+	tooManyRunes := tooMany.String()
+	digits := "0123456789"
+	custom := irv1.CharMapping_CHAR_MAPPING_CUSTOM_ALPHABET
+	alphabetFixture("alphabet_repeated.binpb", custom, &repeated)
+	alphabetFixture("alphabet_empty.binpb", custom, &empty)
+	alphabetFixture("alphabet_too_many.binpb", custom, &tooManyRunes)
+	alphabetFixture("alphabet_missing.binpb", custom, nil)
+	alphabetFixture("alphabet_unread.binpb", irv1.CharMapping_CHAR_MAPPING_DIGIT_VALUE, &digits)
+
+	// A source stating a tier outside the enumeration. UNSPECIFIED is not a
+	// refusal - it means the source states no tier - but a value nothing can
+	// read is a forged bundle.
+	badTier := clone(base)
+	badTier.Identifiers[0].Sources[0].Tier = irv1.SourceTier(47)
+	write(filepath.Join(root, "source_tier_unknown.binpb"), marshal(badTier))
 
 	// A rules_version carrying a control character. The Go engine found this by
 	// fuzzing: the version is interpolated into generated sources, and a NUL is
