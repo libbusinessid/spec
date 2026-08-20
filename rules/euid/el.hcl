@@ -28,9 +28,14 @@ format "euid" "el" {
     require(not(is_absent(capture.register)), "invalid_format", "euid.el.register"),
     require(length_between(capture.register, 1, 8), "invalid_length", "euid.el.register_length"),
     require(ascii_alphanumeric(capture.register), "invalid_characters", "euid.el.register_characters"),
-    require(length_eq(capture.registration, 12), "invalid_length", "euid.el.registration_length"),
-    require(ascii_digits(capture.registration), "invalid_characters", "euid.el.registration_characters"),
   ]
+
+  # The registration part is the national number, so the national rule is
+  # applied to it rather than restated here.
+  use_format {
+    rule  = format.el.gemi
+    input = capture.registration
+  }
 }
 
 identifier "euid" "EL" {

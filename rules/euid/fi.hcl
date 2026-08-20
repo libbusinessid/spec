@@ -32,16 +32,18 @@ format "euid" "fi" {
     require(not(is_absent(capture.register)), "invalid_format", "euid.fi.register"),
     require(length_between(capture.register, 1, 8), "invalid_length", "euid.fi.register_length"),
     require(ascii_alphanumeric(capture.register), "invalid_characters", "euid.fi.register_characters"),
-    require(length_eq(capture.registration, 8), "invalid_length", "euid.fi.registration_length"),
-    require(ascii_digits(capture.registration), "invalid_characters", "euid.fi.registration_characters"),
   ]
+
+  # The registration part is the national number, so the national rule is
+  # applied to it rather than restated here.
+  use_format {
+    rule  = format.fi.y_tunnus
+    input = capture.registration
+  }
 }
 
 checksum "euid" "fi" {
-  rule = compare_digit(
-    remainder_map(modulo(weighted_sum(slice(after_first(subject(), "."), 0, 7), [7, 9, 10, 5, 8, 4, 2], "left", "digit_value"), 11), [0, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]),
-    after_first(subject(), "."), 7,
-  )
+  rule = apply_checksum(checksum.fi.y_tunnus, after_first(subject(), "."))
 }
 
 identifier "euid" "FI" {

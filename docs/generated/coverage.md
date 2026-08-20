@@ -2,83 +2,108 @@
 
 # Rule coverage
 
-Rules version `2026.08.11`, IR format version `1`.
+Rules version `2026.08.12`, IR format version `1`.
 
 ## Country by kind matrix
 
 | Kind | Country | Canonicalizer | Format | Checksum | Default profile | Sources |
 |---|---|---:|---:|---:|---|---:|
-| `cnpj` | `BR` | 2 | 120 | 73 | `compatible` | 1 |
-| `company_number` | `GB` | 35 | 151 | - | `compatible` | 3 |
-| `corporate_number` | `JP` | 38 | 154 | 92 | `compatible` | 1 |
-| `duns` | `GLOBAL` | 36 | 152 | - | `compatible` | 1 |
-| `ein` | `US` | 40 | 156 | - | `compatible` | 1 |
-| `enterprise_number` | `BE` | 1 | 119 | 72 | `compatible` | 1 |
-| `eori` | `GLOBAL` | 37 | 153 | - | `compatible` | 1 |
-| `euid` | `AT` | 6 | 122 | - | `compatible` | 1 |
-| `euid` | `BE` | 7 | 123 | 75 | `compatible` | 1 |
-| `euid` | `BG` | 8 | 124 | 76 | `compatible` | 2 |
-| `euid` | `CY` | 9 | 125 | - | `compatible` | 1 |
-| `euid` | `CZ` | 10 | 126 | 77 | `compatible` | 2 |
-| `euid` | `DE` | 11 | 127 | - | `compatible` | 1 |
-| `euid` | `DK` | 12 | 128 | 78 | `compatible` | 2 |
-| `euid` | `EE` | 13 | 129 | 79 | `compatible` | 2 |
-| `euid` | `EL` | 14 | 130 | - | `compatible` | 1 |
-| `euid` | `ES` | 15 | 131 | 80 | `compatible` | 2 |
-| `euid` | `FI` | 16 | 132 | 81 | `compatible` | 2 |
-| `euid` | `FR` | 17 | 133 | 82 | `compatible` | 2 |
-| `euid` | `HR` | 18 | 134 | - | `compatible` | 1 |
-| `euid` | `HU` | 19 | 135 | - | `compatible` | 1 |
-| `euid` | `IE` | 20 | 136 | - | `compatible` | 1 |
-| `euid` | `IT` | 21 | 137 | 83 | `compatible` | 1 |
-| `euid` | `LT` | 22 | 138 | 84 | `compatible` | 2 |
-| `euid` | `LU` | 23 | 139 | - | `compatible` | 1 |
-| `euid` | `LV` | 24 | 140 | 85 | `compatible` | 2 |
-| `euid` | `MT` | 25 | 141 | - | `compatible` | 1 |
-| `euid` | `NL` | 26 | 142 | - | `compatible` | 1 |
-| `euid` | `PL` | 27 | 143 | - | `compatible` | 1 |
-| `euid` | `PT` | 28 | 144 | 86 | `compatible` | 2 |
-| `euid` | `RO` | 29 | 145 | 87 | `compatible` | 2 |
-| `euid` | `SE` | 30 | 146 | 88 | `compatible` | 2 |
-| `euid` | `SI` | 31 | 147 | - | `compatible` | 1 |
-| `euid` | `SK` | 32 | 148 | 89 | `compatible` | 2 |
-| `lei` | `GLOBAL` | 39 | 155 | 93 | `compatible` | 1 |
-| `siren` | `FR` | 33 | 149 | 90 | `compatible` | 1 |
-| `siret` | `FR` | 34 | 150 | 91 | `compatible` | 1 |
-| `uscc` | `CN` | 3 | 121 | 74 | `compatible` | 1 |
-| `vat` | `AT` | 41 | 157 | - | `compatible` | 1 |
-| `vat` | `BE` | 42 | 158 | 94 | `compatible` | 2 |
-| `vat` | `BG` | 43 | 159 | 95 | `compatible` | 2 |
-| `vat` | `CY` | 44 | 160 | - | `compatible` | 1 |
-| `vat` | `CZ` | 45 | 161 | 96 | `compatible` | 2 |
-| `vat` | `DE` | 46 | 162 | - | `compatible` | 2 |
-| `vat` | `DK` | 47 | 163 | 97 | `compatible` | 2 |
-| `vat` | `EE` | 48 | 164 | 98 | `compatible` | 2 |
-| `vat` | `ES` | 49 | 165 | 99 | `compatible` | 2 |
-| `vat` | `FI` | 50 | 166 | 100 | `compatible` | 2 |
-| `vat` | `FR` | 51 | 167 | 101 | `compatible` | 2 |
-| `vat` | `GB` | 52 | 168 | 102 | `compatible` | 2 |
-| `vat` | `GR` | 53 | 169 | 103 | `compatible` | 2 |
-| `vat` | `HR` | 54 | 170 | - | `compatible` | 1 |
-| `vat` | `HU` | 55 | 171 | 104 | `compatible` | 2 |
-| `vat` | `IE` | 56 | 172 | - | `compatible` | 1 |
-| `vat` | `IS` | 57 | 173 | 105 | `compatible` | 2 |
-| `vat` | `IT` | 58 | 174 | 106 | `compatible` | 2 |
-| `vat` | `LI` | 59 | 175 | - | `compatible` | 1 |
-| `vat` | `LU` | 60 | 176 | 107 | `compatible` | 2 |
-| `vat` | `LV` | 61 | 177 | 108 | `compatible` | 2 |
-| `vat` | `MT` | 62 | 178 | 109 | `compatible` | 2 |
-| `vat` | `NL` | 63 | 179 | 110 | `compatible` | 2 |
-| `vat` | `NO` | 64 | 180 | 111 | `compatible` | 2 |
-| `vat` | `PL` | 65 | 181 | 112 | `compatible` | 2 |
-| `vat` | `PT` | 66 | 182 | 113 | `compatible` | 2 |
-| `vat` | `RO` | 67 | 183 | 114 | `compatible` | 2 |
-| `vat` | `SE` | 68 | 184 | 115 | `compatible` | 2 |
-| `vat` | `SI` | 69 | 185 | 116 | `compatible` | 2 |
-| `vat` | `SK` | 70 | 186 | 117 | `compatible` | 2 |
-| `vat` | `XI` | 71 | 187 | 118 | `compatible` | 2 |
+| `cegjegyzekszam` | `HU` | 45 | 189 | - | `compatible` | 1 |
+| `cnpj` | `BR` | 3 | 149 | 91 | `compatible` | 1 |
+| `company_number` | `GB` | 41 | 185 | - | `compatible` | 3 |
+| `corporate_number` | `JP` | 46 | 190 | 114 | `compatible` | 1 |
+| `cui` | `RO` | 53 | 197 | 119 | `compatible` | 2 |
+| `cvr` | `DK` | 8 | 152 | 94 | `compatible` | 2 |
+| `duns` | `GLOBAL` | 42 | 186 | - | `compatible` | 1 |
+| `eik` | `BG` | 2 | 148 | 90 | `compatible` | 2 |
+| `ein` | `US` | 57 | 201 | - | `compatible` | 1 |
+| `enterprise_number` | `BE` | 1 | 147 | 89 | `compatible` | 1 |
+| `eori` | `GLOBAL` | 43 | 187 | - | `compatible` | 1 |
+| `euid` | `AT` | 11 | 155 | - | `compatible` | 1 |
+| `euid` | `BE` | 12 | 156 | 96 | `compatible` | 1 |
+| `euid` | `BG` | 13 | 157 | 97 | `compatible` | 2 |
+| `euid` | `CY` | 14 | 158 | - | `compatible` | 1 |
+| `euid` | `CZ` | 15 | 159 | 98 | `compatible` | 2 |
+| `euid` | `DE` | 16 | 160 | - | `compatible` | 1 |
+| `euid` | `DK` | 17 | 161 | 99 | `compatible` | 2 |
+| `euid` | `EE` | 18 | 162 | 100 | `compatible` | 2 |
+| `euid` | `EL` | 19 | 163 | - | `compatible` | 1 |
+| `euid` | `ES` | 20 | 164 | 101 | `compatible` | 2 |
+| `euid` | `FI` | 21 | 165 | 102 | `compatible` | 2 |
+| `euid` | `FR` | 22 | 166 | 103 | `compatible` | 2 |
+| `euid` | `HR` | 23 | 167 | - | `compatible` | 1 |
+| `euid` | `HU` | 24 | 168 | - | `compatible` | 1 |
+| `euid` | `IE` | 25 | 169 | - | `compatible` | 1 |
+| `euid` | `IT` | 26 | 170 | 104 | `compatible` | 1 |
+| `euid` | `LT` | 27 | 171 | 105 | `compatible` | 2 |
+| `euid` | `LU` | 28 | 172 | - | `compatible` | 1 |
+| `euid` | `LV` | 29 | 173 | 106 | `compatible` | 2 |
+| `euid` | `MT` | 30 | 174 | - | `compatible` | 1 |
+| `euid` | `NL` | 31 | 175 | - | `compatible` | 1 |
+| `euid` | `PL` | 32 | 176 | - | `compatible` | 1 |
+| `euid` | `PT` | 33 | 177 | 107 | `compatible` | 2 |
+| `euid` | `RO` | 34 | 178 | 108 | `compatible` | 2 |
+| `euid` | `SE` | 35 | 179 | 109 | `compatible` | 2 |
+| `euid` | `SI` | 36 | 180 | - | `compatible` | 1 |
+| `euid` | `SK` | 37 | 181 | 110 | `compatible` | 2 |
+| `gemi` | `EL` | 10 | 154 | - | `compatible` | 1 |
+| `ico` | `CZ` | 5 | 151 | 93 | `compatible` | 2 |
+| `ico` | `SK` | 56 | 200 | 121 | `compatible` | 2 |
+| `juridinio_asmens_kodas` | `LT` | 48 | 192 | 116 | `compatible` | 2 |
+| `krs` | `PL` | 51 | 195 | - | `compatible` | 1 |
+| `kvk` | `NL` | 50 | 194 | - | `compatible` | 1 |
+| `lei` | `GLOBAL` | 47 | 191 | 115 | `compatible` | 1 |
+| `maticna_stevilka` | `SI` | 55 | 199 | - | `compatible` | 1 |
+| `mbs` | `HR` | 44 | 188 | - | `compatible` | 1 |
+| `nipc` | `PT` | 52 | 196 | 118 | `compatible` | 2 |
+| `organisationsnummer` | `SE` | 54 | 198 | 120 | `compatible` | 2 |
+| `registracijas_numurs` | `LV` | 49 | 193 | 117 | `compatible` | 2 |
+| `registrikood` | `EE` | 9 | 153 | 95 | `compatible` | 2 |
+| `siren` | `FR` | 39 | 183 | 112 | `compatible` | 1 |
+| `siret` | `FR` | 40 | 184 | 113 | `compatible` | 1 |
+| `uscc` | `CN` | 4 | 150 | 92 | `compatible` | 1 |
+| `vat` | `AT` | 58 | 202 | - | `compatible` | 1 |
+| `vat` | `BE` | 59 | 203 | 122 | `compatible` | 2 |
+| `vat` | `BG` | 60 | 204 | 123 | `compatible` | 2 |
+| `vat` | `CY` | 61 | 205 | - | `compatible` | 1 |
+| `vat` | `CZ` | 62 | 206 | 124 | `compatible` | 2 |
+| `vat` | `DE` | 63 | 207 | - | `compatible` | 2 |
+| `vat` | `DK` | 64 | 208 | 125 | `compatible` | 2 |
+| `vat` | `EE` | 65 | 209 | 126 | `compatible` | 2 |
+| `vat` | `ES` | 66 | 210 | 127 | `compatible` | 2 |
+| `vat` | `FI` | 67 | 211 | 128 | `compatible` | 2 |
+| `vat` | `FR` | 68 | 212 | 129 | `compatible` | 2 |
+| `vat` | `GB` | 69 | 213 | 130 | `compatible` | 2 |
+| `vat` | `GR` | 70 | 214 | 131 | `compatible` | 2 |
+| `vat` | `HR` | 71 | 215 | - | `compatible` | 1 |
+| `vat` | `HU` | 72 | 216 | 132 | `compatible` | 2 |
+| `vat` | `IE` | 73 | 217 | - | `compatible` | 1 |
+| `vat` | `IS` | 74 | 218 | 133 | `compatible` | 2 |
+| `vat` | `IT` | 75 | 219 | 134 | `compatible` | 2 |
+| `vat` | `LI` | 76 | 220 | - | `compatible` | 1 |
+| `vat` | `LU` | 77 | 221 | 135 | `compatible` | 2 |
+| `vat` | `LV` | 78 | 222 | 136 | `compatible` | 2 |
+| `vat` | `MT` | 79 | 223 | 137 | `compatible` | 2 |
+| `vat` | `NL` | 80 | 224 | 138 | `compatible` | 2 |
+| `vat` | `NO` | 81 | 225 | 139 | `compatible` | 2 |
+| `vat` | `PL` | 82 | 226 | 140 | `compatible` | 2 |
+| `vat` | `PT` | 83 | 227 | 141 | `compatible` | 2 |
+| `vat` | `RO` | 84 | 228 | 142 | `compatible` | 2 |
+| `vat` | `SE` | 85 | 229 | 143 | `compatible` | 2 |
+| `vat` | `SI` | 86 | 230 | 144 | `compatible` | 2 |
+| `vat` | `SK` | 87 | 231 | 145 | `compatible` | 2 |
+| `vat` | `XI` | 88 | 232 | 146 | `compatible` | 2 |
+| `y_tunnus` | `FI` | 38 | 182 | 111 | `compatible` | 2 |
 
 ## Dispatch tables
+
+### `cegjegyzekszam`
+
+Kind aliases: `hu_cegjegyzekszam`.
+
+| Country | Accepted prefixes | Canonical prefix | Implicit |
+|---|---|---|---|
+| `HU` | - | - | yes |
 
 ### `cnpj`
 
@@ -104,6 +129,22 @@ Kind aliases: `hojin_bango`, `houjin_bangou`, `jp_corporate_number`.
 |---|---|---|---|
 | `JP` | - | - | yes |
 
+### `cui`
+
+Kind aliases: `cif`, `ro_cui`.
+
+| Country | Accepted prefixes | Canonical prefix | Implicit |
+|---|---|---|---|
+| `RO` | - | - | yes |
+
+### `cvr`
+
+Kind aliases: `cvr_nummer`, `dk_cvr`.
+
+| Country | Accepted prefixes | Canonical prefix | Implicit |
+|---|---|---|---|
+| `DK` | - | - | yes |
+
 ### `duns`
 
 Kind aliases: `dnb`, `duns_number`.
@@ -111,6 +152,14 @@ Kind aliases: `dnb`, `duns_number`.
 | Country | Accepted prefixes | Canonical prefix | Implicit |
 |---|---|---|---|
 | `GLOBAL` | - | - | no |
+
+### `eik`
+
+Kind aliases: `bg_eik`, `bulstat`.
+
+| Country | Accepted prefixes | Canonical prefix | Implicit |
+|---|---|---|---|
+| `BG` | - | - | yes |
 
 ### `ein`
 
@@ -170,6 +219,47 @@ Kind aliases: none.
 | `SI` | `SI` | `SI` | no |
 | `SK` | `SK` | `SK` | no |
 
+### `gemi`
+
+Kind aliases: `el_gemi`, `gr_gemi`.
+
+| Country | Accepted prefixes | Canonical prefix | Implicit |
+|---|---|---|---|
+| `EL` | - | - | yes |
+
+### `ico`
+
+Kind aliases: `cz_ico`, `sk_ico`.
+
+| Country | Accepted prefixes | Canonical prefix | Implicit |
+|---|---|---|---|
+| `CZ` | - | - | no |
+| `SK` | - | - | no |
+
+### `juridinio_asmens_kodas`
+
+Kind aliases: `lt_juridinio_asmens_kodas`.
+
+| Country | Accepted prefixes | Canonical prefix | Implicit |
+|---|---|---|---|
+| `LT` | - | - | yes |
+
+### `krs`
+
+Kind aliases: `pl_krs`.
+
+| Country | Accepted prefixes | Canonical prefix | Implicit |
+|---|---|---|---|
+| `PL` | - | - | yes |
+
+### `kvk`
+
+Kind aliases: `kvk_nummer`, `nl_kvk`.
+
+| Country | Accepted prefixes | Canonical prefix | Implicit |
+|---|---|---|---|
+| `NL` | - | - | yes |
+
 ### `lei`
 
 Kind aliases: none.
@@ -177,6 +267,54 @@ Kind aliases: none.
 | Country | Accepted prefixes | Canonical prefix | Implicit |
 |---|---|---|---|
 | `GLOBAL` | - | - | no |
+
+### `maticna_stevilka`
+
+Kind aliases: `si_maticna_stevilka`.
+
+| Country | Accepted prefixes | Canonical prefix | Implicit |
+|---|---|---|---|
+| `SI` | - | - | yes |
+
+### `mbs`
+
+Kind aliases: `hr_mbs`.
+
+| Country | Accepted prefixes | Canonical prefix | Implicit |
+|---|---|---|---|
+| `HR` | - | - | yes |
+
+### `nipc`
+
+Kind aliases: `pt_nipc`.
+
+| Country | Accepted prefixes | Canonical prefix | Implicit |
+|---|---|---|---|
+| `PT` | - | - | yes |
+
+### `organisationsnummer`
+
+Kind aliases: `se_organisationsnummer`.
+
+| Country | Accepted prefixes | Canonical prefix | Implicit |
+|---|---|---|---|
+| `SE` | - | - | yes |
+
+### `registracijas_numurs`
+
+Kind aliases: `lv_registracijas_numurs`.
+
+| Country | Accepted prefixes | Canonical prefix | Implicit |
+|---|---|---|---|
+| `LV` | - | - | yes |
+
+### `registrikood`
+
+Kind aliases: `ee_registrikood`.
+
+| Country | Accepted prefixes | Canonical prefix | Implicit |
+|---|---|---|---|
+| `EE` | - | - | yes |
 
 ### `siren`
 
@@ -242,22 +380,30 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 | `SK` | `SK` | `SK` | no |
 | `XI` | `XI` | `XI` | no |
 
+### `y_tunnus`
+
+Kind aliases: `business_id`, `fi_y_tunnus`.
+
+| Country | Accepted prefixes | Canonical prefix | Implicit |
+|---|---|---|---|
+| `FI` | - | - | yes |
+
 ## Algorithms in use
 
 | Operation | Programs |
 |---|---:|
-| `ASSERTION_OP_KIND_REQUIRE` | 69 |
-| `ASSERTION_OP_KIND_SEQUENCE` | 69 |
-| `CALL_OP_KIND_CHECKSUM` | 4 |
-| `CALL_OP_KIND_FORMAT` | 3 |
+| `ASSERTION_OP_KIND_REQUIRE` | 86 |
+| `ASSERTION_OP_KIND_SEQUENCE` | 86 |
+| `CALL_OP_KIND_CHECKSUM` | 15 |
+| `CALL_OP_KIND_FORMAT` | 20 |
 | `CANONICALIZATION_OP_KIND_INSERT` | 1 |
 | `CANONICALIZATION_OP_KIND_PREPEND_COUNTRY_IF_MISSING` | 58 |
-| `CANONICALIZATION_OP_KIND_REMOVE_CHARS` | 43 |
-| `CANONICALIZATION_OP_KIND_REMOVE_WHITESPACE` | 71 |
+| `CANONICALIZATION_OP_KIND_REMOVE_CHARS` | 60 |
+| `CANONICALIZATION_OP_KIND_REMOVE_WHITESPACE` | 88 |
 | `CANONICALIZATION_OP_KIND_REPLACE_PREFIX` | 1 |
-| `CANONICALIZATION_OP_KIND_SEQUENCE` | 71 |
-| `CANONICALIZATION_OP_KIND_TRIM_WHITESPACE` | 71 |
-| `CANONICALIZATION_OP_KIND_UPPERCASE_ASCII` | 67 |
+| `CANONICALIZATION_OP_KIND_SEQUENCE` | 88 |
+| `CANONICALIZATION_OP_KIND_TRIM_WHITESPACE` | 88 |
+| `CANONICALIZATION_OP_KIND_UPPERCASE_ASCII` | 84 |
 | `CANONICALIZATION_OP_KIND_WHEN` | 1 |
 | `CHECKSUM_OP_KIND_ALL_CHECKS` | 3 |
 | `CHECKSUM_OP_KIND_ANY_CHECK` | 3 |
@@ -285,22 +431,23 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 | `PREDICATE_OP_KIND_CONTAINS` | 27 |
 | `PREDICATE_OP_KIND_INTEGER_IS` | 4 |
 | `PREDICATE_OP_KIND_IS_ABSENT` | 27 |
-| `PREDICATE_OP_KIND_IS_EMPTY` | 69 |
-| `PREDICATE_OP_KIND_LENGTH_BETWEEN` | 31 |
+| `PREDICATE_OP_KIND_IS_EMPTY` | 86 |
+| `PREDICATE_OP_KIND_LENGTH_BETWEEN` | 32 |
 | `PREDICATE_OP_KIND_LENGTH_EQ` | 65 |
-| `PREDICATE_OP_KIND_NOT` | 73 |
+| `PREDICATE_OP_KIND_NOT` | 90 |
 | `PREDICATE_OP_KIND_PREFIX_IN` | 1 |
 | `PREDICATE_OP_KIND_PROFILE_IS` | 1 |
-| `PREDICATE_OP_KIND_STARTS_WITH` | 60 |
+| `PREDICATE_OP_KIND_STARTS_WITH` | 61 |
 | `STRING_OP_KIND_AFTER_FIRST` | 42 |
 | `STRING_OP_KIND_BEFORE_FIRST` | 27 |
 | `STRING_OP_KIND_SLICE` | 48 |
 | `STRING_OP_KIND_SLICE_FROM` | 55 |
-| `STRING_OP_KIND_SUBJECT` | 116 |
+| `STRING_OP_KIND_SUBJECT` | 144 |
 | `STRING_OP_KIND_VALUE` | 1 |
 
 ## Rules without a published checksum
 
+- `cegjegyzekszam` / `HU`: reports `checksum_not_published`.
 - `company_number` / `GB`: reports `checksum_not_published`.
 - `duns` / `GLOBAL`: reports `checksum_not_published`.
 - `ein` / `US`: reports `checksum_not_published`.
@@ -317,6 +464,11 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 - `euid` / `NL`: reports `checksum_not_published`.
 - `euid` / `PL`: reports `checksum_not_published`.
 - `euid` / `SI`: reports `checksum_not_published`.
+- `gemi` / `EL`: reports `checksum_not_published`.
+- `krs` / `PL`: reports `checksum_not_published`.
+- `kvk` / `NL`: reports `checksum_not_published`.
+- `maticna_stevilka` / `SI`: reports `checksum_not_published`.
+- `mbs` / `HR`: reports `checksum_not_published`.
 - `vat` / `AT`: reports `unsupported_checksum`.
 - `vat` / `CY`: reports `unsupported_checksum`.
 - `vat` / `DE`: reports `unsupported_checksum`.
@@ -431,29 +583,45 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 
 ## Conformance statistics
 
-Total cases: **564**.
+Total cases: **629**.
 
 | Kind | Cases |
 |---|---:|
 | `  VAT  ` | 1 |
 | `(loader)` | 27 |
 | `VAT!` | 1 |
+| `cegjegyzekszam` | 2 |
 | `cnpj` | 19 |
 | `company_number` | 60 |
 | `corporate_number` | 14 |
+| `cui` | 11 |
+| `cvr` | 4 |
 | `duns` | 3 |
+| `eik` | 4 |
 | `ein` | 3 |
 | `enterprise_number` | 12 |
 | `eori` | 4 |
 | `euid` | 126 |
 | `fr_siren` | 2 |
+| `gemi` | 3 |
+| `ico` | 10 |
+| `juridinio_asmens_kodas` | 3 |
+| `krs` | 3 |
+| `kvk` | 3 |
 | `lei` | 30 |
+| `maticna_stevilka` | 3 |
+| `mbs` | 3 |
+| `nipc` | 3 |
+| `organisationsnummer` | 4 |
+| `registracijas_numurs` | 3 |
+| `registrikood` | 3 |
 | `siren` | 40 |
 | `siret` | 22 |
 | `unknown_kind` | 2 |
 | `uscc` | 19 |
 | `vat` | 178 |
 | `vat_number` | 1 |
+| `y_tunnus` | 3 |
 
 | Tag | Cases |
 |---|---:|
@@ -463,11 +631,11 @@ Total cases: **564**.
 | `boundary` | 19 |
 | `bounds` | 2 |
 | `branch` | 3 |
-| `canonicalization` | 19 |
+| `canonicalization` | 20 |
 | `canonicalize` | 13 |
 | `capabilities` | 2 |
-| `characters` | 21 |
-| `checksum` | 140 |
+| `characters` | 26 |
+| `checksum` | 152 |
 | `composition` | 23 |
 | `country` | 15 |
 | `cycle` | 1 |
@@ -480,16 +648,16 @@ Total cases: **564**.
 | `dormant` | 7 |
 | `empty` | 9 |
 | `enum` | 1 |
-| `format` | 6 |
+| `format` | 8 |
 | `global` | 2 |
 | `graph` | 5 |
 | `group` | 1 |
-| `hole` | 5 |
+| `hole` | 6 |
 | `implicit` | 1 |
-| `invalid` | 265 |
+| `invalid` | 294 |
 | `iso7064` | 2 |
 | `legacy` | 4 |
-| `length` | 51 |
+| `length` | 69 |
 | `letter` | 2 |
 | `letters-first` | 3 |
 | `limits` | 3 |
@@ -500,7 +668,7 @@ Total cases: **564**.
 | `mutation` | 77 |
 | `normalization` | 15 |
 | `parameters` | 1 |
-| `person` | 6 |
+| `person` | 7 |
 | `pre-partition` | 1 |
 | `prefix` | 40 |
 | `profile` | 8 |
@@ -514,12 +682,12 @@ Total cases: **564**.
 | `strict` | 6 |
 | `structure` | 2 |
 | `suffix` | 4 |
-| `synthetic` | 470 |
+| `synthetic` | 535 |
 | `truncation` | 1 |
 | `types` | 1 |
 | `unknown-field` | 1 |
 | `unsupported` | 30 |
-| `valid` | 229 |
+| `valid` | 265 |
 | `variant` | 2 |
 | `version` | 4 |
 | `weighted` | 4 |
@@ -527,5 +695,5 @@ Total cases: **564**.
 | Data classification | Cases |
 |---|---:|
 | `public_business_identifier` | 66 |
-| `synthetic` | 498 |
+| `synthetic` | 563 |
 

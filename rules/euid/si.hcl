@@ -28,9 +28,14 @@ format "euid" "si" {
     require(not(is_absent(capture.register)), "invalid_format", "euid.si.register"),
     require(length_between(capture.register, 1, 8), "invalid_length", "euid.si.register_length"),
     require(ascii_alphanumeric(capture.register), "invalid_characters", "euid.si.register_characters"),
-    require(length_eq(capture.registration, 7), "invalid_length", "euid.si.registration_length"),
-    require(ascii_digits(capture.registration), "invalid_characters", "euid.si.registration_characters"),
   ]
+
+  # The registration part is the national number, so the national rule is
+  # applied to it rather than restated here.
+  use_format {
+    rule  = format.si.maticna_stevilka
+    input = capture.registration
+  }
 }
 
 identifier "euid" "SI" {

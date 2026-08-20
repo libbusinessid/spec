@@ -99,6 +99,23 @@ the dot, so the two cannot drift apart.
 | Japan | **Corporate Number** | National Tax Agency | supported | checked (mod 9 over alternating weights) | 14 |
 | Brazil | **CNPJ** | Receita Federal | supported | checked (two rounds of mod 11, alphanumeric form of 2026 included) | 19 |
 | Belgium | **Enterprise number** | Banque-Carrefour des Entreprises | supported | checked (mod 97) | 12 |
+| Bulgaria | **EIK** | Registry Agency | supported | checked (mod 11) | 4 |
+| Croatia | **MBS** | Sudski registar | supported | format | 3 |
+| Czechia | **IČO** | Czech Statistical Office | supported | checked (mod 11) | 5 |
+| Denmark | **CVR number** | Erhvervsstyrelsen | supported | checked (mod 11) | 4 |
+| Estonia | **Registrikood** (`registrikood`) | Äriregister | supported | checked (mod 11, two rounds) | 3 |
+| Finland | **Y-tunnus** | PRH | supported | checked (mod 11) | 3 |
+| Greece | **GEMI number** | ΓΕΜΗ | supported | format | 3 |
+| Hungary | **Cégjegyzékszám** (`cegjegyzekszam`) | Court of registration | supported | format | 2 |
+| Latvia | **Reģistrācijas numurs** (`registracijas_numurs`) | Uzņēmumu reģistrs | supported | checked (mod 11) | 3 |
+| Lithuania | **Juridinio asmens kodas** (`juridinio_asmens_kodas`) | Registrų centras | supported | checked (mod 11) | 3 |
+| Netherlands | **KvK number** | Kamer van Koophandel | supported | format | 3 |
+| Poland | **KRS number** | Krajowy Rejestr Sądowy | supported | format | 3 |
+| Portugal | **NIPC** | IRN | supported | checked (mod 11) | 3 |
+| Romania | **CUI** | ONRC | supported | checked (mod 11) | 11 |
+| Slovakia | **IČO** | Obchodný register | supported | checked (mod 11) | 5 |
+| Slovenia | **Matična številka** (`maticna_stevilka`) | AJPES | supported | format | 3 |
+| Sweden | **Organisationsnummer** | Bolagsverket | supported | checked (Luhn) | 4 |
 
 Three rules have been swept against their issuer's complete register, through
 the same testee protocol an engine is judged by:
