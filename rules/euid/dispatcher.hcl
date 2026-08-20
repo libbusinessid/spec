@@ -188,4 +188,11 @@ dispatcher "euid" {
     canonical_prefix  = "LV"
     identifier        = identifier.euid.LV
   }
+
+  target {
+    country_code      = "ES"
+    accepted_prefixes = ["ES"]
+    canonical_prefix  = "ES"
+    identifier        = identifier.euid.ES
+  }
 }

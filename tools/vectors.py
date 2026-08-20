@@ -145,3 +145,19 @@ def lv_check(first10: str):
     total = sum(int(c) * w for c, w in zip(first10, (9, 1, 4, 8, 3, 10, 2, 5, 7, 6)))
     c = (3 - total) % 11
     return None if c == 10 else str(c)
+
+
+def es_cif_digit(body7: str) -> str:
+    """Spanish CIF: doubling the odd positions of the body, which is Luhn."""
+    total = 0
+    for i, c in enumerate(body7, start=1):
+        d = int(c)
+        if i % 2 == 1:
+            d *= 2
+            d = d // 10 + d % 10
+        total += d
+    return str((10 - total % 10) % 10)
+
+
+def es_cif_letter(body7: str) -> str:
+    return "JABCDEFGHI"[int(es_cif_digit(body7))]
