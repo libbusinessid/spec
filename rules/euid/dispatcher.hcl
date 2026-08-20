@@ -34,4 +34,46 @@ dispatcher "euid" {
     canonical_prefix  = "SE"
     identifier        = identifier.euid.SE
   }
+
+  target {
+    country_code      = "CZ"
+    accepted_prefixes = ["CZ"]
+    canonical_prefix  = "CZ"
+    identifier        = identifier.euid.CZ
+  }
+
+  target {
+    country_code      = "DK"
+    accepted_prefixes = ["DK"]
+    canonical_prefix  = "DK"
+    identifier        = identifier.euid.DK
+  }
+
+  target {
+    country_code      = "PT"
+    accepted_prefixes = ["PT"]
+    canonical_prefix  = "PT"
+    identifier        = identifier.euid.PT
+  }
+
+  target {
+    country_code      = "SK"
+    accepted_prefixes = ["SK"]
+    canonical_prefix  = "SK"
+    identifier        = identifier.euid.SK
+  }
+
+  target {
+    country_code      = "EE"
+    accepted_prefixes = ["EE"]
+    canonical_prefix  = "EE"
+    identifier        = identifier.euid.EE
+  }
+
+  target {
+    country_code      = "LT"
+    accepted_prefixes = ["LT"]
+    canonical_prefix  = "LT"
+    identifier        = identifier.euid.LT
+  }
 }
