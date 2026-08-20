@@ -207,6 +207,8 @@ jobs:
           cache: true
       - name: Every changed rule must carry a source and a diff
         run: ./tools/check_provenance.sh "origin/${{ github.base_ref }}"
+      - name: Changed business data must move RULES_VERSION
+        run: ./tools/check_rules_version.sh "origin/${{ github.base_ref }}"
       - name: Data policy of the conformance corpus
         run: go run ./cmd/businessidc lint
 
