@@ -39,6 +39,18 @@ for engine in businessid-go businessid-swift businessid-kotlin businessid-typesc
   done
   cp "${here}/docs/spec/spec.md" "${target}/spec/spec.md"
 
+  # The contracts an engine is written against, which it cannot read from here.
+  # They were left out of the first version of this script, and the TypeScript
+  # engine found it the only way anyone could: by being told to read documents
+  # its checkout did not have.
+  cp "${here}/docs/spec/engine.md" "${target}/spec/engine.md"
+  case "${engine}" in
+    businessid-go)         cp "${here}/docs/spec/engine-go.md"         "${target}/spec/engine-go.md" ;;
+    businessid-swift)      cp "${here}/docs/spec/engine-swift.md"      "${target}/spec/engine-swift.md" ;;
+    businessid-kotlin)     cp "${here}/docs/spec/engine-kotlin.md"     "${target}/spec/engine-kotlin.md" ;;
+    businessid-typescript) cp "${here}/docs/spec/engine-typescript.md" "${target}/spec/engine-typescript.md" ;;
+  esac
+
   cat > "${target}/rules.lock" <<LOCK
 # Pre-release lock, produced locally from the spec repository.
 #
