@@ -92,6 +92,7 @@ refuse numbers Dun & Bradstreet issues.
 | United States | **EIN** | Internal Revenue Service | supported | format | 3 |
 | China | **USCC** | State Administration for Market Regulation | supported | checked (GB 32100-2015, mod 31 over a 31 code point alphabet) | 19 |
 | Japan | **Corporate Number** | National Tax Agency | supported | checked (mod 9 over alternating weights) | 14 |
+| Brazil | **CNPJ** | Receita Federal | supported | checked (two rounds of mod 11, alphanumeric form of 2026 included) | 19 |
 
 Three rules have been swept against their issuer's complete register, through
 the same testee protocol an engine is judged by:
@@ -136,7 +137,7 @@ which country issues what, and whether we cover it.
 | 7 | France | **SIREN** (9) / **SIRET** (14) | INSEE | EUID, TVA | **supported** |
 | 8 | Italy | **Codice fiscale / P.IVA** (11) | Agenzia delle Entrate, Registro Imprese | EUID | supported via EUID and VAT |
 | 9 | Canada | **Business Number** (9 + program) | Canada Revenue Agency | Provincial corporation numbers | planned |
-| 10 | Brazil | **CNPJ**, 14 digits, two check digits | Receita Federal | — | planned |
+| 10 | Brazil | **CNPJ**, 14 positions, alphanumeric from 2026, two check digits | Receita Federal | — | **supported** |
 | 11 | Russia | **ИНН** (10) and **ОГРН** (13) | Federal Tax Service | — | none |
 | 12 | South Korea | **BRN** (사업자등록번호), 10 digits, check digit | National Tax Service | CRN (13) | planned |
 | 13 | Australia | **ABN** (11, check) / **ACN** (9, check) | ATO / ASIC | — | planned |
@@ -261,14 +262,13 @@ Ordered by economic weight and by how much the issuer publishes. An issuer that
 publishes a check algorithm and a bulk register is worth more than a larger
 economy that publishes neither, because the rule can be proven.
 
-1. **Brazil — CNPJ.** Two check digits, well documented, and a bulk register.
-2. **India — CIN.** 21 structured characters carrying state and year, so the
+1. **India — CIN.** 21 structured characters carrying state and year, so the
    rule catches far more than a length check would.
-3. **Australia — ABN and ACN.** Both carry a published check.
-4. **Switzerland — UID.** One identifier across commercial register, VAT,
+2. **Australia — ABN and ACN.** Both carry a published check.
+3. **Switzerland — UID.** One identifier across commercial register, VAT,
    customs and social insurance; a check digit; a public register.
-5. **South Korea — BRN.** 10 digits with a published check.
-6. **Canada — Business Number**, then **Mexico RFC**, **Argentina CUIT**,
+4. **South Korea — BRN.** 10 digits with a published check.
+5. **Canada — Business Number**, then **Mexico RFC**, **Argentina CUIT**,
    **Chile RUT**, **Colombia NIT** — the Latin American set shares a family
    resemblance and a check digit each.
 

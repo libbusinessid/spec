@@ -320,7 +320,7 @@ func mentionsCountry(text, code string) bool {
 // fails the lint, which is the point: adding a country means placing it on the
 // map.
 var atlasCountryNames = map[string]string{
-	"AT": "Austria", "CN": "China", "JP": "Japan", "BE": "Belgium", "BG": "Bulgaria", "CY": "Cyprus",
+	"AT": "Austria", "CN": "China", "JP": "Japan", "BR": "Brazil", "BE": "Belgium", "BG": "Bulgaria", "CY": "Cyprus",
 	"CZ": "Czechia", "DE": "Germany", "DK": "Denmark", "EE": "Estonia",
 	"EL": "Greece", "ES": "Spain", "FI": "Finland", "FR": "France",
 	"GB": "United Kingdom", "GR": "Greece", "HR": "Croatia", "HU": "Hungary",
