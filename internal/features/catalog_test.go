@@ -86,6 +86,7 @@ func TestEveryCapabilityIsReachableFromAnOperationOrStructure(t *testing.T) {
 		features.IdentifierDispatchV1: true,
 		features.ProfilesV1:           true,
 		features.ProvenanceV1:         true,
+		features.ProvenanceTierV1:     true,
 		features.CapturesAndCallsV1:   true,
 	}
 	for _, op := range features.Ops() {

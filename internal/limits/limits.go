@@ -53,6 +53,10 @@ const (
 	// against. The range matches what a checked integer expression can produce,
 	// so a comparison can never be written against a value no expression could
 	// reach.
+	// MaxRulesVersionBytes bounds the version string, which engines carry into
+	// generated sources, manifests and logs.
+	MaxRulesVersionBytes = 64
+
 	MinConstant = -1_000_000_000
 	MaxConstant = 1_000_000_000
 	// MinConcatOperands is the smallest accepted number of concat operands.

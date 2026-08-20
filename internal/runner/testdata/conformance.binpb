@@ -1,48 +1,50 @@
-	2026.08.0 O÷Â4Iv·1_•ykÎ±J•"zb[˘Ì∆ÔÁÏ⁄§"ï
+	2026.08.4 wk\˝∂zxﬂ’æCX|dûCœX6·'ªXs≤›“4»Pl"ï
 !dispatch-boundary-input-limit-0151An input of exactly 1024 bytes is still processedsiren"FR*Ä11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111112
 compatible8BŒÀ
 sirenÄ1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111Ä1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"FR*
-compatible2	2026.08.08B"fr.siren.lengthJJboundaryJlimitsJ	syntheticRfr-insee-sirenr	syntheticzóSynthetic value produced by the documented generator of DATA_POLICY.md section 4; not derived from any register, extract, user submission or telemetry." 
+compatible2	2026.08.48B"fr.siren.lengthJJboundaryJlimitsJ	syntheticRfr-insee-sirenr	syntheticzóSynthetic value produced by the documented generator of DATA_POLICY.md section 4; not derived from any register, extract, user submission or telemetry." 
 *dispatch-canonicalize-country-mismatch-014;A contradicting country is invalid at canonicalization timevat"FR*BE01234567492
 compatible8BD
 B
 vatBE0123456749BE0123456749"FR*
-compatible2	2026.08.08@HJcanonicalizeJdispatchJ	syntheticRbe-fps-finance-vatReu-vies-number-structurer	syntheticzóSynthetic value produced by the documented generator of DATA_POLICY.md section 4; not derived from any register, extract, user submission or telemetry."•
+compatible2	2026.08.48@HJcanonicalizeJdispatchJ	syntheticRbe-fps-finance-vatReu-vies-number-structurer	syntheticzóSynthetic value produced by the documented generator of DATA_POLICY.md section 4; not derived from any register, extract, user submission or telemetry."•
 (dispatch-canonicalize-input-too-long-012FCanonicalization of an over long input keeps the raw value and contextsiren"FR*Å111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111112
 compatible8B≥
 ∞
 sirenÅ11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111Å11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"FR*
-compatible2	2026.08.08@HJcanonicalizeJlimitsJsecurityJ	syntheticRfr-insee-sirenr	syntheticzóSynthetic value produced by the documented generator of DATA_POLICY.md section 4; not derived from any register, extract, user submission or telemetry."É
+compatible2	2026.08.48@HJcanonicalizeJlimitsJsecurityJ	syntheticRfr-insee-sirenr	syntheticzóSynthetic value produced by the documented generator of DATA_POLICY.md section 4; not derived from any register, extract, user submission or telemetry."É
 &dispatch-canonicalize-unknown-kind-0137Canonicalization of an unknown kind keeps the raw valueunknown_kind* X 2
 compatible8B7
 5
 unknown_kind X  X *
-compatible2	2026.08.08@H	JcanonicalizeJdispatchJ	syntheticr	syntheticzóSynthetic value produced by the documented generator of DATA_POLICY.md section 4; not derived from any register, extract, user submission or telemetry."¿
+compatible2	2026.08.48@H	JcanonicalizeJdispatchJ	syntheticr	syntheticzóSynthetic value produced by the documented generator of DATA_POLICY.md section 4; not derived from any register, extract, user submission or telemetry."¿
 dispatch-country-mismatch-0047An explicit country contradicting the prefix is invalidvat"FR*BE01234567492
 compatible8BPN
 vatBE0123456749BE0123456749"FR*
-compatible2	2026.08.08BJJdispatchJinvalidJ	syntheticRbe-fps-finance-vatReu-vies-number-structurer	syntheticzóSynthetic value produced by the documented generator of DATA_POLICY.md section 4; not derived from any register, extract, user submission or telemetry."∑
+compatible2	2026.08.48BJJdispatchJinvalidJ	syntheticRbe-fps-finance-vatReu-vies-number-structurer	syntheticzóSynthetic value produced by the documented generator of DATA_POLICY.md section 4; not derived from any register, extract, user submission or telemetry."∑
 dispatch-empty-country-0085An empty country token behaves like an absent contextvat" *BE01234567492
 compatible8BPN
 vatBE0123456749BE0123456749"BE*
-compatible2	2026.08.08BJJdispatchJ	syntheticJvalidRbe-fps-finance-vatReu-vies-number-structurer	syntheticzóSynthetic value produced by the documented generator of DATA_POLICY.md section 4; not derived from any register, extract, user submission or telemetry."¥
+compatible2	2026.08.48BJJdispatchJ	syntheticJvalidRbe-fps-finance-vatReu-vies-number-structurer	syntheticzóSynthetic value produced by the documented generator of DATA_POLICY.md section 4; not derived from any register, extract, user submission or telemetry."¥
 euid-fr-validate-format-0210validate_format stops before the reused checksumeuid*FRTVX.0123456752
 compatible8BWU
 euidFRTVX.012345675FRTVX.012345675"FR*
-compatible2	2026.08.08BJJcompositionJformatJ	syntheticReu-2015-884-euidRfr-insee-sirenr	syntheticzóSynthetic value produced by the documented generator of DATA_POLICY.md section 4; not derived from any register, extract, user submission or telemetry."◊
-loader-call-cycle-014&A self recursive call graph is refused8JcycleJdecoderJsecurityZÑ	2026.08.0	("                                 2Ädemo (0:
-compatibleB„
+compatible2	2026.08.48BJJcompositionJformatJ	syntheticReu-2015-884-euidRfr-insee-sirenr	syntheticzóSynthetic value produced by the documented generator of DATA_POLICY.md section 4; not derived from any register, extract, user submission or telemetry."⁄
+loader-call-cycle-014&A self recursive call graph is refused8JcycleJdecoderJsecurityZá	2026.08.0
+()"                                 2Çdemo (0:
+compatibleBÂ
 libbusinessid-reference-bundle%https://github.com/libbusinessid/specLibBusinessID"Minimal reference bundle*
 2026-08-182GLOBAL:enBMSynthetic demonstration rule: four ASCII digits closed by a Luhn check digit.J
-Apache-2.0:"jj
+Apache-2.0X:"jj
  j :jR b(rdemo.length	 brdemo.characters
 r :'R	 z Ç B
-demo* binvalid_rulesetr	syntheticzWSynthetic decoder fixture generated by tools/genfixtures.go; holds no identifier value."ï
-loader-duplicate-prefix-0171The same prefix claimed by two targets is refused8JdecoderJdispatchJsecurityZÆ	2026.08.0	("                                 2ÑdemoBE (0:
-compatibleB„
+demo* binvalid_rulesetr	syntheticzWSynthetic decoder fixture generated by tools/genfixtures.go; holds no identifier value."ò
+loader-duplicate-prefix-0171The same prefix claimed by two targets is refused8JdecoderJdispatchJsecurityZ±	2026.08.0
+()"                                 2ÜdemoBE (0:
+compatibleBÂ
 libbusinessid-reference-bundle%https://github.com/libbusinessid/specLibBusinessID"Minimal reference bundle*
 2026-08-182GLOBAL:enBMSynthetic demonstration rule: four ASCII digits closed by a Luhn check digit.J
-Apache-2.02demoFR (0:
+Apache-2.0X2demoFR (0:
 compatible:"jj
  j :jR b(rdemo.length	 brdemo.characters
 r :R	 z B 
@@ -55,12 +57,12 @@ compatible:"jj
 siren-validate-checksum-0525validate_checksum returns the same report as validatesiren*	0123456752
 compatible8BLJ
 siren	012345675	012345675"FR*
-compatible2	2026.08.08BJJchecksumJinvalidJ	syntheticRfr-insee-sirenr	syntheticzóSynthetic value produced by the documented generator of DATA_POLICY.md section 4; not derived from any register, extract, user submission or telemetry."ê
+compatible2	2026.08.48BJJchecksumJinvalidJ	syntheticRfr-insee-sirenr	syntheticzóSynthetic value produced by the documented generator of DATA_POLICY.md section 4; not derived from any register, extract, user submission or telemetry."ê
 siren-validate-format-0506validate_format reports checksum not_run/not_requestedsiren*	0123456742
 compatible8BLJ
 siren	012345674	012345674"FR*
-compatible2	2026.08.08BJJformatJ	syntheticJvalidRfr-insee-sirenr	syntheticzóSynthetic value produced by the documented generator of DATA_POLICY.md section 4; not derived from any register, extract, user submission or telemetry."ö
+compatible2	2026.08.48BJJformatJ	syntheticJvalidRfr-insee-sirenr	syntheticzóSynthetic value produced by the documented generator of DATA_POLICY.md section 4; not derived from any register, extract, user submission or telemetry."ö
 !siren-validate-format-invalid-051(validate_format keeps the format failuresiren*012345672
 compatible8B[Y
 siren0123456701234567"FR*
-compatible2	2026.08.08B"fr.siren.lengthJJformatJinvalidJ	syntheticRfr-insee-sirenr	syntheticzóSynthetic value produced by the documented generator of DATA_POLICY.md section 4; not derived from any register, extract, user submission or telemetry.
+compatible2	2026.08.48B"fr.siren.lengthJJformatJinvalidJ	syntheticRfr-insee-sirenr	syntheticzóSynthetic value produced by the documented generator of DATA_POLICY.md section 4; not derived from any register, extract, user submission or telemetry.

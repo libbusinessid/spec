@@ -2,7 +2,7 @@
 
 # Rule coverage
 
-Rules version `2026.08.3`, IR format version `1`.
+Rules version `2026.08.4`, IR format version `1`.
 
 ## Country by kind matrix
 
@@ -296,6 +296,7 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 | 34 | `CHECKSUM_COMPARE_CONSTANT_V1` | comparison against a literal constant |
 | 35 | `CHECKSUM_INTEGER_PREDICATE_V1` | branching on the value of an integer |
 | 40 | `PROVENANCE_V1` | sources linked to definitions |
+| 41 | `PROVENANCE_TIER_V1` | how close a source sits to the authority |
 
 ## Provenance
 
@@ -375,12 +376,12 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 
 ## Conformance statistics
 
-Total cases: **432**.
+Total cases: **434**.
 
 | Kind | Cases |
 |---|---:|
 | `  VAT  ` | 1 |
-| `(loader)` | 25 |
+| `(loader)` | 27 |
 | `VAT!` | 1 |
 | `duns` | 3 |
 | `ein` | 3 |
@@ -399,7 +400,7 @@ Total cases: **432**.
 | `alias` | 5 |
 | `arithmetic` | 2 |
 | `boundary` | 19 |
-| `bounds` | 1 |
+| `bounds` | 2 |
 | `branch` | 3 |
 | `canonicalization` | 4 |
 | `canonicalize` | 13 |
@@ -409,7 +410,7 @@ Total cases: **432**.
 | `composition` | 17 |
 | `country` | 15 |
 | `cycle` | 1 |
-| `decoder` | 25 |
+| `decoder` | 27 |
 | `derogation` | 4 |
 | `digest` | 1 |
 | `dispatch` | 17 |
@@ -439,7 +440,7 @@ Total cases: **432**.
 | `profile` | 8 |
 | `real` | 5 |
 | `reason-code` | 1 |
-| `security` | 27 |
+| `security` | 29 |
 | `shape` | 15 |
 | `short` | 2 |
 | `sole_trader` | 4 |
@@ -452,11 +453,11 @@ Total cases: **432**.
 | `unsupported` | 30 |
 | `valid` | 155 |
 | `variant` | 2 |
-| `version` | 3 |
+| `version` | 4 |
 | `weighted` | 4 |
 
 | Data classification | Cases |
 |---|---:|
 | `public_business_identifier` | 5 |
-| `synthetic` | 427 |
+| `synthetic` | 429 |
 

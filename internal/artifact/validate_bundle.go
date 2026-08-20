@@ -350,6 +350,18 @@ func (v *validator) validateDeclaredFeatures() error {
 	for _, d := range v.bundle.GetIdentifiers() {
 		if len(d.GetSources()) > 0 {
 			v.used.Add(features.ProvenanceV1)
+			// tier ships under its own capability, PROVENANCE_V1 being frozen
+			v.used.Add(features.ProvenanceTierV1)
+			// The tier is a closed set. An unknown value would leave two engines
+			// free to read the same source differently, and the capability that
+			// carries it is what announces a new one.
+			for _, src := range d.GetSources() {
+				if _, ok := irv1.SourceTier_name[int32(src.GetTier())]; !ok ||
+					src.GetTier() == irv1.SourceTier_SOURCE_TIER_UNSPECIFIED {
+					return invalidf("identifier %d source %q declares an unknown tier",
+						d.GetId(), src.GetId())
+				}
+			}
 		}
 		if d.AbsentChecksumReason != nil {
 			v.used.Add(features.ChecksumTristateV1)

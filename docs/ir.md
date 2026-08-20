@@ -1176,6 +1176,7 @@ absolute value of a weight           0..1000000
 weights per operation                1..256
 elements of a remainder map          1..1000000
 index / slice bound                  0..4096
+comparison constant                  -1000000000..1000000000
 operands of concat                   1..256
 provable digits of digits_to_integer 1..18
 ```
@@ -1225,10 +1226,10 @@ An engine performs these checks, in this order, before executing anything:
 
 1. binary size at most 16 MiB
 2. complete Protobuf decoding
-3. absence of any unknown field at any depth
-4. supported `format_version`
-5. every `required_feature_ids` entry known, strictly ascending
-6. non empty `rules_version`
+3. supported `format_version`
+4. every `required_feature_ids` entry known, strictly ascending
+5. absence of any unknown field at any depth
+6. `rules_version` non empty, at most 64 bytes, and made only of ASCII letters, digits, dot, dash and underscore
 7. `source_digest` of exactly 32 bytes
 8. program ids unique and non zero, program kinds specified
 9. node count within the per program and total limits
@@ -1259,6 +1260,13 @@ operation declares the capability that introduced it, so an engine too old to
 understand it stops at check 5 with `incompatible_ruleset`. Reaching check 10
 with an unknown operation means the bundle used one without declaring it, which
 is a forged bundle rather than a version gap.
+
+The version checks precede the unknown field scan, and the order carries a
+meaning. A bundle built against a later version holds fields this runtime has
+never heard of; reporting those as unknown fields would call a legitimate
+version gap a forged bundle. Asking first whether the bundle announces
+something unsupported yields the accurate answer, and tells an operator to
+upgrade rather than to suspect the file.
 
 A bundle whose encoding repeats a singular field, or carries two branches of the
 same `oneof`, is not a valid bundle. A generator SHOULD refuse it. One that does

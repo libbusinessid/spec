@@ -31,6 +31,7 @@ a bundle declaring a single unknown ID.
 | 34 | `CHECKSUM_COMPARE_CONSTANT_V1` | comparison against a literal constant |
 | 35 | `CHECKSUM_INTEGER_PREDICATE_V1` | branching on the value of an integer |
 | 40 | `PROVENANCE_V1` | sources linked to definitions |
+| 41 | `PROVENANCE_TIER_V1` | how close a source sits to the authority |
 
 ## 1 - `CORE_GRAPH_V1`
 
@@ -374,6 +375,18 @@ Frozen content:
 
 - `Source` and `IdentifierDefinition.sources`, sorted by source id.
 - Every rule able to reject an input carries at least one source.
+
+This capability declares no operation of its own: it is required by the
+bundle level constructs listed above.
+
+## 41 - `PROVENANCE_TIER_V1`
+
+How close a source sits to the authority.
+
+Frozen content:
+
+- `Source.tier` and the `SourceTier` enumeration.
+- It is a capability of its own rather than an addition to `PROVENANCE_V1`, whose content is frozen: a field added to a frozen capability reaches an engine as an unknown field, which reads as a forged bundle rather than as the version gap it is.
 
 This capability declares no operation of its own: it is required by the
 bundle level constructs listed above.

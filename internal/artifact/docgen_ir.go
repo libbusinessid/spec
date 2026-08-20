@@ -324,6 +324,7 @@ func RenderIRDoc() []byte {
 	w("weights per operation                %d..%d", limits.MinWeights, limits.MaxWeights)
 	w("elements of a remainder map          %d..%d", limits.MinRemainderValues, limits.MaxRemainderValues)
 	w("index / slice bound                  0..%d", limits.MaxIndex)
+	w("comparison constant                  %d..%d", limits.MinConstant, limits.MaxConstant)
 	w("operands of concat                   %d..%d", limits.MinConcatOperands, limits.MaxConcatOperands)
 	w("provable digits of digits_to_integer 1..%d", limits.MaxDigitsToIntegerLength)
 	w("```")
@@ -389,6 +390,13 @@ func RenderIRDoc() []byte {
 	w("with an unknown operation means the bundle used one without declaring it, which")
 	w("is a forged bundle rather than a version gap.")
 	w("")
+	w("The version checks precede the unknown field scan, and the order carries a")
+	w("meaning. A bundle built against a later version holds fields this runtime has")
+	w("never heard of; reporting those as unknown fields would call a legitimate")
+	w("version gap a forged bundle. Asking first whether the bundle announces")
+	w("something unsupported yields the accurate answer, and tells an operator to")
+	w("upgrade rather than to suspect the file.")
+	w("")
 	w("A bundle whose encoding repeats a singular field, or carries two branches of the")
 	w("same `oneof`, is not a valid bundle. A generator SHOULD refuse it. One that does")
 	w("not inspect the wire encoding decodes it with the Protobuf semantics, and the")
@@ -401,10 +409,10 @@ func RenderIRDoc() []byte {
 var loadChecks = []string{
 	"binary size at most 16 MiB",
 	"complete Protobuf decoding",
-	"absence of any unknown field at any depth",
 	"supported `format_version`",
 	"every `required_feature_ids` entry known, strictly ascending",
-	"non empty `rules_version`",
+	"absence of any unknown field at any depth",
+	"`rules_version` non empty, at most 64 bytes, and made only of ASCII letters, digits, dot, dash and underscore",
 	"`source_digest` of exactly 32 bytes",
 	"program ids unique and non zero, program kinds specified",
 	"node count within the per program and total limits",

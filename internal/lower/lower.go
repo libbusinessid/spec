@@ -269,6 +269,8 @@ func (l *lowerer) lowerIdentifiers() []*irv1.IdentifierDefinition {
 		def.Sources = lowerSources(id.Sources)
 		if len(def.GetSources()) > 0 {
 			l.used.Add(features.ProvenanceV1)
+			// tier ships under its own capability, PROVENANCE_V1 being frozen
+			l.used.Add(features.ProvenanceTierV1)
 		}
 		out = append(out, def)
 	}
