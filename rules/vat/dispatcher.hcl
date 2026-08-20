@@ -144,4 +144,39 @@ dispatcher "vat" {
     canonical_prefix  = "SK"
     identifier        = identifier.vat.SK
   }
+
+  target {
+    country_code      = "BG"
+    accepted_prefixes = ["BG"]
+    canonical_prefix  = "BG"
+    identifier        = identifier.vat.BG
+  }
+
+  target {
+    country_code      = "CZ"
+    accepted_prefixes = ["CZ"]
+    canonical_prefix  = "CZ"
+    identifier        = identifier.vat.CZ
+  }
+
+  target {
+    country_code      = "HR"
+    accepted_prefixes = ["HR"]
+    canonical_prefix  = "HR"
+    identifier        = identifier.vat.HR
+  }
+
+  target {
+    country_code      = "LV"
+    accepted_prefixes = ["LV"]
+    canonical_prefix  = "LV"
+    identifier        = identifier.vat.LV
+  }
+
+  target {
+    country_code      = "NO"
+    accepted_prefixes = ["NO"]
+    canonical_prefix  = "NO"
+    identifier        = identifier.vat.NO
+  }
 }

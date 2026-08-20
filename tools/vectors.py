@@ -221,3 +221,22 @@ def vat_hu_check(first7: str) -> str:
 
 def vat_sk_ok(body10: str) -> bool:
     return int(body10) % 11 == 0
+
+
+def vat_cz_check(first7: str) -> str:
+    total = sum(int(c) * w for c, w in zip(first7, (8, 7, 6, 5, 4, 3, 2)))
+    return str([1, 0, 9, 8, 7, 6, 5, 4, 3, 2, 1][total % 11])
+
+
+def vat_lv_check(first10: str):
+    total = sum(int(c) * w for c, w in zip(first10, (9, 1, 4, 8, 3, 10, 2, 5, 7, 6)))
+    c = (3 - total) % 11
+    return None if c == 10 else str(c)
+
+
+def vat_no_check(first8: str):
+    m = sum(int(c) * w for c, w in zip(first8, (3, 2, 7, 6, 5, 4, 3, 2))) % 11
+    c = 11 - m
+    if c == 10:
+        return None
+    return str(0 if c == 11 else c)
