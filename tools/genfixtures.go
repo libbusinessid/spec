@@ -16,6 +16,7 @@ import (
 
 	conformancev1 "github.com/libbusinessid/spec/gen/go/libbusinessid/conformance/v1"
 	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
+	"github.com/libbusinessid/spec/internal/limits"
 	"github.com/libbusinessid/spec/internal/artifact"
 	"github.com/libbusinessid/spec/internal/features"
 )
@@ -451,6 +452,44 @@ func main() {
 	}
 	badModulus.Programs[2].RootNode = 2
 	write(filepath.Join(root, "modulus_out_of_range.binpb"), marshal(badModulus))
+
+	// A left_pad asking for more code points than a slice bound allows. An
+	// engine that compiles the rules ahead of time sizes its work buffer from
+	// this number, so an unbounded length is an allocation primitive.
+	longPad := clone(base)
+	longPad.Programs[1].Nodes = append(longPad.Programs[1].Nodes,
+		&irv1.Node{
+			OutputType: irv1.ValueType_VALUE_TYPE_CANONICALIZATION_STEP,
+			Operation: &irv1.Node_CanonicalizationOperation{CanonicalizationOperation: &irv1.CanonicalizationOperation{
+				Kind:   irv1.CanonicalizationOpKind_CANONICALIZATION_OP_KIND_LEFT_PAD,
+				Text:   s("0"),
+				Length: u(limits.MaxIndex + 1),
+			}},
+		})
+	longPad.Programs[1].RootNode = uint32(len(longPad.Programs[1].Nodes) - 1)
+	write(filepath.Join(root, "left_pad_length.binpb"), marshal(longPad))
+
+	// A message key that is present and empty. Absence and emptiness are
+	// indistinguishable in an idiomatic API, so two engines could report
+	// differently on the same bundle.
+	emptyKey := clone(base)
+	marked := false
+	for _, p := range emptyKey.GetPrograms() {
+		for _, n := range p.GetNodes() {
+			if a := n.GetAssertionOperation(); a != nil {
+				a.MessageKey = s("")
+				marked = true
+				break
+			}
+		}
+		if marked {
+			break
+		}
+	}
+	if !marked {
+		panic("genfixtures: the base bundle holds no assertion to give an empty message key")
+	}
+	write(filepath.Join(root, "empty_message_key.binpb"), marshal(emptyKey))
 
 	// A WHEN branch outside a CHOOSE.
 	strayWhen := clone(base)

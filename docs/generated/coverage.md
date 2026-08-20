@@ -305,12 +305,12 @@ Country aliases: `EL` to `GR`, `UK` to `GB`.
 
 ## Conformance statistics
 
-Total cases: **371**.
+Total cases: **373**.
 
 | Kind | Cases |
 |---|---:|
 | `  VAT  ` | 1 |
-| `(loader)` | 23 |
+| `(loader)` | 25 |
 | `VAT!` | 1 |
 | `euid` | 126 |
 | `fr_siren` | 2 |
@@ -326,6 +326,7 @@ Total cases: **371**.
 | `alias` | 5 |
 | `arithmetic` | 2 |
 | `boundary` | 19 |
+| `bounds` | 1 |
 | `branch` | 1 |
 | `canonicalization` | 2 |
 | `canonicalize` | 13 |
@@ -335,7 +336,7 @@ Total cases: **371**.
 | `composition` | 17 |
 | `country` | 14 |
 | `cycle` | 1 |
-| `decoder` | 23 |
+| `decoder` | 25 |
 | `derogation` | 4 |
 | `digest` | 1 |
 | `dispatch` | 16 |
@@ -353,6 +354,7 @@ Total cases: **371**.
 | `letter` | 1 |
 | `limits` | 3 |
 | `luhn` | 3 |
+| `message_key` | 1 |
 | `mismatch` | 1 |
 | `mod97` | 5 |
 | `mutation` | 77 |
@@ -363,7 +365,7 @@ Total cases: **371**.
 | `profile` | 8 |
 | `real` | 5 |
 | `reason-code` | 1 |
-| `security` | 25 |
+| `security` | 27 |
 | `shape` | 13 |
 | `strict` | 6 |
 | `structure` | 2 |
@@ -379,5 +381,5 @@ Total cases: **371**.
 | Data classification | Cases |
 |---|---:|
 | `public_business_identifier` | 5 |
-| `synthetic` | 366 |
+| `synthetic` | 368 |
 
