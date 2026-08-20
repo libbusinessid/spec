@@ -73,13 +73,22 @@ cover:
 	$(GO) run ./tools/coverage -profile coverage.out -line-min $(COVERAGE_LINE_MIN) -branch-min $(COVERAGE_BRANCH_MIN)
 
 .PHONY: fuzz-smoke
+# The smoke run is counted in executions, not seconds.
+#
+# A wall clock budget makes the result depend on how loaded the runner is: the
+# fuzzing engine stops at the deadline and reports "context deadline exceeded"
+# when a worker has not yet handed back, which looks like a finding and is not
+# one. Counting executions asks the question the smoke run actually asks - does
+# fuzzing start, and does anything crash - and gives the same answer on every
+# machine. The weekly long run in scheduled.yml stays time based, because there
+# the point is to spend a budget.
 fuzz-smoke:
-	$(GO) test -run '^$$' -fuzz FuzzParseHCL -fuzztime 20s ./internal/hcllang
-	$(GO) test -run '^$$' -fuzz FuzzReadJSONL -fuzztime 20s ./internal/conformance
-	$(GO) test -run '^$$' -fuzz FuzzLoadRuleset -fuzztime 20s ./internal/artifact
-	$(GO) test -run '^$$' -fuzz FuzzMutateBundle -fuzztime 20s ./internal/artifact
-	$(GO) test -run '^$$' -fuzz FuzzValidateInput -fuzztime 20s ./internal/reference
-	$(GO) test -run '^$$' -fuzz FuzzCompileUnit -fuzztime 20s ./internal/typecheck
+	$(GO) test -run '^$$' -fuzz FuzzParseHCL -fuzztime 200000x ./internal/hcllang
+	$(GO) test -run '^$$' -fuzz FuzzReadJSONL -fuzztime 200000x ./internal/conformance
+	$(GO) test -run '^$$' -fuzz FuzzLoadRuleset -fuzztime 200000x ./internal/artifact
+	$(GO) test -run '^$$' -fuzz FuzzMutateBundle -fuzztime 200000x ./internal/artifact
+	$(GO) test -run '^$$' -fuzz FuzzValidateInput -fuzztime 200000x ./internal/reference
+	$(GO) test -run '^$$' -fuzz FuzzCompileUnit -fuzztime 200000x ./internal/typecheck
 
 .PHONY: vulncheck
 vulncheck:
