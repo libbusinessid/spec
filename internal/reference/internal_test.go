@@ -792,3 +792,45 @@ func TestSubjectFallsBackToTheProgramSubjectNode(t *testing.T) {
 		t.Fatalf("unexpected subject %+v", got)
 	}
 }
+
+// The alphabet is what makes the Chinese check expressible: its J is 18 where
+// base 36 makes it 19, so the two mappings disagree from the tenth letter on.
+// A code point the alphabet does not list is outside the domain, exactly as a
+// letter is under DIGIT_VALUE, and makes the sum indeterminate rather than
+// wrong.
+func TestCustomAlphabetMapsByIndex(t *testing.T) {
+	const uscc = "0123456789ABCDEFGHJKLMNPQRTUWXY"
+	for name, tc := range map[string]struct {
+		r    rune
+		want int64
+		ok   bool
+	}{
+		"a digit":                      {'7', 7, true},
+		"a letter before the gap":      {'H', 17, true},
+		"the letter the gap shifts":    {'J', 18, true},
+		"a letter well after the gap":  {'Y', 30, true},
+		"a letter the alphabet drops":  {'I', 0, false},
+		"another letter it drops":      {'Z', 0, false},
+		"a code point of another kind": {'#', 0, false},
+	} {
+		t.Run(name, func(t *testing.T) {
+			got, ok := mapChar(tc.r, irv1.CharMapping_CHAR_MAPPING_CUSTOM_ALPHABET, uscc)
+			if ok != tc.ok || (tc.ok && got != tc.want) {
+				t.Fatalf("got (%d, %v), want (%d, %v)", got, ok, tc.want, tc.ok)
+			}
+		})
+	}
+	// base 36 agrees up to H and diverges from J onwards.
+	for _, r := range "0123456789ABCDEFGH" {
+		a, _ := mapChar(r, irv1.CharMapping_CHAR_MAPPING_CUSTOM_ALPHABET, uscc)
+		b, _ := mapChar(r, irv1.CharMapping_CHAR_MAPPING_ALNUM_BASE36, "")
+		if a != b {
+			t.Fatalf("%q: the alphabet and base 36 should still agree, got %d and %d", string(r), a, b)
+		}
+	}
+	j, _ := mapChar('J', irv1.CharMapping_CHAR_MAPPING_CUSTOM_ALPHABET, uscc)
+	jb, _ := mapChar('J', irv1.CharMapping_CHAR_MAPPING_ALNUM_BASE36, "")
+	if j == jb {
+		t.Fatalf("J must differ between the alphabet and base 36, both gave %d", j)
+	}
+}

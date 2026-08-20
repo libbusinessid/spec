@@ -25,20 +25,18 @@ format "euid" "dk" {
     require(not(is_absent(capture.register)), "invalid_format", "euid.dk.register"),
     require(length_between(capture.register, 1, 8), "invalid_length", "euid.dk.register_length"),
     require(ascii_alphanumeric(capture.register), "invalid_characters", "euid.dk.register_characters"),
-    require(length_eq(capture.registration, 8), "invalid_length", "euid.dk.registration_length"),
-    require(ascii_digits(capture.registration), "invalid_characters", "euid.dk.registration_characters"),
-    require(not(starts_with(capture.registration, "0")), "invalid_format", "euid.dk.registration_leading"),
   ]
+
+  # The registration part is the national number, so the national rule is
+  # applied to it rather than restated here.
+  use_format {
+    rule  = format.dk.cvr
+    input = capture.registration
+  }
 }
 
 checksum "euid" "dk" {
-  rule = compare_constant(
-    modulo(
-      weighted_sum(slice(after_first(subject(), "."), 0, 8), [2, 7, 6, 5, 4, 3, 2, 1], "left", "digit_value"),
-      11,
-    ),
-    0,
-  )
+  rule = apply_checksum(checksum.dk.cvr, after_first(subject(), "."))
 }
 
 identifier "euid" "DK" {

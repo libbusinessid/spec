@@ -29,22 +29,18 @@ format "euid" "lt" {
     require(not(is_absent(capture.register)), "invalid_format", "euid.lt.register"),
     require(length_between(capture.register, 1, 8), "invalid_length", "euid.lt.register_length"),
     require(ascii_alphanumeric(capture.register), "invalid_characters", "euid.lt.register_characters"),
-    require(length_eq(capture.registration, 9), "invalid_length", "euid.lt.registration_length"),
-    require(ascii_digits(capture.registration), "invalid_characters", "euid.lt.registration_characters"),
   ]
+
+  # The registration part is the national number, so the national rule is
+  # applied to it rather than restated here.
+  use_format {
+    rule  = format.lt.juridinio_asmens_kodas
+    input = capture.registration
+  }
 }
 
 checksum "euid" "lt" {
-  rule = choose(
-    when_checksum(
-      integer_is(modulo(weighted_sum(slice(after_first(subject(), "."), 0, 9), [1, 2, 3, 4, 5, 6, 7, 8, 9], "left", "digit_value"), 11), 10),
-      compare_constant(
-        remainder_map(modulo(weighted_sum(slice(after_first(subject(), "."), 0, 9), [3, 4, 5, 6, 7, 8, 9, 1, 2], "left", "digit_value"), 11), [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0]),
-        0,
-      ),
-    ),
-    compare_constant(modulo(weighted_sum(slice(after_first(subject(), "."), 0, 9), [1, 2, 3, 4, 5, 6, 7, 8, 9], "left", "digit_value"), 11), 0),
-  )
+  rule = apply_checksum(checksum.lt.juridinio_asmens_kodas, after_first(subject(), "."))
 }
 
 identifier "euid" "LT" {

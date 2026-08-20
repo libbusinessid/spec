@@ -27,9 +27,14 @@ format "euid" "nl" {
     require(not(is_absent(capture.register)), "invalid_format", "euid.nl.register"),
     require(length_between(capture.register, 1, 8), "invalid_length", "euid.nl.register_length"),
     require(ascii_alphanumeric(capture.register), "invalid_characters", "euid.nl.register_characters"),
-    require(length_eq(capture.registration, 8), "invalid_length", "euid.nl.registration_length"),
-    require(ascii_digits(capture.registration), "invalid_characters", "euid.nl.registration_characters"),
   ]
+
+  # The registration part is the national number, so the national rule is
+  # applied to it rather than restated here.
+  use_format {
+    rule  = format.nl.kvk
+    input = capture.registration
+  }
 }
 
 identifier "euid" "NL" {

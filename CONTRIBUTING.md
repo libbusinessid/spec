@@ -107,6 +107,38 @@ Two things that are *not* grounds for refusal:
   `checksum_not_published` is for. A format rule with no checksum is still a
   rule, as long as the format itself is published.
 
+### Identifiers that contain other identifiers
+
+When one identifier contains another, build the **inner** validator first, prove
+it, then compose the outer one from it. Never restate the inner rule inside the
+outer one.
+
+- **SIRET** = SIREN (9) + NIC (5). `checksum.fr.siret` applies
+  `checksum.fr.siren` to the nine leading digits and adds the Luhn over
+  fourteen.
+- **EUID** = country code + register identifier + `.` + the national number.
+  `format.euid.fr` reuses `format.fr.siren` through `use_format`, and
+  `checksum.euid.fr` reuses `checksum.fr.siren` through `apply_checksum`.
+
+Two reasons, and the second is the one that is easy to miss.
+
+Two copies of a rule drift, and the drift is silent: the corpus of one
+identifier does not exercise the other, so nothing fails when they diverge.
+
+Composition also **strengthens** what is checked, because the inner check is
+rarely implied by the outer one. Luhn over nine positions and Luhn over fourteen
+double the opposite positions, so a valid SIRET does not mathematically imply a
+valid SIREN: measured on 50 000 random Luhn-valid SIRET, **90.2%** carry nine
+leading digits that fail their own check, and the uncomposed rule accepted every
+one of them.
+
+That is also why composition is a **restriction** and needs the strongest
+evidence available before it is merged. Here the whole INSEE stock was checked
+first — 43 896 818 establishments, none with a SIREN that fails — and then the
+composed rule was swept over the same register. Do the same for any other
+jurisdiction whose number nests one inside another: the inner rule first, with
+its own sources, its own corpus and ideally its own sweep.
+
 ### Which historical variants to accept
 
 Section 2.6 of the specification gives the criterion: usage, never the issuing
@@ -199,11 +231,18 @@ The UK register takes about 100 seconds for its 5 695 465 companies and peaks
 under 20 MB, because cases are generated, sent and discarded one at a time.
 Gzipped dumps are read directly.
 
-A sweep asserts **one** thing, and only one: every identifier in an issuer's own
-register is accepted by the rule. It says nothing about the canonical value or
-the checksum, because the register establishes neither — and filling them in
-would mean computing them with the interpreter under test, which is the one
-source a conformance expectation may never come from.
+A sweep asserts **one** thing, and only one: no identifier in an issuer's own
+register is refused. It says nothing about the canonical value, and nothing
+about which of `valid` or `unsupported` the checksum should be — the register
+establishes neither, and filling them in would mean computing them with the
+interpreter under test, the one source a conformance expectation may never come
+from.
+
+Refusal is not only a format matter. A rule that accepts the shape and then
+declares the checksum `invalid` has refused the identifier just as firmly, so a
+sweep runs the whole validation and treats an invalid checksum as a refusal.
+`unsupported` is never a refusal: section 1.2 is explicit that it must not turn
+away a valid identifier.
 
 So a sweep is **not** a conformance verdict and the runner never calls it one.
 Conformance is settled by the corpus, which states what should happen down to

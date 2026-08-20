@@ -32,24 +32,18 @@ format "euid" "be" {
     require(not(is_absent(capture.register)), "invalid_format", "euid.be.register"),
     require(length_between(capture.register, 1, 8), "invalid_length", "euid.be.register_length"),
     require(ascii_alphanumeric(capture.register), "invalid_characters", "euid.be.register_characters"),
-    require(length_eq(capture.registration, 10), "invalid_length", "euid.be.registration_length"),
-    require(ascii_digits(capture.registration), "invalid_characters", "euid.be.registration_characters"),
-    require(
-      any(
-        starts_with(capture.registration, "0"),
-        starts_with(capture.registration, "1"),
-      ),
-      "invalid_format",
-      "euid.be.registration_leading",
-    ),
   ]
+
+  # The registration part is the enterprise number, so the national rule is
+  # applied to it rather than restated here.
+  use_format {
+    rule  = format.be.enterprise_number
+    input = capture.registration
+  }
 }
 
 checksum "euid" "be" {
-  rule = compare_slice(
-    complement(mod_digits(slice(after_first(subject(), "."), 0, 8), 97), 97),
-    after_first(subject(), "."), 8, 10,
-  )
+  rule = apply_checksum(checksum.be.enterprise_number, after_first(subject(), "."))
 }
 
 identifier "euid" "BE" {

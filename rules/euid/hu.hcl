@@ -30,9 +30,14 @@ format "euid" "hu" {
     require(not(is_absent(capture.register)), "invalid_format", "euid.hu.register"),
     require(length_between(capture.register, 1, 8), "invalid_length", "euid.hu.register_length"),
     require(ascii_alphanumeric(capture.register), "invalid_characters", "euid.hu.register_characters"),
-    require(length_eq(capture.registration, 10), "invalid_length", "euid.hu.registration_length"),
-    require(ascii_digits(capture.registration), "invalid_characters", "euid.hu.registration_characters"),
   ]
+
+  # The registration part is the national number, so the national rule is
+  # applied to it rather than restated here.
+  use_format {
+    rule  = format.hu.cegjegyzekszam
+    input = capture.registration
+  }
 }
 
 identifier "euid" "HU" {

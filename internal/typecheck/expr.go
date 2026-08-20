@@ -237,6 +237,8 @@ func (c *checker) bindString(node *Node, slot argSlot, arg ast.Expr, call *ast.C
 		node.Replacement = stringPtr(lit.Value)
 	case features.ParamMessageKey:
 		node.MessageKey = stringPtr(lit.Value)
+	case features.ParamAlphabet:
+		node.Alphabet = stringPtr(lit.Value)
 	default:
 		c.bag.Errorf(arg.Pos(), CodeBadConstant, "unsupported string parameter")
 		return false
@@ -438,9 +440,11 @@ func (c *checker) setEnum(node *Node, param features.Param, value string, arg as
 			node.Mapping = mappingPtr(irv1.CharMapping_CHAR_MAPPING_DIGIT_VALUE)
 		case "alnum_base36":
 			node.Mapping = mappingPtr(irv1.CharMapping_CHAR_MAPPING_ALNUM_BASE36)
+		case "custom_alphabet":
+			node.Mapping = mappingPtr(irv1.CharMapping_CHAR_MAPPING_CUSTOM_ALPHABET)
 		default:
 			c.bag.Errorf(arg.Pos(), CodeBadConstant,
-				"unknown mapping %q, expected digit_value or alnum_base36", value)
+				"unknown mapping %q, expected digit_value, alnum_base36 or custom_alphabet", value)
 			return false
 		}
 	default:

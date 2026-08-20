@@ -166,6 +166,10 @@ message IntegerOperation {
   optional WeightAlignment alignment = 4;
   optional CharMapping mapping = 5;
   repeated int64 remainder_values = 6;
+  // The ordered alphabet of CHAR_MAPPING_CUSTOM_ALPHABET: the value of a code
+  // point is its index here. Required by that mapping and forbidden by the
+  // others, so a bundle cannot state an alphabet nothing reads.
+  optional string alphabet = 7;
 }
 
 // PredicateOperation produces a boolean.
@@ -308,6 +312,12 @@ enum CharMapping {
   CHAR_MAPPING_UNSPECIFIED = 0;
   CHAR_MAPPING_DIGIT_VALUE = 1;
   CHAR_MAPPING_ALNUM_BASE36 = 2;
+  // The value of a code point is its index in the alphabet the operation
+  // carries. Issuers routinely drop the letters that are read as digits, and
+  // the resulting alphabet is neither base 10 nor base 36: the Chinese unified
+  // social credit code omits I, O, S, V and Z, so its J is 18 where base 36
+  // makes it 19.
+  CHAR_MAPPING_CUSTOM_ALPHABET = 3;
 }
 
 // PredicateOpKind enumerates the V1 predicates.

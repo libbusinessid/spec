@@ -274,17 +274,17 @@ Computes the remainder of `expr` modulo `modulus`, digit by digit, without any b
 
 #### `INTEGER_OP_KIND_WEIGHTED_SUM`
 
-Surface syntax: `weighted_sum(expr, weights, alignment, mapping)`.
+Surface syntax: `weighted_sum(expr, weights, alignment, mapping[, alphabet])`.
 
 Output: `VALUE_TYPE_INTEGER`.
 
 Operands: `expr` of type `VALUE_TYPE_STRING`.
 
-Parameters: `weights` (required), `alignment` (required), `mapping` (required); any other field present in the message is refused.
+Parameters: `weights` (required), `alignment` (required), `mapping` (required), `alphabet` (optional); any other field present in the message is refused.
 
 Capabilities: `CORE_GRAPH_V1` (1), `CHECKSUM_TRISTATE_V1` (30), `CHECKSUM_WEIGHTED_V1` (33).
 
-Sums `mapping(expr[i]) * weight(i)` over the paired positions. `LEFT` pairs position `i` with `weights[i]`, `RIGHT` pairs the last position with the last weight, and `CYCLE` pairs position `i` with `weights[i mod len(weights)]`. `LEFT` and `RIGHT` only pair `min(len(expr), len(weights))` positions; the remaining positions of `expr` contribute nothing. Indeterminate when `expr` is absent, empty, or contains a code point outside the mapping domain.
+Sums `mapping(expr[i]) * weight(i)` over the paired positions. `LEFT` pairs position `i` with `weights[i]`, `RIGHT` pairs the last position with the last weight, and `CYCLE` pairs position `i` with `weights[i mod len(weights)]`. `LEFT` and `RIGHT` only pair `min(len(expr), len(weights))` positions; the remaining positions of `expr` contribute nothing. Indeterminate when `expr` is absent, empty, or contains a code point outside the mapping domain. `CUSTOM_ALPHABET` takes the value of a code point from its index in `alphabet`, which is required by that mapping and forbidden by the others.
 
 #### `INTEGER_OP_KIND_MODULO`
 

@@ -513,6 +513,12 @@ const (
 	CharMapping_CHAR_MAPPING_UNSPECIFIED  CharMapping = 0
 	CharMapping_CHAR_MAPPING_DIGIT_VALUE  CharMapping = 1
 	CharMapping_CHAR_MAPPING_ALNUM_BASE36 CharMapping = 2
+	// The value of a code point is its index in the alphabet the operation
+	// carries. Issuers routinely drop the letters that are read as digits, and
+	// the resulting alphabet is neither base 10 nor base 36: the Chinese unified
+	// social credit code omits I, O, S, V and Z, so its J is 18 where base 36
+	// makes it 19.
+	CharMapping_CHAR_MAPPING_CUSTOM_ALPHABET CharMapping = 3
 )
 
 // Enum value maps for CharMapping.
@@ -521,11 +527,13 @@ var (
 		0: "CHAR_MAPPING_UNSPECIFIED",
 		1: "CHAR_MAPPING_DIGIT_VALUE",
 		2: "CHAR_MAPPING_ALNUM_BASE36",
+		3: "CHAR_MAPPING_CUSTOM_ALPHABET",
 	}
 	CharMapping_value = map[string]int32{
-		"CHAR_MAPPING_UNSPECIFIED":  0,
-		"CHAR_MAPPING_DIGIT_VALUE":  1,
-		"CHAR_MAPPING_ALNUM_BASE36": 2,
+		"CHAR_MAPPING_UNSPECIFIED":     0,
+		"CHAR_MAPPING_DIGIT_VALUE":     1,
+		"CHAR_MAPPING_ALNUM_BASE36":    2,
+		"CHAR_MAPPING_CUSTOM_ALPHABET": 3,
 	}
 )
 
@@ -1872,8 +1880,12 @@ type IntegerOperation struct {
 	Alignment       *WeightAlignment       `protobuf:"varint,4,opt,name=alignment,proto3,enum=libbusinessid.ir.v1.WeightAlignment,oneof" json:"alignment,omitempty"`
 	Mapping         *CharMapping           `protobuf:"varint,5,opt,name=mapping,proto3,enum=libbusinessid.ir.v1.CharMapping,oneof" json:"mapping,omitempty"`
 	RemainderValues []int64                `protobuf:"varint,6,rep,packed,name=remainder_values,json=remainderValues,proto3" json:"remainder_values,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	// The ordered alphabet of CHAR_MAPPING_CUSTOM_ALPHABET: the value of a code
+	// point is its index here. Required by that mapping and forbidden by the
+	// others, so a bundle cannot state an alphabet nothing reads.
+	Alphabet      *string `protobuf:"bytes,7,opt,name=alphabet,proto3,oneof" json:"alphabet,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *IntegerOperation) Reset() {
@@ -1946,6 +1958,13 @@ func (x *IntegerOperation) GetRemainderValues() []int64 {
 		return x.RemainderValues
 	}
 	return nil
+}
+
+func (x *IntegerOperation) GetAlphabet() string {
+	if x != nil && x.Alphabet != nil {
+		return *x.Alphabet
+	}
+	return ""
 }
 
 // PredicateOperation produces a boolean.
@@ -2440,20 +2459,22 @@ const file_libbusinessid_ir_v1_rules_proto_rawDesc = "" +
 	"\x03end\x18\x04 \x01(\rH\x02R\x03end\x88\x01\x01B\a\n" +
 	"\x05_textB\b\n" +
 	"\x06_startB\x06\n" +
-	"\x04_end\"\xde\x02\n" +
+	"\x04_end\"\x8c\x03\n" +
 	"\x10IntegerOperation\x126\n" +
 	"\x04kind\x18\x01 \x01(\x0e2\".libbusinessid.ir.v1.IntegerOpKindR\x04kind\x12\x1d\n" +
 	"\amodulus\x18\x02 \x01(\x03H\x00R\amodulus\x88\x01\x01\x12\x18\n" +
 	"\aweights\x18\x03 \x03(\x03R\aweights\x12G\n" +
 	"\talignment\x18\x04 \x01(\x0e2$.libbusinessid.ir.v1.WeightAlignmentH\x01R\talignment\x88\x01\x01\x12?\n" +
 	"\amapping\x18\x05 \x01(\x0e2 .libbusinessid.ir.v1.CharMappingH\x02R\amapping\x88\x01\x01\x12)\n" +
-	"\x10remainder_values\x18\x06 \x03(\x03R\x0fremainderValuesB\n" +
+	"\x10remainder_values\x18\x06 \x03(\x03R\x0fremainderValues\x12\x1f\n" +
+	"\balphabet\x18\a \x01(\tH\x03R\balphabet\x88\x01\x01B\n" +
 	"\n" +
 	"\b_modulusB\f\n" +
 	"\n" +
 	"_alignmentB\n" +
 	"\n" +
-	"\b_mapping\"\x83\x03\n" +
+	"\b_mappingB\v\n" +
+	"\t_alphabet\"\x83\x03\n" +
 	"\x12PredicateOperation\x128\n" +
 	"\x04kind\x18\x01 \x01(\x0e2$.libbusinessid.ir.v1.PredicateOpKindR\x04kind\x12\x17\n" +
 	"\x04text\x18\x02 \x01(\tH\x00R\x04text\x88\x01\x01\x12\x16\n" +
@@ -2579,11 +2600,12 @@ const file_libbusinessid_ir_v1_rules_proto_rawDesc = "" +
 	"\x1cWEIGHT_ALIGNMENT_UNSPECIFIED\x10\x00\x12\x19\n" +
 	"\x15WEIGHT_ALIGNMENT_LEFT\x10\x01\x12\x1a\n" +
 	"\x16WEIGHT_ALIGNMENT_RIGHT\x10\x02\x12\x1a\n" +
-	"\x16WEIGHT_ALIGNMENT_CYCLE\x10\x03*h\n" +
+	"\x16WEIGHT_ALIGNMENT_CYCLE\x10\x03*\x8a\x01\n" +
 	"\vCharMapping\x12\x1c\n" +
 	"\x18CHAR_MAPPING_UNSPECIFIED\x10\x00\x12\x1c\n" +
 	"\x18CHAR_MAPPING_DIGIT_VALUE\x10\x01\x12\x1d\n" +
-	"\x19CHAR_MAPPING_ALNUM_BASE36\x10\x02*\xd5\x05\n" +
+	"\x19CHAR_MAPPING_ALNUM_BASE36\x10\x02\x12 \n" +
+	"\x1cCHAR_MAPPING_CUSTOM_ALPHABET\x10\x03*\xd5\x05\n" +
 	"\x0fPredicateOpKind\x12!\n" +
 	"\x1dPREDICATE_OP_KIND_UNSPECIFIED\x10\x00\x12\x1e\n" +
 	"\x1aPREDICATE_OP_KIND_IS_EMPTY\x10\x01\x12\x1f\n" +

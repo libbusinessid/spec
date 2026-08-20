@@ -35,6 +35,15 @@ func TestSweepReadsEveryIdentifier(t *testing.T) {
 		if c.GetKind() != "company_number" || c.GetCountryCode() != "GB" {
 			t.Fatalf("%s: wrong routing", c.GetInput())
 		}
+		// The question a sweep asks is whether the identifier is refused, and a
+		// rule refuses just as firmly through the checksum as through the
+		// format. Asking only for the format would never run the checksum at
+		// all, and the sweep would report a clean run over rules it never
+		// exercised.
+		if c.GetOperation() != conformancev1.Operation_OPERATION_VALIDATE {
+			t.Fatalf("%s: a sweep must ask for the whole validation, got %s",
+				c.GetInput(), c.GetOperation())
+		}
 		// A register establishes existence and nothing else, so a sweep case
 		// must not claim a canonical value or a checksum it cannot know.
 		if report.GetCanonicalValue() != "" || report.GetChecksum() != nil {

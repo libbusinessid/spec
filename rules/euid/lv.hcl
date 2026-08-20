@@ -41,17 +41,18 @@ format "euid" "lv" {
     require(not(is_absent(capture.register)), "invalid_format", "euid.lv.register"),
     require(length_between(capture.register, 1, 8), "invalid_length", "euid.lv.register_length"),
     require(ascii_alphanumeric(capture.register), "invalid_characters", "euid.lv.register_characters"),
-    require(length_eq(capture.registration, 11), "invalid_length", "euid.lv.registration_length"),
-    require(ascii_digits(capture.registration), "invalid_characters", "euid.lv.registration_characters"),
-    require(char_at_in(capture.registration, 0, "456789"), "invalid_format", "euid.lv.registration_legal_entity"),
   ]
+
+  # The registration part is the national number, so the national rule is
+  # applied to it rather than restated here.
+  use_format {
+    rule  = format.lv.registracijas_numurs
+    input = capture.registration
+  }
 }
 
 checksum "euid" "lv" {
-  rule = compare_digit(
-    remainder_map(modulo(weighted_sum(slice(after_first(subject(), "."), 0, 10), [9, 1, 4, 8, 3, 10, 2, 5, 7, 6], "left", "digit_value"), 11), [3, 2, 1, 0, 10, 9, 8, 7, 6, 5, 4]),
-    after_first(subject(), "."), 10,
-  )
+  rule = apply_checksum(checksum.lv.registracijas_numurs, after_first(subject(), "."))
 }
 
 identifier "euid" "LV" {

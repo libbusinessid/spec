@@ -28,10 +28,14 @@ format "euid" "mt" {
     require(not(is_absent(capture.register)), "invalid_format", "euid.mt.register"),
     require(length_between(capture.register, 1, 8), "invalid_length", "euid.mt.register_length"),
     require(ascii_alphanumeric(capture.register), "invalid_characters", "euid.mt.register_characters"),
-    require(length_between(capture.registration, 5, 7), "invalid_length", "euid.mt.registration_length"),
-    require(starts_with(capture.registration, "C"), "invalid_format", "euid.mt.registration_prefix"),
-    require(ascii_digits(slice_from(capture.registration, 1)), "invalid_characters", "euid.mt.registration_characters"),
   ]
+
+  # The registration part is the national number, so the national rule is
+  # applied to it rather than restated here.
+  use_format {
+    rule  = format.mt.mbr_number
+    input = capture.registration
+  }
 }
 
 identifier "euid" "MT" {

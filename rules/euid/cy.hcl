@@ -28,9 +28,14 @@ format "euid" "cy" {
     require(not(is_absent(capture.register)), "invalid_format", "euid.cy.register"),
     require(length_between(capture.register, 1, 8), "invalid_length", "euid.cy.register_length"),
     require(ascii_alphanumeric(capture.register), "invalid_characters", "euid.cy.register_characters"),
-    require(length_eq(capture.registration, 6), "invalid_length", "euid.cy.registration_length"),
-    require(ascii_digits(capture.registration), "invalid_characters", "euid.cy.registration_characters"),
   ]
+
+  # The registration part is the national number, so the national rule is
+  # applied to it rather than restated here.
+  use_format {
+    rule  = format.cy.he_number
+    input = capture.registration
+  }
 }
 
 identifier "euid" "CY" {

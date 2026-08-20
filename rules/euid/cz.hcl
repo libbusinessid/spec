@@ -25,16 +25,18 @@ format "euid" "cz" {
     require(not(is_absent(capture.register)), "invalid_format", "euid.cz.register"),
     require(length_between(capture.register, 1, 8), "invalid_length", "euid.cz.register_length"),
     require(ascii_alphanumeric(capture.register), "invalid_characters", "euid.cz.register_characters"),
-    require(length_eq(capture.registration, 8), "invalid_length", "euid.cz.registration_length"),
-    require(ascii_digits(capture.registration), "invalid_characters", "euid.cz.registration_characters"),
   ]
+
+  # The registration part is the national number, so the national rule is
+  # applied to it rather than restated here.
+  use_format {
+    rule  = format.cz.ico
+    input = capture.registration
+  }
 }
 
 checksum "euid" "cz" {
-  rule = compare_digit(
-    remainder_map(modulo(weighted_sum(slice(after_first(subject(), "."), 0, 7), [8, 7, 6, 5, 4, 3, 2], "left", "digit_value"), 11), [1, 0, 9, 8, 7, 6, 5, 4, 3, 2, 1]),
-    after_first(subject(), "."), 7,
-  )
+  rule = apply_checksum(checksum.cz.ico, after_first(subject(), "."))
 }
 
 identifier "euid" "CZ" {

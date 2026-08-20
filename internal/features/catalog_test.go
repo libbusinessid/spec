@@ -87,7 +87,10 @@ func TestEveryCapabilityIsReachableFromAnOperationOrStructure(t *testing.T) {
 		features.ProfilesV1:           true,
 		features.ProvenanceV1:         true,
 		features.ProvenanceTierV1:     true,
-		features.CapturesAndCallsV1:   true,
+		// Reached by a variant of weighted_sum rather than by an operation of
+		// its own: only a rule that names a custom alphabet declares it.
+		features.ChecksumCustomAlphabetV1: true,
+		features.CapturesAndCallsV1:       true,
 	}
 	for _, op := range features.Ops() {
 		for _, id := range op.Features {

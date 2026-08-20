@@ -25,22 +25,18 @@ format "euid" "pt" {
     require(not(is_absent(capture.register)), "invalid_format", "euid.pt.register"),
     require(length_between(capture.register, 1, 8), "invalid_length", "euid.pt.register_length"),
     require(ascii_alphanumeric(capture.register), "invalid_characters", "euid.pt.register_characters"),
-    require(length_eq(capture.registration, 9), "invalid_length", "euid.pt.registration_length"),
-    require(ascii_digits(capture.registration), "invalid_characters", "euid.pt.registration_characters"),
   ]
+
+  # The registration part is the national number, so the national rule is
+  # applied to it rather than restated here.
+  use_format {
+    rule  = format.pt.nipc
+    input = capture.registration
+  }
 }
 
 checksum "euid" "pt" {
-  rule = compare_digit(
-    remainder_map(
-      modulo(
-        weighted_sum(slice(after_first(subject(), "."), 0, 8), [9, 8, 7, 6, 5, 4, 3, 2], "left", "digit_value"),
-        11,
-      ),
-      [0, 0, 9, 8, 7, 6, 5, 4, 3, 2, 1],
-    ),
-    after_first(subject(), "."), 8,
-  )
+  rule = apply_checksum(checksum.pt.nipc, after_first(subject(), "."))
 }
 
 identifier "euid" "PT" {

@@ -34,6 +34,7 @@ type Node struct {
 	Weights     []int64
 	Alignment   *irv1.WeightAlignment
 	Mapping     *irv1.CharMapping
+	Alphabet    *string
 	Remainders  []int64
 	ReasonCode  *irv1.ReasonCode
 

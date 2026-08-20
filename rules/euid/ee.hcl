@@ -30,25 +30,18 @@ format "euid" "ee" {
     require(not(is_absent(capture.register)), "invalid_format", "euid.ee.register"),
     require(length_between(capture.register, 1, 8), "invalid_length", "euid.ee.register_length"),
     require(ascii_alphanumeric(capture.register), "invalid_characters", "euid.ee.register_characters"),
-    require(length_eq(capture.registration, 8), "invalid_length", "euid.ee.registration_length"),
-    require(ascii_digits(capture.registration), "invalid_characters", "euid.ee.registration_characters"),
   ]
+
+  # The registration part is the national number, so the national rule is
+  # applied to it rather than restated here.
+  use_format {
+    rule  = format.ee.registrikood
+    input = capture.registration
+  }
 }
 
 checksum "euid" "ee" {
-  rule = choose(
-    when_checksum(
-      integer_is(modulo(weighted_sum(slice(after_first(subject(), "."), 0, 7), [1, 2, 3, 4, 5, 6, 7], "left", "digit_value"), 11), 10),
-      compare_digit(
-        remainder_map(modulo(weighted_sum(slice(after_first(subject(), "."), 0, 7), [3, 4, 5, 6, 7, 8, 9], "left", "digit_value"), 11), [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0]),
-        after_first(subject(), "."), 7,
-      ),
-    ),
-    compare_digit(
-      remainder_map(modulo(weighted_sum(slice(after_first(subject(), "."), 0, 7), [1, 2, 3, 4, 5, 6, 7], "left", "digit_value"), 11), [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0]),
-      after_first(subject(), "."), 7,
-    ),
-  )
+  rule = apply_checksum(checksum.ee.registrikood, after_first(subject(), "."))
 }
 
 identifier "euid" "EE" {

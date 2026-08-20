@@ -139,8 +139,11 @@ func runSweep(arg string, command []string, timeout time.Duration, manifestFile 
 		}
 	}
 
+	if timeout == 0 {
+		timeout = runner.DefaultSweepTimeout
+	}
 	res, err := runner.RunStream(context.Background(), cases, runner.Options{
-		Command: command, Timeout: timeout, FormatStatusOnly: true,
+		Command: command, Timeout: timeout, RefusalOnly: true,
 	})
 	if err != nil {
 		return false, err

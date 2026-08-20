@@ -16,6 +16,9 @@ const maxMappedDigit = 35
 // finishNode applies the operation specific invariants and computes the static
 // bounds proving that no arithmetic can overflow.
 func (c *checker) finishNode(n *Node, call *ast.CallExpr) bool {
+	if !c.checkAlphabet(n, call) {
+		return false
+	}
 	if len(n.Inputs) < n.Op.MinOperands() {
 		c.bag.Errorf(n.Pos, CodeArity, "%s expects at least %d operand(s), got %d",
 			call.Name, n.Op.MinOperands(), len(n.Inputs))
@@ -311,4 +314,47 @@ func minOf(a, b int) int {
 		return a
 	}
 	return b
+}
+
+// checkAlphabet keeps the mapping and the alphabet in step.
+//
+// CUSTOM_ALPHABET reads the value of a code point from the alphabet the
+// operation carries, so an operation naming that mapping without one computes
+// nothing, and an operation carrying one under another mapping states
+// something no runtime reads. Both are caught here rather than at load time,
+// because a rule author should hear about it while writing the rule.
+func (c *checker) checkAlphabet(n *Node, call *ast.CallExpr) bool {
+	custom := n.Mapping != nil &&
+		*n.Mapping == irv1.CharMapping_CHAR_MAPPING_CUSTOM_ALPHABET
+	switch {
+	case custom && (n.Alphabet == nil || *n.Alphabet == ""):
+		c.bag.Errorf(n.Pos, CodeBadConstant,
+			"%s uses custom_alphabet and must be given a non empty alphabet", call.Name)
+		return false
+	case !custom && n.Alphabet != nil:
+		c.bag.Errorf(n.Pos, CodeBadConstant,
+			"%s carries an alphabet that only custom_alphabet reads", call.Name)
+		return false
+	}
+	if !custom {
+		return true
+	}
+	// A repeated code point would carry two values at once, and which one wins
+	// would depend on how an implementation happens to search the alphabet.
+	seen := map[rune]bool{}
+	for _, r := range *n.Alphabet {
+		if seen[r] {
+			c.bag.Errorf(n.Pos, CodeBadConstant,
+				"the alphabet lists %q twice, so its value would depend on the implementation", string(r))
+			return false
+		}
+		seen[r] = true
+	}
+	if len(seen) > limits.MaxAlphabetRunes {
+		c.bag.Errorf(n.Pos, CodeLimit,
+			"the alphabet holds %d code points, above the accepted %d",
+			len(seen), limits.MaxAlphabetRunes)
+		return false
+	}
+	return true
 }

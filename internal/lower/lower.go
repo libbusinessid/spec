@@ -189,7 +189,14 @@ func (l *lowerer) buildNode(n *typecheck.Node, inputs []uint32) *irv1.Node {
 		op.Weights = n.Weights
 		op.Alignment = n.Alignment
 		op.Mapping = n.Mapping
+		op.Alphabet = n.Alphabet
 		op.RemainderValues = n.Remainders
+		// The capability is declared by the variant, not by the operation: a
+		// weighted_sum over digits must not force a runtime to implement an
+		// alphabet it never reads.
+		if n.Mapping != nil && *n.Mapping == irv1.CharMapping_CHAR_MAPPING_CUSTOM_ALPHABET {
+			l.used.Add(features.ChecksumCustomAlphabetV1)
+		}
 		node.Operation = &irv1.Node_IntegerOperation{IntegerOperation: op}
 	case features.CategoryPredicate:
 		op := &irv1.PredicateOperation{Kind: irv1.PredicateOpKind(n.Op.Code)}

@@ -18,6 +18,28 @@
       "authority": "Companies House",
       "terms": "Crown copyright, Open Government Licence v3.0",
       "notes": "Every company on the live register. The 2026-08-01 file carries 5695465 of them, all on exactly eight characters. Dissolved companies are absent, so a prefix with no row is not thereby invalid."
+    },
+    {
+      "id": "fr-insee-sirene-siren",
+      "kind": "siren",
+      "country": "FR",
+      "url": "https://www.data.gouv.fr/datasets/base-sirene-des-entreprises-et-de-leurs-etablissements-siren-siret",
+      "archive": "stock-stockunitelegale-csv.zip",
+      "column": "siren",
+      "authority": "INSEE",
+      "terms": "Licence Ouverte / Open Licence v2.0",
+      "notes": "Every legal unit the SIREN directory has ever registered, active and ceased alike, 29922486 of them in the 2026-08-01 stock. Ceased units are kept, which is what makes the sweep cover identifiers that outlive their company."
+    },
+    {
+      "id": "fr-insee-sirene-siret",
+      "kind": "siret",
+      "country": "FR",
+      "url": "https://www.data.gouv.fr/datasets/base-sirene-des-entreprises-et-de-leurs-etablissements-siren-siret",
+      "archive": "stock-stocketablissement-csv.zip",
+      "column": "siret",
+      "authority": "INSEE",
+      "terms": "Licence Ouverte / Open Licence v2.0",
+      "notes": "Every establishment the SIRET directory has ever registered, 43896818 of them in the 2026-08-01 stock. One entry is refused and is expected to be: 58209045200015 satisfies neither the Luhn check nor the La Poste derogation, and no source documents a derogation for the company holding it, an ordinary limited company registered in 1958. It reads as a single bad record among forty four million rather than a rule, and inventing an exception for one number would be inventing a rule with no source."
     }
   ]
 }

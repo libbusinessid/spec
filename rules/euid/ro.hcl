@@ -33,104 +33,18 @@ format "euid" "ro" {
     require(not(is_absent(capture.register)), "invalid_format", "euid.ro.register"),
     require(length_between(capture.register, 1, 8), "invalid_length", "euid.ro.register_length"),
     require(ascii_alphanumeric(capture.register), "invalid_characters", "euid.ro.register_characters"),
-    require(length_between(capture.registration, 2, 10), "invalid_length", "euid.ro.registration_length"),
-    require(ascii_digits(capture.registration), "invalid_characters", "euid.ro.registration_characters"),
   ]
+
+  # The registration part is the national number, so the national rule is
+  # applied to it rather than restated here.
+  use_format {
+    rule  = format.ro.cui
+    input = capture.registration
+  }
 }
 
 checksum "euid" "ro" {
-  rule = choose(
-    when_checksum(
-      length_eq(after_first(subject(), "."), 2),
-      compare_digit(
-        remainder_map(
-          modulo(weighted_sum(slice(after_first(subject(), "."), 0, 1), [70, 50, 30, 20, 10, 70, 50, 30, 20], "right", "digit_value"), 11),
-          [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
-        ),
-        after_first(subject(), "."), 1,
-      ),
-    ),
-    when_checksum(
-      length_eq(after_first(subject(), "."), 3),
-      compare_digit(
-        remainder_map(
-          modulo(weighted_sum(slice(after_first(subject(), "."), 0, 2), [70, 50, 30, 20, 10, 70, 50, 30, 20], "right", "digit_value"), 11),
-          [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
-        ),
-        after_first(subject(), "."), 2,
-      ),
-    ),
-    when_checksum(
-      length_eq(after_first(subject(), "."), 4),
-      compare_digit(
-        remainder_map(
-          modulo(weighted_sum(slice(after_first(subject(), "."), 0, 3), [70, 50, 30, 20, 10, 70, 50, 30, 20], "right", "digit_value"), 11),
-          [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
-        ),
-        after_first(subject(), "."), 3,
-      ),
-    ),
-    when_checksum(
-      length_eq(after_first(subject(), "."), 5),
-      compare_digit(
-        remainder_map(
-          modulo(weighted_sum(slice(after_first(subject(), "."), 0, 4), [70, 50, 30, 20, 10, 70, 50, 30, 20], "right", "digit_value"), 11),
-          [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
-        ),
-        after_first(subject(), "."), 4,
-      ),
-    ),
-    when_checksum(
-      length_eq(after_first(subject(), "."), 6),
-      compare_digit(
-        remainder_map(
-          modulo(weighted_sum(slice(after_first(subject(), "."), 0, 5), [70, 50, 30, 20, 10, 70, 50, 30, 20], "right", "digit_value"), 11),
-          [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
-        ),
-        after_first(subject(), "."), 5,
-      ),
-    ),
-    when_checksum(
-      length_eq(after_first(subject(), "."), 7),
-      compare_digit(
-        remainder_map(
-          modulo(weighted_sum(slice(after_first(subject(), "."), 0, 6), [70, 50, 30, 20, 10, 70, 50, 30, 20], "right", "digit_value"), 11),
-          [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
-        ),
-        after_first(subject(), "."), 6,
-      ),
-    ),
-    when_checksum(
-      length_eq(after_first(subject(), "."), 8),
-      compare_digit(
-        remainder_map(
-          modulo(weighted_sum(slice(after_first(subject(), "."), 0, 7), [70, 50, 30, 20, 10, 70, 50, 30, 20], "right", "digit_value"), 11),
-          [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
-        ),
-        after_first(subject(), "."), 7,
-      ),
-    ),
-    when_checksum(
-      length_eq(after_first(subject(), "."), 9),
-      compare_digit(
-        remainder_map(
-          modulo(weighted_sum(slice(after_first(subject(), "."), 0, 8), [70, 50, 30, 20, 10, 70, 50, 30, 20], "right", "digit_value"), 11),
-          [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
-        ),
-        after_first(subject(), "."), 8,
-      ),
-    ),
-    when_checksum(
-      length_eq(after_first(subject(), "."), 10),
-      compare_digit(
-        remainder_map(
-          modulo(weighted_sum(slice(after_first(subject(), "."), 0, 9), [70, 50, 30, 20, 10, 70, 50, 30, 20], "right", "digit_value"), 11),
-          [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
-        ),
-        after_first(subject(), "."), 9,
-      ),
-    ),
-  )
+  rule = apply_checksum(checksum.ro.cui, after_first(subject(), "."))
 }
 
 identifier "euid" "RO" {

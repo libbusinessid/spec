@@ -38,10 +38,14 @@ format "euid" "de" {
     require(not(is_absent(capture.register)), "invalid_format", "euid.de.register"),
     require(length_between(capture.register, 1, 8), "invalid_length", "euid.de.register_length"),
     require(ascii_alphanumeric(capture.register), "invalid_characters", "euid.de.register_characters"),
-    require(not(is_empty(capture.registration)), "empty", "euid.de.registration_empty"),
-    require(length_between(capture.registration, 1, 20), "invalid_length", "euid.de.registration_length"),
-    require(ascii_alphanumeric(capture.registration), "invalid_characters", "euid.de.registration_characters"),
   ]
+
+  # The registration part is the national number, so the national rule is
+  # applied to it rather than restated here.
+  use_format {
+    rule  = format.de.handelsregisternummer
+    input = capture.registration
+  }
 }
 
 identifier "euid" "DE" {

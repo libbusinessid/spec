@@ -121,7 +121,10 @@ func caseFor(def Definition, value string, row int) *conformancev1.ConformanceCa
 		CountryCode: &country,
 		Input:       value,
 		Profile:     "compatible",
-		Operation:   conformancev1.Operation_OPERATION_VALIDATE_FORMAT,
+		// The whole validation, not just the format: a rule refuses just as
+		// firmly through the checksum, and asking only for the format would
+		// report a clean sweep over a checksum it never ran.
+		Operation: conformancev1.Operation_OPERATION_VALIDATE,
 		Expected: &conformancev1.ExpectedOutcome{
 			Value: &conformancev1.ExpectedOutcome_ValidationReport{
 				ValidationReport: &conformancev1.ExpectedValidationReport{

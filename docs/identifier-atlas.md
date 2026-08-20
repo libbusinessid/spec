@@ -84,17 +84,65 @@ refuse numbers Dun & Bradstreet issues.
 
 ### National identifiers
 
+An EU member state appears twice below when its national register number is
+validated in its own right as well as through the EUID. The EUID rule does not
+restate the national algorithm, it applies the national rule to the part after
+the dot, so the two cannot drift apart.
+
 | Country | Identifier | Issuer | Status | Maturity | Cases |
 |---|---|---|---|---|---|
-| France | **SIREN** | INSEE | supported | checked (Luhn) | 40 |
-| France | **SIRET** | INSEE | supported | checked (Luhn, La Poste derogation) | 16 |
+| France | **SIREN** | INSEE | supported | **register-swept** (Luhn) | 40 |
+| France | **SIRET** | INSEE | supported | **register-swept** (Luhn over the SIREN and over the fourteen, La Poste derogation) | 22 |
 | United Kingdom | **Company number** | Companies House | supported | **register-swept** | 60 |
 | United States | **EIN** | Internal Revenue Service | supported | format | 3 |
+| China | **USCC** | State Administration for Market Regulation | supported | checked (GB 32100-2015, mod 31 over a 31 code point alphabet) | 19 |
+| Japan | **Corporate Number** | National Tax Agency | supported | checked (mod 9 over alternating weights) | 14 |
+| Brazil | **CNPJ** | Receita Federal | supported | checked (two rounds of mod 11, alphanumeric form of 2026 included) | 19 |
+| Belgium | **Enterprise number** | Banque-Carrefour des Entreprises | supported | checked (mod 97) | 12 |
+| Austria | **Firmenbuchnummer (`firmenbuchnummer`)** | Firmenbuch | supported | format | 4 |
+| Cyprus | **HE number (`he_number`)** | Registrar of Companies | supported | format | 3 |
+| Germany | **Handelsregisternummer (`handelsregisternummer`)** | Registry courts | supported | format | 1 |
+| Ireland | **CRO number (`cro_number`)** | Companies Registration Office | supported | format | 4 |
+| Italy | **Codice fiscale (`codice_fiscale_impresa`)** | Registro Imprese | supported | checked (Luhn) | 4 |
+| Luxembourg | **RCS number (`rcs_number`)** | RCS | supported | format | 4 |
+| Malta | **MBR number (`mbr_number`)** | Malta Business Registry | supported | format | 4 |
+| Spain | **NIF (`nif`)** | Agencia Tributaria | supported | checked (Luhn or letter) | 4 |
+| Bulgaria | **EIK** | Registry Agency | supported | checked (mod 11) | 4 |
+| Croatia | **MBS** | Sudski registar | supported | format | 3 |
+| Czechia | **IČO** | Czech Statistical Office | supported | checked (mod 11) | 5 |
+| Denmark | **CVR number** | Erhvervsstyrelsen | supported | checked (mod 11) | 4 |
+| Estonia | **Registrikood** (`registrikood`) | Äriregister | supported | checked (mod 11, two rounds) | 3 |
+| Finland | **Y-tunnus** | PRH | supported | checked (mod 11) | 3 |
+| Greece | **GEMI number** | ΓΕΜΗ | supported | format | 3 |
+| Hungary | **Cégjegyzékszám** (`cegjegyzekszam`) | Court of registration | supported | format | 2 |
+| Latvia | **Reģistrācijas numurs** (`registracijas_numurs`) | Uzņēmumu reģistrs | supported | checked (mod 11) | 3 |
+| Lithuania | **Juridinio asmens kodas** (`juridinio_asmens_kodas`) | Registrų centras | supported | checked (mod 11) | 3 |
+| Netherlands | **KvK number** | Kamer van Koophandel | supported | format | 3 |
+| Poland | **KRS number** | Krajowy Rejestr Sądowy | supported | format | 3 |
+| Portugal | **NIPC** | IRN | supported | checked (mod 11) | 3 |
+| Romania | **CUI** | ONRC | supported | checked (mod 11) | 11 |
+| Slovakia | **IČO** | Obchodný register | supported | checked (mod 11) | 5 |
+| Slovenia | **Matična številka** (`maticna_stevilka`) | AJPES | supported | format | 3 |
+| Sweden | **Organisationsnummer** | Bolagsverket | supported | checked (Luhn) | 4 |
 
-The UK company number is the only rule swept against a complete register: all
-5 695 465 companies of the 2026-08-01 *Free Company Data Product*, none
-refused. That is the standard the other rules should reach where the issuer
-publishes a bulk download.
+Three rules have been swept against their issuer's complete register, through
+the same testee protocol an engine is judged by:
+
+| Register | Identifiers | Refused |
+|---|---|---|
+| Companies House, 2026-08-01 | 5 695 465 | 0 |
+| SIRENE legal units, 2026-08-01 | 29 922 486 | 0 |
+| SIRENE establishments, 2026-08-01 | 43 896 818 | 1 |
+
+That one is `58209045200015`, which satisfies neither the Luhn check nor the La
+Poste derogation. No source documents a derogation for the company holding it,
+an ordinary limited company registered in 1958, so it reads as a single bad
+record in forty four million rather than a rule. Inventing an exception for one
+number would be inventing a rule with no source.
+
+`conformance/registers.json` records where each dump comes from; the dumps
+themselves are never committed. That is the standard the other rules should
+reach wherever the issuer publishes a bulk download.
 
 ---
 
@@ -112,15 +160,15 @@ which country issues what, and whether we cover it.
 | # | Country | Primary business identifier | Issuer | Also carries | Status |
 |---|---|---|---|---|---|
 | 1 | United States | *none nationally* | — | EIN (IRS), state entity numbers, CIK (SEC), UEI (SAM.gov) | **no single register** — EIN supported |
-| 2 | China | **USCC** — Unified Social Credit Code, 18 chars, check digit | State Administration for Market Regulation | — | planned |
+| 2 | China | **USCC** — Unified Social Credit Code, 18 chars, check character | State Administration for Market Regulation | — | **supported** |
 | 3 | Germany | **Handelsregisternummer** (HRB/HRA + court) | Local registry courts | EUID, USt-IdNr. | supported via EUID and VAT |
-| 4 | Japan | **Corporate Number** (法人番号), 13 digits, check digit | National Tax Agency | — | planned |
+| 4 | Japan | **Corporate Number** (法人番号), 13 digits, check digit | National Tax Agency | — | **supported** |
 | 5 | India | **CIN**, 21 chars | Registrar of Companies (MCA) | GSTIN (15), PAN (10) | planned |
 | 6 | United Kingdom | **Company number**, 8 chars | Companies House | VAT | **supported** |
 | 7 | France | **SIREN** (9) / **SIRET** (14) | INSEE | EUID, TVA | **supported** |
 | 8 | Italy | **Codice fiscale / P.IVA** (11) | Agenzia delle Entrate, Registro Imprese | EUID | supported via EUID and VAT |
 | 9 | Canada | **Business Number** (9 + program) | Canada Revenue Agency | Provincial corporation numbers | planned |
-| 10 | Brazil | **CNPJ**, 14 digits, two check digits | Receita Federal | — | planned |
+| 10 | Brazil | **CNPJ**, 14 positions, alphanumeric from 2026, two check digits | Receita Federal | — | **supported** |
 | 11 | Russia | **ИНН** (10) and **ОГРН** (13) | Federal Tax Service | — | none |
 | 12 | South Korea | **BRN** (사업자등록번호), 10 digits, check digit | National Tax Service | CRN (13) | planned |
 | 13 | Australia | **ABN** (11, check) / **ACN** (9, check) | ATO / ASIC | — | planned |
@@ -138,7 +186,7 @@ which country issues what, and whether we cover it.
 |---|---|---|---|---|---|
 | 21 | Poland | **KRS** (10) / **REGON** (9 or 14) | National Court Register / GUS | EUID, NIP | supported via EUID and VAT |
 | 22 | Taiwan | **UBN**, 8 digits, check digit | Ministry of Economic Affairs | — | none |
-| 23 | Belgium | **Ondernemingsnummer**, 10 digits, mod 97 | Crossroads Bank for Enterprises | EUID, BTW/TVA | **supported** |
+| 23 | Belgium | **Ondernemingsnummer**, 10 digits, mod 97 | Crossroads Bank for Enterprises | EUID, BTW/TVA | **supported**, nationally and through EUID |
 | 24 | Argentina | **CUIT**, 11 digits, check digit | AFIP | — | planned |
 | 25 | Sweden | **Organisationsnummer**, 10 digits, Luhn | Bolagsverket | EUID, moms | supported via EUID and VAT |
 | 26 | Ireland | **CRO number** | Companies Registration Office | EUID, VAT | supported via EUID and VAT |
@@ -245,18 +293,13 @@ Ordered by economic weight and by how much the issuer publishes. An issuer that
 publishes a check algorithm and a bulk register is worth more than a larger
 economy that publishes neither, because the rule can be proven.
 
-1. **China — USCC.** Second economy, 18 characters, published check digit over
-   a documented structure. The single highest-value rule not yet written.
-2. **Japan — Corporate Number.** 13 digits with a published check, issued by
-   the National Tax Agency, which also publishes the full register.
-3. **Brazil — CNPJ.** Two check digits, well documented, and a bulk register.
-4. **India — CIN.** 21 structured characters carrying state and year, so the
+1. **India — CIN.** 21 structured characters carrying state and year, so the
    rule catches far more than a length check would.
-5. **Australia — ABN and ACN.** Both carry a published check.
-6. **Switzerland — UID.** One identifier across commercial register, VAT,
+2. **Australia — ABN and ACN.** Both carry a published check.
+3. **Switzerland — UID.** One identifier across commercial register, VAT,
    customs and social insurance; a check digit; a public register.
-7. **South Korea — BRN.** 10 digits with a published check.
-8. **Canada — Business Number**, then **Mexico RFC**, **Argentina CUIT**,
+4. **South Korea — BRN.** 10 digits with a published check.
+5. **Canada — Business Number**, then **Mexico RFC**, **Argentina CUIT**,
    **Chile RUT**, **Colombia NIT** — the Latin American set shares a family
    resemblance and a check digit each.
 

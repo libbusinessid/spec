@@ -1,6 +1,8 @@
 package artifact
 
 import (
+	"unicode/utf8"
+
 	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
 	"github.com/libbusinessid/spec/internal/features"
 	"github.com/libbusinessid/spec/internal/limits"
@@ -292,6 +294,9 @@ func validateWeightedSum(s *irv1.IntegerOperation, operandBound int, fail func(s
 	if s.GetMapping() == irv1.CharMapping_CHAR_MAPPING_UNSPECIFIED {
 		return fail("weighted_sum has an unspecified mapping")
 	}
+	if err := checkAlphabet(s, fail); err != nil {
+		return err
+	}
 	if s.GetAlignment() == irv1.WeightAlignment_WEIGHT_ALIGNMENT_CYCLE {
 		if operandBound == unknownLength {
 			return fail("a cycling weighted_sum needs a statically bounded operand")
@@ -564,4 +569,40 @@ func runeCount(s string) int {
 		n++
 	}
 	return n
+}
+
+// checkAlphabet holds the mapping and the alphabet to each other.
+//
+// The compiler already refuses these, but a bundle does not have to come from
+// this compiler. CUSTOM_ALPHABET without an alphabet computes nothing, an
+// alphabet under another mapping states something no runtime reads, and a
+// repeated code point would take its value from wherever an implementation
+// happens to find it first - which is how two conformant engines disagree.
+func checkAlphabet(s *irv1.IntegerOperation, fail func(string, ...any) error) error {
+	custom := s.GetMapping() == irv1.CharMapping_CHAR_MAPPING_CUSTOM_ALPHABET
+	alphabet := s.GetAlphabet()
+	if !custom {
+		if alphabet != "" {
+			return fail("weighted_sum carries an alphabet that only custom_alphabet reads")
+		}
+		return nil
+	}
+	if alphabet == "" {
+		return fail("weighted_sum uses custom_alphabet without an alphabet")
+	}
+	if !utf8.ValidString(alphabet) {
+		return fail("the alphabet is not valid UTF-8")
+	}
+	seen := make(map[rune]bool, len(alphabet))
+	for _, r := range alphabet {
+		if seen[r] {
+			return fail("the alphabet lists %q twice", string(r))
+		}
+		seen[r] = true
+	}
+	if len(seen) > limits.MaxAlphabetRunes {
+		return fail("the alphabet holds %d code points, above the accepted %d",
+			len(seen), limits.MaxAlphabetRunes)
+	}
+	return nil
 }
