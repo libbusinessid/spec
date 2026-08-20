@@ -67,6 +67,7 @@ func RenderCoverageDoc(in CoverageInput) []byte {
 	renderDefinitionMatrix(w, bundle)
 	renderDispatchTables(w, bundle)
 	renderAlgorithms(w, bundle)
+	renderUnusedOperations(w, bundle)
 	renderMissingChecksums(w, bundle)
 	renderCapabilities(w, bundle)
 	renderProvenance(w, bundle)
@@ -172,6 +173,55 @@ func renderAlgorithms(w writeLine, bundle *irv1.RuleBundle) {
 	sort.Strings(symbols)
 	for _, symbol := range symbols {
 		w("| `%s` | %d |", symbol, usage[symbol])
+	}
+	w("")
+}
+
+// renderUnusedOperations lists what the IR defines and no rule emits.
+//
+// An engine compiles the bundle into native code, so it never generates an
+// operation no rule carries - but it still has to implement one, in case a
+// later bundle does, and nothing in the corpus proves that implementation. The
+// count is the size of that untested surface, and printing it is what keeps it
+// from growing unnoticed: prefix_in sat here fully implemented across the whole
+// toolchain while a rule spelled out forty one starts_with by hand.
+func renderUnusedOperations(w writeLine, bundle *irv1.RuleBundle) {
+	used := map[string]bool{}
+	for _, p := range bundle.GetPrograms() {
+		for _, n := range p.GetNodes() {
+			shape, err := shapeOf(n)
+			if err != nil {
+				continue
+			}
+			if op, ok := features.LookupOp(shape.category, shape.code); ok {
+				used[op.Symbol] = true
+			}
+		}
+	}
+	var unused []string
+	for _, op := range features.Ops() {
+		if !used[op.Symbol] {
+			unused = append(unused, op.Symbol)
+		}
+	}
+	sort.Strings(unused)
+
+	w("## Operations no rule exercises")
+	w("")
+	w("%d of %d operations. Every engine implements these and no conformance case",
+		len(unused), len(features.Ops()))
+	w("proves that implementation, so the list is the untested surface of the IR.")
+	w("It shrinks when a rule needs one of them, and it must not grow silently.")
+	w("")
+	if len(unused) == 0 {
+		w("None.")
+		w("")
+		return
+	}
+	w("| Operation |")
+	w("|---|")
+	for _, symbol := range unused {
+		w("| `%s` |", symbol)
 	}
 	w("")
 }

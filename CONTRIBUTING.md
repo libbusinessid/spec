@@ -152,6 +152,35 @@ proof, the variant is supported. A variant that is no longer issued but still
 circulates belongs to `compatible` and may be refused by `strict_current`; that
 profile split is the only normative way to mark a variant as historical.
 
+### Never write an identifier from memory
+
+Every real identifier in the corpus must be **fetched**, in the session that
+adds it, from the issuer's own register or a reliable business directory. Not
+recalled, not reconstructed, not adapted from one that looks similar.
+
+In order of preference:
+
+1. **The issuer's register**, queried live — Companies House, the NTA lookup
+   site, the INSEE bulk files, a national trade register.
+2. **The issuer's own documentation**, when it carries a worked example — the
+   NTA check-digit note builds `8700110005901`, the Receita Federal announced
+   `00.000.000/E08G-12` as the first alphanumeric CNPJ.
+3. **A reliable business directory** — Pappers, OpenCorporates and equivalents,
+   when the register itself is not reachable.
+
+Keep the URL and cite it in `sourceIds` and `redistributionBasis`.
+
+Synthetic values remain welcome and remain synthetic: generated per
+`DATA_POLICY.md` section 4, marked `dataClassification: synthetic`, never
+presented as real. If a value cannot be fetched, use a synthetic one and say so.
+
+The reason is not pedantry. A remembered identifier looks right and does not
+exist. Adding China, Japan and Brazil, seven such numbers were used before being
+checked — five Japanese, two Chinese — and every one was wrong while the
+algorithms they were meant to verify were correct. That is worse than a failing
+test: a plausible identifier that happens to validate makes a broken rule look
+proven. **When an algorithm disagrees with a number, suspect the number first.**
+
 Never write an expected result by running the reference interpreter. Expectations
 come from the published algorithm, from an independent implementation such as
 `tools/vectors.py`, or from an authority document.
@@ -164,6 +193,30 @@ Two independent implementations guard the artifacts:
 - `tools/canonical_stream.py` re-implements the canonical source stream of
   `spec.md` section 7.2, and the CI compares its digests with the ones the Go
   compiler writes into the manifest.
+
+## Operations no rule exercises
+
+The generated coverage document lists every operation the IR defines and no
+rule emits, and `TestUnusedOperationsAreTheOnesWeKnowAbout` holds that list to
+what `knownUnusedOperations` says.
+
+An engine compiles the bundle into native code, so it never generates an
+operation no rule carries — but it must still implement one, in case a later
+bundle does, and no conformance case proves that implementation. The list is
+that untested surface, and the capability freeze makes it permanent once a
+release exists.
+
+The test fails in both directions, on purpose:
+
+- **An operation appears that nothing uses.** Either write a rule that needs it,
+  or add it to the list with a reason. Widening what every engine owes with no
+  evidence behind it should be a decision, not a side effect.
+- **A rule starts using one.** Remove the entry. The list should say what is
+  true.
+
+`prefix_in` is why this exists: it sat there fully implemented across proto,
+catalogue, type checker and interpreter while the UK company number rule spelled
+out forty one `starts_with` by hand, and nothing said so.
 
 ## Changing the core
 

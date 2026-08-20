@@ -517,6 +517,26 @@ Kind aliases: `business_id`, `fi_y_tunnus`.
 | `STRING_OP_KIND_SUBJECT` | 154 |
 | `STRING_OP_KIND_VALUE` | 1 |
 
+## Operations no rule exercises
+
+11 of 63 operations. Every engine implements these and no conformance case
+proves that implementation, so the list is the untested surface of the IR.
+It shrinks when a rule needs one of them, and it must not grow silently.
+
+| Operation |
+|---|
+| `CANONICALIZATION_OP_KIND_APPEND` |
+| `CANONICALIZATION_OP_KIND_LEFT_PAD` |
+| `CANONICALIZATION_OP_KIND_PREPEND` |
+| `PREDICATE_OP_KIND_ENDS_WITH` |
+| `PREDICATE_OP_KIND_EQUALS` |
+| `PREDICATE_OP_KIND_LENGTH_IN` |
+| `STRING_OP_KIND_CONCAT` |
+| `STRING_OP_KIND_CONSTANT` |
+| `STRING_OP_KIND_COUNTRY_CODE` |
+| `STRING_OP_KIND_SLICE_TO` |
+| `STRING_OP_KIND_STRIP_PREFIX` |
+
 ## Rules without a published checksum
 
 - `cegjegyzekszam` / `HU`: reports `checksum_not_published`.
