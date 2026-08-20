@@ -87,6 +87,9 @@ func buildSignatures() map[string]signature {
 	register(table, a, int32(irv1.AssertionOpKind_ASSERTION_OP_KIND_REQUIRE),
 		operand(), reasonArg(), optStrArg(features.ParamMessageKey))
 
+	register(table, features.CategoryPredicate, int32(irv1.PredicateOpKind_PREDICATE_OP_KIND_INTEGER_IS),
+		operand(), constantArg())
+
 	k := features.CategoryChecksum
 	register(table, k, int32(irv1.ChecksumOpKind_CHECKSUM_OP_KIND_LUHN), operand())
 	register(table, k, int32(irv1.ChecksumOpKind_CHECKSUM_OP_KIND_ISO7064_MOD97_10), operand())

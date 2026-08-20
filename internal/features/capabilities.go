@@ -24,6 +24,7 @@ const (
 	ChecksumMod97V1               uint32 = 32
 	ChecksumWeightedV1            uint32 = 33
 	ChecksumCompareConstantV1     uint32 = 34
+	ChecksumIntegerPredicateV1    uint32 = 35
 	ProvenanceV1                  uint32 = 40
 )
 
@@ -186,6 +187,15 @@ var capabilities = []Capability{
 		Content: []string{
 			"The `COMPARE_CONSTANT` checksum operation.",
 			"It closes the gap left by `COMPARE_DIGIT` and `COMPARE_SLICE`, which can only compare a computed integer against part of the value being checked. A rule stating that a remainder must equal zero has nothing in the value to compare against.",
+		},
+	},
+	{
+		ID:      ChecksumIntegerPredicateV1,
+		Name:    "CHECKSUM_INTEGER_PREDICATE_V1",
+		Summary: "branching on the value of an integer",
+		Content: []string{
+			"The `INTEGER_IS` predicate.",
+			"Every other predicate reads a string, so a checksum could compare a remainder but never branch on it. Registers that recompute their sum with a second set of weights when the first remainder reaches a given value need exactly that.",
 		},
 	},
 	{

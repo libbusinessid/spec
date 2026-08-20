@@ -383,6 +383,13 @@ var ops = []Op{
 		Doc:      "True when `expr` is present, `index` is a valid code point position and the code point at `index` belongs to the non empty ASCII set `text`.",
 	},
 	{
+		Category: CategoryPredicate, Code: int32(irv1.PredicateOpKind_PREDICATE_OP_KIND_INTEGER_IS),
+		Symbol: "PREDICATE_OP_KIND_INTEGER_IS", HCL: "integer_is(int_expr, constant)", Output: tBool,
+		Operands: []Operand{integerOperand}, Required: []Param{ParamConstant},
+		Features: []uint32{CoreGraphV1, ChecksumTristateV1, ChecksumIntegerPredicateV1},
+		Doc:      "True when `int_expr` equals the literal `constant`. It is the only predicate reading an integer, and exists so that a checksum can branch on the value of a remainder: several national registers recompute their weighted sum with a second set of weights when the first remainder reaches a given value. An indeterminate operand yields `false`, so the branch does not apply and the enclosing `CHOOSE` falls through.",
+	},
+	{
 		Category: CategoryPredicate, Code: int32(irv1.PredicateOpKind_PREDICATE_OP_KIND_CONTAINS),
 		Symbol: "PREDICATE_OP_KIND_CONTAINS", HCL: "contains(expr, literal)", Output: tBool,
 		Operands: []Operand{str("expr")}, Required: []Param{ParamText},

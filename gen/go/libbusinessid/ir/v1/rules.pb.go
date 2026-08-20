@@ -580,6 +580,9 @@ const (
 	PredicateOpKind_PREDICATE_OP_KIND_ANY                 PredicateOpKind = 17
 	PredicateOpKind_PREDICATE_OP_KIND_NOT                 PredicateOpKind = 18
 	PredicateOpKind_PREDICATE_OP_KIND_PROFILE_IS          PredicateOpKind = 19
+	// True when an integer expression equals a literal. Every other predicate
+	// reads a string, which left no way to branch on the value of a remainder.
+	PredicateOpKind_PREDICATE_OP_KIND_INTEGER_IS PredicateOpKind = 20
 )
 
 // Enum value maps for PredicateOpKind.
@@ -605,6 +608,7 @@ var (
 		17: "PREDICATE_OP_KIND_ANY",
 		18: "PREDICATE_OP_KIND_NOT",
 		19: "PREDICATE_OP_KIND_PROFILE_IS",
+		20: "PREDICATE_OP_KIND_INTEGER_IS",
 	}
 	PredicateOpKind_value = map[string]int32{
 		"PREDICATE_OP_KIND_UNSPECIFIED":         0,
@@ -627,6 +631,7 @@ var (
 		"PREDICATE_OP_KIND_ANY":                 17,
 		"PREDICATE_OP_KIND_NOT":                 18,
 		"PREDICATE_OP_KIND_PROFILE_IS":          19,
+		"PREDICATE_OP_KIND_INTEGER_IS":          20,
 	}
 )
 
@@ -1948,13 +1953,16 @@ type PredicateOperation struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Kind  PredicateOpKind        `protobuf:"varint,1,opt,name=kind,proto3,enum=libbusinessid.ir.v1.PredicateOpKind" json:"kind,omitempty"`
 	// Prefix, suffix, literal, character set or profile name depending on kind.
-	Text          *string  `protobuf:"bytes,2,opt,name=text,proto3,oneof" json:"text,omitempty"`
-	Values        []string `protobuf:"bytes,3,rep,name=values,proto3" json:"values,omitempty"`
-	Lengths       []uint32 `protobuf:"varint,4,rep,packed,name=lengths,proto3" json:"lengths,omitempty"`
-	Length        *uint32  `protobuf:"varint,5,opt,name=length,proto3,oneof" json:"length,omitempty"`
-	MinLength     *uint32  `protobuf:"varint,6,opt,name=min_length,json=minLength,proto3,oneof" json:"min_length,omitempty"`
-	MaxLength     *uint32  `protobuf:"varint,7,opt,name=max_length,json=maxLength,proto3,oneof" json:"max_length,omitempty"`
-	Index         *uint32  `protobuf:"varint,8,opt,name=index,proto3,oneof" json:"index,omitempty"`
+	Text      *string  `protobuf:"bytes,2,opt,name=text,proto3,oneof" json:"text,omitempty"`
+	Values    []string `protobuf:"bytes,3,rep,name=values,proto3" json:"values,omitempty"`
+	Lengths   []uint32 `protobuf:"varint,4,rep,packed,name=lengths,proto3" json:"lengths,omitempty"`
+	Length    *uint32  `protobuf:"varint,5,opt,name=length,proto3,oneof" json:"length,omitempty"`
+	MinLength *uint32  `protobuf:"varint,6,opt,name=min_length,json=minLength,proto3,oneof" json:"min_length,omitempty"`
+	MaxLength *uint32  `protobuf:"varint,7,opt,name=max_length,json=maxLength,proto3,oneof" json:"max_length,omitempty"`
+	Index     *uint32  `protobuf:"varint,8,opt,name=index,proto3,oneof" json:"index,omitempty"`
+	// The literal an integer operand is compared against, for INTEGER_IS. Signed
+	// and bounded like every other integer of the IR.
+	Constant      *int64 `protobuf:"varint,9,opt,name=constant,proto3,oneof" json:"constant,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2041,6 +2049,13 @@ func (x *PredicateOperation) GetMaxLength() uint32 {
 func (x *PredicateOperation) GetIndex() uint32 {
 	if x != nil && x.Index != nil {
 		return *x.Index
+	}
+	return 0
+}
+
+func (x *PredicateOperation) GetConstant() int64 {
+	if x != nil && x.Constant != nil {
+		return *x.Constant
 	}
 	return 0
 }
@@ -2438,7 +2453,7 @@ const file_libbusinessid_ir_v1_rules_proto_rawDesc = "" +
 	"\n" +
 	"_alignmentB\n" +
 	"\n" +
-	"\b_mapping\"\xd5\x02\n" +
+	"\b_mapping\"\x83\x03\n" +
 	"\x12PredicateOperation\x128\n" +
 	"\x04kind\x18\x01 \x01(\x0e2$.libbusinessid.ir.v1.PredicateOpKindR\x04kind\x12\x17\n" +
 	"\x04text\x18\x02 \x01(\tH\x00R\x04text\x88\x01\x01\x12\x16\n" +
@@ -2449,12 +2464,14 @@ const file_libbusinessid_ir_v1_rules_proto_rawDesc = "" +
 	"min_length\x18\x06 \x01(\rH\x02R\tminLength\x88\x01\x01\x12\"\n" +
 	"\n" +
 	"max_length\x18\a \x01(\rH\x03R\tmaxLength\x88\x01\x01\x12\x19\n" +
-	"\x05index\x18\b \x01(\rH\x04R\x05index\x88\x01\x01B\a\n" +
+	"\x05index\x18\b \x01(\rH\x04R\x05index\x88\x01\x01\x12\x1f\n" +
+	"\bconstant\x18\t \x01(\x03H\x05R\bconstant\x88\x01\x01B\a\n" +
 	"\x05_textB\t\n" +
 	"\a_lengthB\r\n" +
 	"\v_min_lengthB\r\n" +
 	"\v_max_lengthB\b\n" +
-	"\x06_index\"\x82\x02\n" +
+	"\x06_indexB\v\n" +
+	"\t_constant\"\x82\x02\n" +
 	"\x19CanonicalizationOperation\x12?\n" +
 	"\x04kind\x18\x01 \x01(\x0e2+.libbusinessid.ir.v1.CanonicalizationOpKindR\x04kind\x12\x17\n" +
 	"\x04text\x18\x02 \x01(\tH\x00R\x04text\x88\x01\x01\x12%\n" +
@@ -2566,7 +2583,7 @@ const file_libbusinessid_ir_v1_rules_proto_rawDesc = "" +
 	"\vCharMapping\x12\x1c\n" +
 	"\x18CHAR_MAPPING_UNSPECIFIED\x10\x00\x12\x1c\n" +
 	"\x18CHAR_MAPPING_DIGIT_VALUE\x10\x01\x12\x1d\n" +
-	"\x19CHAR_MAPPING_ALNUM_BASE36\x10\x02*\xb3\x05\n" +
+	"\x19CHAR_MAPPING_ALNUM_BASE36\x10\x02*\xd5\x05\n" +
 	"\x0fPredicateOpKind\x12!\n" +
 	"\x1dPREDICATE_OP_KIND_UNSPECIFIED\x10\x00\x12\x1e\n" +
 	"\x1aPREDICATE_OP_KIND_IS_EMPTY\x10\x01\x12\x1f\n" +
@@ -2588,7 +2605,8 @@ const file_libbusinessid_ir_v1_rules_proto_rawDesc = "" +
 	"\x15PREDICATE_OP_KIND_ALL\x10\x10\x12\x19\n" +
 	"\x15PREDICATE_OP_KIND_ANY\x10\x11\x12\x19\n" +
 	"\x15PREDICATE_OP_KIND_NOT\x10\x12\x12 \n" +
-	"\x1cPREDICATE_OP_KIND_PROFILE_IS\x10\x13*\xc0\x04\n" +
+	"\x1cPREDICATE_OP_KIND_PROFILE_IS\x10\x13\x12 \n" +
+	"\x1cPREDICATE_OP_KIND_INTEGER_IS\x10\x14*\xc0\x04\n" +
 	"\x16CanonicalizationOpKind\x12(\n" +
 	"$CANONICALIZATION_OP_KIND_UNSPECIFIED\x10\x00\x12%\n" +
 	"!CANONICALIZATION_OP_KIND_SEQUENCE\x10\x01\x12,\n" +

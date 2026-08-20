@@ -596,6 +596,20 @@ Capabilities: `CORE_GRAPH_V1` (1), `PROFILES_V1` (21).
 
 True when the effective validation profile equals `text`, which is either `compatible` or `strict_current`.
 
+#### `PREDICATE_OP_KIND_INTEGER_IS`
+
+Surface syntax: `integer_is(int_expr, constant)`.
+
+Output: `VALUE_TYPE_BOOLEAN`.
+
+Operands: `int_expr` of type `VALUE_TYPE_INTEGER`.
+
+Parameters: `constant` (required); any other field present in the message is refused.
+
+Capabilities: `CORE_GRAPH_V1` (1), `CHECKSUM_TRISTATE_V1` (30), `CHECKSUM_INTEGER_PREDICATE_V1` (35).
+
+True when `int_expr` equals the literal `constant`. It is the only predicate reading an integer, and exists so that a checksum can branch on the value of a remainder: several national registers recompute their weighted sum with a second set of weights when the first remainder reaches a given value. An indeterminate operand yields `false`, so the branch does not apply and the enclosing `CHOOSE` falls through.
+
 ### 3.4 Canonicalization operations
 
 #### `CANONICALIZATION_OP_KIND_SEQUENCE`

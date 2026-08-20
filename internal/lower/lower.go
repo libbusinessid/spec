@@ -198,6 +198,7 @@ func (l *lowerer) buildNode(n *typecheck.Node, inputs []uint32) *irv1.Node {
 		op.Lengths = n.Lengths
 		op.Length = n.Length
 		op.MinLength = n.MinLength
+		op.Constant = n.Constant
 		op.MaxLength = n.MaxLength
 		op.Index = n.Index
 		node.Operation = &irv1.Node_PredicateOperation{PredicateOperation: op}

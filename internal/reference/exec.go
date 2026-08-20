@@ -307,27 +307,10 @@ func (m *machine) evalPredicate(f *frame, index uint32) (bool, error) {
 		return !ok, err
 	case irv1.PredicateOpKind_PREDICATE_OP_KIND_PROFILE_IS:
 		return string(f.profile) == op.GetText(), nil
+	case irv1.PredicateOpKind_PREDICATE_OP_KIND_INTEGER_IS:
+		return m.evalIntegerIs(f, node, op)
 	case irv1.PredicateOpKind_PREDICATE_OP_KIND_EQUALS:
-		leftIndex, err := operand(node, 0)
-		if err != nil {
-			return false, err
-		}
-		rightIndex, err := operand(node, 1)
-		if err != nil {
-			return false, err
-		}
-		left, err := m.evalString(f, leftIndex)
-		if err != nil {
-			return false, err
-		}
-		right, err := m.evalString(f, rightIndex)
-		if err != nil {
-			return false, err
-		}
-		if left.absent || right.absent {
-			return false, nil
-		}
-		return left.text == right.text, nil
+		return m.evalEquals(f, node)
 	default:
 		// Every other predicate reads a single string operand, handled below.
 	}
@@ -347,6 +330,52 @@ func (m *machine) evalPredicate(f *frame, index uint32) (bool, error) {
 		return false, nil
 	}
 	return evalStringPredicate(op, value.text)
+}
+
+// evalEquals compares two string operands. An absent operand makes the
+// predicate false, as absence does for every other predicate.
+func (m *machine) evalEquals(f *frame, node *irv1.Node) (bool, error) {
+	leftIndex, err := operand(node, 0)
+	if err != nil {
+		return false, err
+	}
+	rightIndex, err := operand(node, 1)
+	if err != nil {
+		return false, err
+	}
+	left, err := m.evalString(f, leftIndex)
+	if err != nil {
+		return false, err
+	}
+	right, err := m.evalString(f, rightIndex)
+	if err != nil {
+		return false, err
+	}
+	if left.absent || right.absent {
+		return false, nil
+	}
+	return left.text == right.text, nil
+}
+
+// evalIntegerIs is the only predicate reading an integer.
+//
+// An indeterminate operand yields false rather than an error: the branch simply
+// does not apply, and the enclosing CHOOSE falls through to its default. That is
+// what lets a register recompute its sum with a second set of weights when the
+// first remainder reaches a given value.
+func (m *machine) evalIntegerIs(f *frame, node *irv1.Node, op *irv1.PredicateOperation) (bool, error) {
+	first, err := operand(node, 0)
+	if err != nil {
+		return false, err
+	}
+	v, err := m.evalInteger(f, first)
+	if err != nil {
+		return false, err
+	}
+	if v.indeterminate {
+		return false, nil
+	}
+	return v.value == op.GetConstant(), nil
 }
 
 // evalStringPredicate evaluates the predicates that read a single present

@@ -44,6 +44,7 @@ func shapeOf(n *irv1.Node) (nodeShape, error) {
 		mark(p, features.ParamMinLength, s.MinLength != nil)
 		mark(p, features.ParamMaxLength, s.MaxLength != nil)
 		mark(p, features.ParamIndex, s.Index != nil)
+		mark(p, features.ParamConstant, s.Constant != nil)
 		return nodeShape{features.CategoryPredicate, int32(s.GetKind()), p}, nil
 	case *irv1.Node_CanonicalizationOperation:
 		s := op.CanonicalizationOperation

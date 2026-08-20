@@ -179,6 +179,9 @@ message PredicateOperation {
   optional uint32 min_length = 6;
   optional uint32 max_length = 7;
   optional uint32 index = 8;
+  // The literal an integer operand is compared against, for INTEGER_IS. Signed
+  // and bounded like every other integer of the IR.
+  optional int64 constant = 9;
 }
 
 // CanonicalizationOperation transforms the current value.
@@ -329,6 +332,9 @@ enum PredicateOpKind {
   PREDICATE_OP_KIND_ANY = 17;
   PREDICATE_OP_KIND_NOT = 18;
   PREDICATE_OP_KIND_PROFILE_IS = 19;
+  // True when an integer expression equals a literal. Every other predicate
+  // reads a string, which left no way to branch on the value of a remainder.
+  PREDICATE_OP_KIND_INTEGER_IS = 20;
 }
 
 // CanonicalizationOpKind enumerates the V1 canonicalization steps.
