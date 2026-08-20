@@ -12,12 +12,28 @@ if [[ -z "${urls}" ]]; then
   exit 1
 fi
 
+# A browser user agent, because several registers answer a bare curl with a
+# challenge page. Identifying as a browser is what a reader would do.
+agent="Mozilla/5.0 (compatible; libbusinessid-source-check/1.0)"
+
 while IFS= read -r url; do
   [[ -n "${url}" ]] || continue
-  code="$(curl -sS -o /dev/null -w '%{http_code}' -L --max-time 30 "${url}" || echo 000)"
+  code="$(curl -sS -o /dev/null -w '%{http_code}' -L -A "${agent}" --max-time 30 "${url}" || echo 000)"
   case "${code}" in
-    2*|3*) echo "ok   ${code} ${url}" ;;
-    *)     echo "::warning::source unreachable (${code}): ${url}"; status=1 ;;
+    2*|3*)
+      echo "ok   ${code} ${url}"
+      ;;
+    401|403|429)
+      # The server answered and refused this client. The page is there; a bot
+      # is not welcome to it. Treating that as a dead source would make the
+      # check cry wolf every week on registers that simply block automation,
+      # and a real removal would then go unnoticed among the noise.
+      echo "note ${code} ${url} (reachable, refuses automated clients)"
+      ;;
+    *)
+      echo "::error::source unreachable (${code}): ${url}"
+      status=1
+      ;;
   esac
 done <<< "${urls}"
 

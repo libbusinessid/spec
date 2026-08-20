@@ -76,4 +76,116 @@ dispatcher "euid" {
     canonical_prefix  = "LT"
     identifier        = identifier.euid.LT
   }
+
+  target {
+    country_code      = "RO"
+    accepted_prefixes = ["RO"]
+    canonical_prefix  = "RO"
+    identifier        = identifier.euid.RO
+  }
+
+  target {
+    country_code      = "CY"
+    accepted_prefixes = ["CY"]
+    canonical_prefix  = "CY"
+    identifier        = identifier.euid.CY
+  }
+
+  target {
+    country_code      = "EL"
+    accepted_prefixes = ["EL"]
+    canonical_prefix  = "EL"
+    identifier        = identifier.euid.EL
+  }
+
+  target {
+    country_code      = "HR"
+    accepted_prefixes = ["HR"]
+    canonical_prefix  = "HR"
+    identifier        = identifier.euid.HR
+  }
+
+  target {
+    country_code      = "HU"
+    accepted_prefixes = ["HU"]
+    canonical_prefix  = "HU"
+    identifier        = identifier.euid.HU
+  }
+
+  target {
+    country_code      = "IE"
+    accepted_prefixes = ["IE"]
+    canonical_prefix  = "IE"
+    identifier        = identifier.euid.IE
+  }
+
+  target {
+    country_code      = "LU"
+    accepted_prefixes = ["LU"]
+    canonical_prefix  = "LU"
+    identifier        = identifier.euid.LU
+  }
+
+  target {
+    country_code      = "MT"
+    accepted_prefixes = ["MT"]
+    canonical_prefix  = "MT"
+    identifier        = identifier.euid.MT
+  }
+
+  target {
+    country_code      = "NL"
+    accepted_prefixes = ["NL"]
+    canonical_prefix  = "NL"
+    identifier        = identifier.euid.NL
+  }
+
+  target {
+    country_code      = "PL"
+    accepted_prefixes = ["PL"]
+    canonical_prefix  = "PL"
+    identifier        = identifier.euid.PL
+  }
+
+  target {
+    country_code      = "SI"
+    accepted_prefixes = ["SI"]
+    canonical_prefix  = "SI"
+    identifier        = identifier.euid.SI
+  }
+
+  target {
+    country_code      = "AT"
+    accepted_prefixes = ["AT"]
+    canonical_prefix  = "AT"
+    identifier        = identifier.euid.AT
+  }
+
+  target {
+    country_code      = "DE"
+    accepted_prefixes = ["DE"]
+    canonical_prefix  = "DE"
+    identifier        = identifier.euid.DE
+  }
+
+  target {
+    country_code      = "BG"
+    accepted_prefixes = ["BG"]
+    canonical_prefix  = "BG"
+    identifier        = identifier.euid.BG
+  }
+
+  target {
+    country_code      = "FI"
+    accepted_prefixes = ["FI"]
+    canonical_prefix  = "FI"
+    identifier        = identifier.euid.FI
+  }
+
+  target {
+    country_code      = "LV"
+    accepted_prefixes = ["LV"]
+    canonical_prefix  = "LV"
+    identifier        = identifier.euid.LV
+  }
 }
