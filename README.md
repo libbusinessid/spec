@@ -5,6 +5,11 @@ the intermediate representation, the official rules, the shared conformance
 suite and the compiler that turns all of it into the artifacts the engines
 consume.
 
+**Which identifiers does it support?**
+[`docs/identifier-atlas.md`](docs/identifier-atlas.md) answers that, and answers
+it next to what every major economy issues — so the gap between the two is
+visible rather than implied.
+
 ## What this project does, and what it does not
 
 LibBusinessID answers two precise questions about a business identifier:
@@ -184,6 +189,7 @@ passes the whole conformance suite on a published bundle. Anything other than
 
 | Document | Contents |
 |---|---|
+| [`docs/identifier-atlas.md`](docs/identifier-atlas.md) | which identifiers are supported, at what maturity, and what the rest of the world issues |
 | [`docs/language.md`](docs/language.md) | the authoring language, its declarations, expressions and restrictions |
 | [`docs/ir.md`](docs/ir.md) | generated: the exhaustive normative semantics of every opcode, limit and error |
 | [`docs/features.md`](docs/features.md) | generated: the frozen content of every capability ID |

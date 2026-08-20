@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	"github.com/hashicorp/hcl/v2/hclwrite"
 
@@ -108,6 +109,7 @@ func runLint(args []string, stdout, stderr io.Writer) int {
 	lintFormatting(bag, opts)
 	lintProvenance(bag, result)
 	lintStructuralSeparators(bag, result)
+	lintAtlas(bag, result)
 	return report(bag, opts.json, stdout, stderr)
 }
 
@@ -229,6 +231,104 @@ func lintProvenance(bag *diagnostics.Bag, result *buildResult) {
 		bag.Errorf(diagnostics.Position{}, "LINT005",
 			"the definition %s/%s carries no source", d.GetKind(), country)
 	}
+}
+
+// atlasPath is the document that states, for every country that matters to the
+// roadmap, which identifier it issues and whether this library covers it.
+const atlasPath = "docs/identifier-atlas.md"
+
+// lintAtlas refuses a definition the atlas does not mention.
+//
+// The atlas answers "what does this library actually support", and it is the
+// page a reader lands on before any other. It is written by hand because most
+// of it is about the world rather than about this repository, and a hand
+// written page that tracks generated artifacts drifts - the engine PROVENANCE
+// headers proved that, sitting three versions behind their own lock. So the
+// half that can be checked is checked: a rule that ships without an entry is
+// a rule nobody can find.
+//
+// The check is deliberately shallow, and it is worth being precise about how
+// shallow: it asks whether the document names the identifier somewhere and the
+// jurisdiction somewhere, not whether it names them in the same row, and not
+// whether what it says about them is true. It catches the omission of a whole
+// definition, which is the failure that actually happens. Judging prose is not
+// something a linter should pretend to do.
+func lintAtlas(bag *diagnostics.Bag, result *buildResult) {
+	raw, err := os.ReadFile(atlasPath)
+	if err != nil {
+		// Running from somewhere other than the repository root is not itself
+		// an error; the CI always runs from the root, which is what matters.
+		return
+	}
+	checkAtlas(bag, result, string(raw))
+}
+
+// checkAtlas holds the decision, separated from reading the file so it can be
+// tested against a document rather than against the repository.
+func checkAtlas(bag *diagnostics.Bag, result *buildResult, text string) {
+	// The atlas writes identifier names the way a reader says them: VAT rather
+	// than vat, "Company number" rather than company_number, D-U-N-S rather
+	// than duns. Folding case and dropping the separators makes the three
+	// spellings meet without asking the document to be written in kind names.
+	folded := foldName(text)
+	for _, d := range result.rules.Bundle.GetIdentifiers() {
+		country := globalCountry
+		if d.CountryCode != nil {
+			country = d.GetCountryCode()
+		}
+		// A country is covered either by its own row or by a family row that
+		// names it, so the kind alone is not enough to conclude.
+		if strings.Contains(folded, foldName(d.GetKind())) && mentionsCountry(text, country) {
+			continue
+		}
+		bag.Errorf(diagnostics.Position{File: atlasPath}, "LINT006",
+			"the definition %s/%s is missing from %s", d.GetKind(), country, atlasPath)
+	}
+}
+
+// foldName lower cases and removes the separators that distinguish an
+// identifier name written for a reader from the same name written as a kind.
+func foldName(s string) string {
+	var b strings.Builder
+	b.Grow(len(s))
+	for _, r := range strings.ToLower(s) {
+		if r == ' ' || r == '-' || r == '_' || r == '.' {
+			continue
+		}
+		b.WriteRune(r)
+	}
+	return b.String()
+}
+
+// mentionsCountry reports whether the atlas names the jurisdiction, by code or
+// by the English name the tables use.
+func mentionsCountry(text, code string) bool {
+	if code == globalCountry {
+		return true
+	}
+	if strings.Contains(text, "`"+code+"`") {
+		return true
+	}
+	if name, ok := atlasCountryNames[code]; ok {
+		return strings.Contains(text, name)
+	}
+	return false
+}
+
+// atlasCountryNames maps every jurisdiction carrying a definition to the name
+// the atlas tables use for it. A definition for a jurisdiction absent here
+// fails the lint, which is the point: adding a country means placing it on the
+// map.
+var atlasCountryNames = map[string]string{
+	"AT": "Austria", "BE": "Belgium", "BG": "Bulgaria", "CY": "Cyprus",
+	"CZ": "Czechia", "DE": "Germany", "DK": "Denmark", "EE": "Estonia",
+	"EL": "Greece", "ES": "Spain", "FI": "Finland", "FR": "France",
+	"GB": "United Kingdom", "GR": "Greece", "HR": "Croatia", "HU": "Hungary",
+	"IE": "Ireland", "IS": "Iceland", "IT": "Italy", "LI": "Liechtenstein",
+	"LT": "Lithuania", "LU": "Luxembourg", "LV": "Latvia", "MT": "Malta",
+	"NL": "Netherlands", "NO": "Norway", "PL": "Poland", "PT": "Portugal",
+	"RO": "Romania", "SE": "Sweden", "SI": "Slovenia", "SK": "Slovakia",
+	"US": "United States", "XI": "Northern Ireland",
 }
 
 // lintStructuralSeparators refuses a canonicalizer that removes a character its
