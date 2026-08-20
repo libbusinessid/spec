@@ -102,4 +102,46 @@ dispatcher "vat" {
     canonical_prefix  = "LU"
     identifier        = identifier.vat.LU
   }
+
+  target {
+    country_code      = "AT"
+    accepted_prefixes = ["AT"]
+    canonical_prefix  = "AT"
+    identifier        = identifier.vat.AT
+  }
+
+  target {
+    country_code      = "CY"
+    accepted_prefixes = ["CY"]
+    canonical_prefix  = "CY"
+    identifier        = identifier.vat.CY
+  }
+
+  target {
+    country_code      = "HU"
+    accepted_prefixes = ["HU"]
+    canonical_prefix  = "HU"
+    identifier        = identifier.vat.HU
+  }
+
+  target {
+    country_code      = "NL"
+    accepted_prefixes = ["NL"]
+    canonical_prefix  = "NL"
+    identifier        = identifier.vat.NL
+  }
+
+  target {
+    country_code      = "SE"
+    accepted_prefixes = ["SE"]
+    canonical_prefix  = "SE"
+    identifier        = identifier.vat.SE
+  }
+
+  target {
+    country_code      = "SK"
+    accepted_prefixes = ["SK"]
+    canonical_prefix  = "SK"
+    identifier        = identifier.vat.SK
+  }
 }

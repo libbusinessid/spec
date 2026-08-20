@@ -207,3 +207,17 @@ def vat_lu_check(first6: str) -> str:
 
 def vat_dk_ok(body8: str) -> bool:
     return _weighted(body8, (2, 7, 6, 5, 4, 3, 2, 1)) % 11 == 0
+
+
+def vat_nl_check(first8: str):
+    m = sum(int(c) * w for c, w in zip(first8, (9, 8, 7, 6, 5, 4, 3, 2))) % 11
+    return None if m == 10 else str(m)
+
+
+def vat_hu_check(first7: str) -> str:
+    total = sum(int(c) * w for c, w in zip(first7, (9, 7, 3, 1, 9, 7, 3)))
+    return str((10 - total % 10) % 10)
+
+
+def vat_sk_ok(body10: str) -> bool:
+    return int(body10) % 11 == 0
