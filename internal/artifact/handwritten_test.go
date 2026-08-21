@@ -79,11 +79,29 @@ func TestEveryEngineContractRefusesARuntimeLoader(t *testing.T) {
 				t.Errorf("%s declares %q.\n"+
 					"A factory taking bundle bytes forces the whole loader and the "+
 					"whole opcode machine into every caller, which is an interpreter.\n"+
-					"engine.md section 1.1 requires a generator.",
+					"engine.md section 1.2 requires a generator.",
 					filepath.Base(path), strings.TrimSpace(m))
 			}
-			if !strings.Contains(text, "section 1.1") {
-				t.Errorf("%s never points at engine.md section 1.1.\n"+
+			// A signature is not the only way a document asks for an
+			// interpreter. The Go contract stated the generator rule in its
+			// opening and then, three paragraphs later, required the library to
+			// embed the bundle, decode the IR defensively and build an engine
+			// from custom bytes. The first version of this test looked for
+			// declarations and saw none of it.
+			for _, phrase := range []string{
+				"embarquer `businessid-rules.binpb`",
+				"bytes personnalisés",
+				"go:embed",
+			} {
+				if strings.Contains(text, phrase) {
+					t.Errorf("%s asks for %q.\n"+
+						"That is an interpreter stated in prose rather than in a "+
+						"signature: the bundle is an input to the generator, not "+
+						"data in the published package.", filepath.Base(path), phrase)
+				}
+			}
+			if !strings.Contains(text, "section 1.2") {
+				t.Errorf("%s never points at engine.md section 1.2.\n"+
 					"An implementer reading only this document would not learn that "+
 					"the bundle is read by a generator rather than interpreted.",
 					filepath.Base(path))

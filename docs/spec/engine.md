@@ -45,7 +45,7 @@ arrêter l’implémentation, ouvrir un défaut dans `spec` et ne pas choisir ar
 une interprétation. Le code Go de l’interpréteur de référence n’est jamais une source
 normative et ne doit pas être copié.
 
-## 1.1 Générateur, pas interpréteur
+## 1.2 Générateur, pas interpréteur
 
 Un moteur NE DOIT PAS interpréter le bundle à l’exécution. Le travail se sépare en
 deux :

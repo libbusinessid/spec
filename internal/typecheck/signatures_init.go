@@ -92,14 +92,17 @@ func buildSignatures() map[string]signature {
 		operand(), constantArg())
 
 	k := features.CategoryChecksum
-	register(table, k, int32(irv1.ChecksumOpKind_CHECKSUM_OP_KIND_LUHN), operand())
+	register(table, k, int32(irv1.ChecksumOpKind_CHECKSUM_OP_KIND_LUHN),
+		operand(), optStrArg(features.ParamMessageKey))
 	register(table, k, int32(irv1.ChecksumOpKind_CHECKSUM_OP_KIND_ISO7064_MOD97_10), operand())
 	register(table, k, int32(irv1.ChecksumOpKind_CHECKSUM_OP_KIND_COMPARE_DIGIT),
-		operand(), operand(), intArg(features.ParamIndex))
+		operand(), operand(), intArg(features.ParamIndex),
+		optStrArg(features.ParamMessageKey))
 	register(table, k, int32(irv1.ChecksumOpKind_CHECKSUM_OP_KIND_COMPARE_SLICE),
-		operand(), operand(), intArg(features.ParamStart), intArg(features.ParamEnd))
+		operand(), operand(), intArg(features.ParamStart), intArg(features.ParamEnd),
+		optStrArg(features.ParamMessageKey))
 	register(table, k, int32(irv1.ChecksumOpKind_CHECKSUM_OP_KIND_COMPARE_CONSTANT),
-		operand(), constantArg())
+		operand(), constantArg(), optStrArg(features.ParamMessageKey))
 	register(table, k, int32(irv1.ChecksumOpKind_CHECKSUM_OP_KIND_CHOOSE), variadic())
 	register(table, k, int32(irv1.ChecksumOpKind_CHECKSUM_OP_KIND_WHEN), operand(), operand())
 	register(table, k, int32(irv1.ChecksumOpKind_CHECKSUM_OP_KIND_ALL_CHECKS), variadic())

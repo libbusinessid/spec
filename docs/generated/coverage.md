@@ -2,7 +2,7 @@
 
 # Rule coverage
 
-Rules version `2026.08.14`, IR format version `1`.
+Rules version `2026.08.15`, IR format version `1`.
 
 ## Country by kind matrix
 
@@ -681,7 +681,7 @@ It shrinks when a rule needs one of them, and it must not grow silently.
 
 ## Conformance statistics
 
-Total cases: **663**.
+Total cases: **664**.
 
 | Kind | Cases |
 |---|---:|
@@ -722,7 +722,7 @@ Total cases: **663**.
 | `registracijas_numurs` | 3 |
 | `registrikood` | 3 |
 | `siren` | 40 |
-| `siret` | 22 |
+| `siret` | 23 |
 | `unknown_kind` | 2 |
 | `uscc` | 19 |
 | `vat` | 178 |
@@ -741,8 +741,8 @@ Total cases: **663**.
 | `canonicalize` | 13 |
 | `capabilities` | 2 |
 | `characters` | 27 |
-| `checksum` | 154 |
-| `composition` | 23 |
+| `checksum` | 155 |
+| `composition` | 24 |
 | `country` | 15 |
 | `cycle` | 1 |
 | `decoder` | 27 |
@@ -760,7 +760,7 @@ Total cases: **663**.
 | `group` | 1 |
 | `hole` | 6 |
 | `implicit` | 1 |
-| `invalid` | 308 |
+| `invalid` | 309 |
 | `iso7064` | 2 |
 | `legacy` | 4 |
 | `length` | 74 |
@@ -789,7 +789,7 @@ Total cases: **663**.
 | `strict` | 6 |
 | `structure` | 2 |
 | `suffix` | 4 |
-| `synthetic` | 569 |
+| `synthetic` | 570 |
 | `truncation` | 1 |
 | `types` | 1 |
 | `unknown-field` | 1 |
@@ -802,5 +802,5 @@ Total cases: **663**.
 | Data classification | Cases |
 |---|---:|
 | `public_business_identifier` | 66 |
-| `synthetic` | 597 |
+| `synthetic` | 598 |
 

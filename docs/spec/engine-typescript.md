@@ -21,7 +21,7 @@ commune tout en offrant des types TypeScript naturels et sûrs.
 - TypeScript strict ;
 - cible ES2020 ou plus récente documentée ;
 - aucune API `fs`, `Buffer`, `process` ou DOM dans le cœur ;
-- `@bufbuild/protobuf` / Protobuf-ES pour décoder l’IR ;
+- `@bufbuild/protobuf` / Protobuf-ES pour décoder l’IR **dans le générateur** ; le paquet publié ne décode rien ;
 - package tree-shakeable avec `sideEffects: false` si exact ;
 - exports explicites et types inclus ;
 - bundle officiel disponible synchroniquement sans fetch réseau.
@@ -120,7 +120,7 @@ await, fetch ou lecture filesystem nécessaire au chemin par défaut.
 Il n’y a pas de fabrique acceptant un bundle en octets à l’exécution. Une version
 antérieure de ce document déclarait `static fromRules(bytes: Uint8Array)`, ce qui
 imposait de porter le validateur complet et la machine d’exécution de l’IR chez chaque
-appelant — c’est-à-dire un interpréteur, que `engine.md` section 1.1 interdit. Un jeu
+appelant — c’est-à-dire un interpréteur, que `engine.md` section 1.2 interdit. Un jeu
 de règles personnalisé passe par le générateur, à la construction.
 
 ## Interface registre TypeScript
