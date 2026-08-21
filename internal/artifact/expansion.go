@@ -1,6 +1,8 @@
 package artifact
 
 import (
+	"slices"
+
 	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
 	"github.com/libbusinessid/spec/internal/limits"
 )
@@ -79,15 +81,31 @@ func emissionRoots(p *irv1.Program, costs []int64) []uint32 {
 		roots = append(roots, p.GetSubjectNode())
 	}
 
-	// A capture the root already reaches is emitted inside the root's
-	// expression; only the ones it misses add anything.
-	reached := reachableFrom(p, roots)
+	// A capture any root already reaches is emitted inside that root's
+	// expression; only the ones no root reaches add anything.
+	//
+	// The captures are taken from the highest index down, because an operand
+	// always sits at a lower index than the node reading it: a capture reached
+	// by another is therefore seen after the one reaching it, and one pass
+	// settles it. Walking the list in its own order made the answer depend on
+	// how the captures happened to be listed.
+	indices := make([]uint32, 0, len(p.GetCaptures()))
 	for _, c := range p.GetCaptures() {
-		if inRange(c.GetNode()) && !reached[c.GetNode()] {
-			roots = append(roots, c.GetNode())
-			for n := range reachableFrom(p, []uint32{c.GetNode()}) {
-				reached[n] = true
-			}
+		if inRange(c.GetNode()) {
+			indices = append(indices, c.GetNode())
+		}
+	}
+	slices.Sort(indices)
+	slices.Reverse(indices)
+
+	reached := reachableFrom(p, roots)
+	for _, node := range indices {
+		if reached[node] {
+			continue
+		}
+		roots = append(roots, node)
+		for n := range reachableFrom(p, []uint32{node}) {
+			reached[n] = true
 		}
 	}
 	return roots
