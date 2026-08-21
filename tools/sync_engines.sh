@@ -26,6 +26,16 @@ fi
 
 sha() { sha256sum "$1" | cut -d' ' -f1; }
 
+# The figures PROVENANCE.md quotes come from the bundle, not from anyone's
+# memory of it.
+inspect="$(cd "${here}" && go run ./cmd/businessidc inspect "${dist}/businessid-rules-${version}.binpb")"
+definitions="$(printf '%s\n' "${inspect}" | sed -n 's/^identifiers *\([0-9]*\).*/\1/p')"
+nodes="$(printf '%s\n' "${inspect}" | sed -n 's/^programs *[0-9]* (\([0-9]*\) nodes).*/\1/p')"
+capabilities="$(printf '%s\n' "${inspect}" | grep -cE '^ +[0-9]+ [A-Z]')"
+unused_ops="$(sed -n 's/^\([0-9]*\) of [0-9]* operations.*/\1/p' "${here}/docs/generated/coverage.md" | head -1)"
+total_ops="$(sed -n 's/^[0-9]* of \([0-9]*\) operations.*/\1/p' "${here}/docs/generated/coverage.md" | head -1)"
+used_ops="$((total_ops - unused_ops))"
+
 for engine in businessid-go businessid-swift businessid-kotlin businessid-typescript; do
   target="${root}/${engine}"
   [[ -d "${target}/spec" ]] || { echo "skip ${engine}: no spec directory"; continue; }
@@ -71,6 +81,27 @@ features_doc_sha256 = "$(sha "${dist}/features.md")"
 stability = "$(jq -r .stability "${dist}/businessid-manifest-${version}.json")"
 source_commit = "${commit}"
 LOCK
+
+  # PROVENANCE.md is assembled rather than copied: a common body, the notes for
+  # this language, and the figures read from the bundle. It used to be four hand
+  # written files, and they drifted exactly as hand written files do - still
+  # describing seven definitions and 185 IR nodes when the bundle carried
+  # ninety four and 2375.
+  lang="${engine#businessid-}"
+  {
+    printf '# Where these files come from, and what to build\n\n'
+    printf 'Copied from `github.com/libbusinessid/spec` at commit\n'
+    printf '`%s`, rules version\n`%s`, stability `%s`.\n\n' \
+      "${commit}" "${version}" "$(jq -r .stability "${dist}/businessid-manifest-${version}.json")"
+    sed -e "s/{{DEFINITIONS}}/${definitions}/g" \
+        -e "s/{{NODES}}/${nodes}/g" \
+        -e "s/{{CAPABILITIES}}/${capabilities}/g" \
+        -e "s/{{USED_OPS}}/${used_ops}/g" \
+        -e "s/{{TOTAL_OPS}}/${total_ops}/g" \
+        "${here}/docs/spec/provenance/body.md"
+    printf '\n'
+    cat "${here}/docs/spec/provenance/${lang}.md"
+  } > "${target}/spec/PROVENANCE.md"
 
   # The header of PROVENANCE.md names the same commit and version as the lock.
   # It is the first thing a reader of the engine repository sees, so a stale
