@@ -99,6 +99,24 @@ func RenderIRDoc() []byte {
 	w("IR at validation time applies the budget as written. Section 2.4 of the")
 	w("specification binds observable results, never the strategy that produces them.")
 	w("")
+	w("A generator that inlines an operand where the graph reads it more than once")
+	w("must bound what it emits, and the budget above is that bound: a generated")
+	w("program may hold at most %d operation instances, counted after inlining.",
+		limits.MaxStepsPerValidation)
+	w("")
+	w("The bound is not a formality. The node count of a program is bounded, but")
+	w("the graph is a DAG, and a DAG whose every node reads the previous one twice")
+	w("expands exponentially while passing all twenty four load checks. Without a")
+	w("bound, such a bundle is a denial of service against the generator rather")
+	w("than against the engine, and the twenty four checks would not see it.")
+	w("")
+	w("Choosing the budget rather than a new number is deliberate: a generated")
+	w("program may not carry more instances than an interpreter would have taken")
+	w("steps to run it once. A generator that shares a repeated operand instead of")
+	w("inlining it stays free to do so, provided the sharing preserves the short")
+	w("circuit of `ALL`, `ANY` and of the assertion sequence, which stop at the")
+	w("first decisive operand.")
+	w("")
 	w("### 2.1 Calls")
 	w("")
 	w("`CALL_OP_KIND_FORMAT` runs a format program with the operand as its subject and")
@@ -431,6 +449,7 @@ var loadChecks = []string{
 	"operand count, operand types and strictly lower operand indices",
 	"only the parameters the operation declares, and every required parameter",
 	"arithmetic bounds: moduli, weights, remainder tables, indices, provable integer widths and the alphabet of a custom mapping",
+	"expansion within the evaluation budget once repeated operands are inlined",
 	"root, subject and capture nodes inside the program and correctly typed",
 	"program shape: accepted root per kind, `WHEN` only inside `CHOOSE`, and a " +
 		"pre-canonicalization program restricted to its five permitted operations",

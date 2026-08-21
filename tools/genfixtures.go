@@ -567,6 +567,30 @@ func main() {
 	alphabetFixture("alphabet_missing.binpb", custom, nil)
 	alphabetFixture("alphabet_unread.binpb", irv1.CharMapping_CHAR_MAPPING_DIGIT_VALUE, &digits)
 
+	// A graph whose every node reads the previous one twice. The node count is
+	// bounded, the graph is acyclic, the depth is fine - and a generator that
+	// inlines repeated operands emits 2^n instances. The TypeScript engine hit
+	// this the moment it stopped interpreting.
+	explosive := clone(base)
+	{
+		// Node 0 of a checksum program is the subject, which is the string this
+		// chain needs; the last node is a checksum outcome.
+		nodes := explosive.Programs[2].Nodes
+		first := uint32(0)
+		for range 40 {
+			nodes = append(nodes, &irv1.Node{
+				OutputType: irv1.ValueType_VALUE_TYPE_STRING,
+				InputNodes: []uint32{first, first},
+				Operation: &irv1.Node_StringOperation{StringOperation: &irv1.StringOperation{
+					Kind: irv1.StringOpKind_STRING_OP_KIND_CONCAT,
+				}},
+			})
+			first = uint32(len(nodes) - 1)
+		}
+		explosive.Programs[2].Nodes = nodes
+	}
+	write(filepath.Join(root, "program_expansion.binpb"), marshal(explosive))
+
 	// A source stating a tier outside the enumeration. UNSPECIFIED is not a
 	// refusal - it means the source states no tier - but a value nothing can
 	// read is a forged bundle.

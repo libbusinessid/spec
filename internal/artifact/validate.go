@@ -171,6 +171,11 @@ func (v *validator) validatePrograms() error {
 		if int(p.GetRootNode()) >= len(nodes) {
 			return invalidf("program %d has an out of range root node", p.GetId())
 		}
+		// A generator inlining repeated operands emits one instance per path,
+		// not one per node, and a bounded node count does not bound that.
+		if err := checkExpansion(p); err != nil {
+			return err
+		}
 		if err := v.validateProgramShape(p, nodes); err != nil {
 			return err
 		}
