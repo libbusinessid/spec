@@ -61,7 +61,6 @@ public struct ValidationReport: Sendable, Hashable, Codable { ... }
 public final class BusinessIDEngine: @unchecked Sendable {
     public static let `default`: BusinessIDEngine
 
-    public init(rules: Data) throws
     public func canonicalize(
         _ input: IdentifierInput,
         options: ValidationOptions = .init()
@@ -80,6 +79,12 @@ public final class BusinessIDEngine: @unchecked Sendable {
     ) -> ValidationReport
 }
 ```
+
+Il n'y a pas d'initialiseur acceptant un bundle en octets à l'exécution. Une version
+antérieure de ce document déclarait `public init(rules: Data) throws`, ce qui imposait
+de porter le validateur complet et la machine d'exécution de l'IR chez chaque
+appelant — c'est-à-dire un interpréteur, que `engine.md` section 1.1 interdit. Un jeu
+de règles personnalisé passe par le générateur, à la construction.
 
 N’utilise `@unchecked Sendable` que si l’immuabilité est démontrée et documentée ;
 préfère une `struct Sendable` ou un stockage interne réellement `Sendable` lorsque

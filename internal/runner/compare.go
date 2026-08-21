@@ -116,6 +116,10 @@ func cmpStep(add func(string, string, string), name string, want *conformancev1.
 	}
 	cmpStatus(add, name+".status", want.GetStatus(), got.GetStatus())
 	cmpReason(add, name+".reasonCode", want.GetReasonCode(), got.GetReasonCode())
+	// engine.md section 11.2 states that the common tests compare the code and
+	// the key. The key travelled nowhere until ObservedStep carried it, so the
+	// engines were held to a weaker contract than the corpus states.
+	cmpString(add, name+".messageKey", want.GetMessageKey(), got.GetMessageKey())
 }
 
 func cmpString(add func(string, string, string), field, want, got string) {

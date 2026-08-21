@@ -146,10 +146,17 @@ func loadOutcome(payload []byte) *testeev1.ObservedLoad {
 }
 
 func step(s reference.StepResult) *testeev1.ObservedStep {
-	return &testeev1.ObservedStep{
+	out := &testeev1.ObservedStep{
 		Status:     statusOf(s.Status),
 		ReasonCode: s.ReasonCode,
 	}
+	// Absent when the result came from before any rule assertion, which is what
+	// engine.md section 11.2 requires: dispatch, input_too_long, not_requested
+	// and the not_run reasons carry no key.
+	if s.MessageKey != nil {
+		out.MessageKey = s.MessageKey
+	}
+	return out
 }
 
 // statusOf maps the engine's status onto the wire enum. An unknown status is

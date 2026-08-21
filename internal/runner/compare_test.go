@@ -1,6 +1,7 @@
 package runner
 
 import (
+	"strings"
 	"testing"
 
 	"google.golang.org/protobuf/proto"
@@ -318,5 +319,37 @@ func TestASweepRefusesAnInvalidChecksumToo(t *testing.T) {
 				t.Fatalf("refused=%v, want %v: %v", got, tc.refused, d)
 			}
 		})
+	}
+}
+
+// engine.md section 11.2 states that the common tests compare the reason code
+// and the message key. They compared only the code: ObservedStep did not carry
+// the key, so an engine could emit any key at all and no case would notice,
+// while businessidc verify checked it against the reference interpreter. The
+// engines were held to a weaker contract than the corpus states.
+func TestTheMessageKeyIsCompared(t *testing.T) {
+	c := validationCase(proto.String("FR"))
+	c.GetExpected().GetValidationReport().GetFormat().MessageKey = proto.String("fr.siren.length")
+
+	same := validationResponse("552100554")
+	same.GetValidationReport().GetFormat().MessageKey = proto.String("fr.siren.length")
+	if d := compare(c, same, false); len(d) != 0 {
+		t.Fatalf("a matching key must not differ: %v", d)
+	}
+
+	other := validationResponse("552100554")
+	other.GetValidationReport().GetFormat().MessageKey = proto.String("fr.siren.characters")
+	d := compare(c, other, false)
+	if len(d) == 0 {
+		t.Fatal("a different message key must be reported")
+	}
+	if !strings.Contains(d[0].Field, "messageKey") {
+		t.Fatalf("the difference must name the field, got %v", d[0])
+	}
+
+	// A key the engine omits where the corpus states one is also a difference.
+	absent := validationResponse("552100554")
+	if d := compare(c, absent, false); len(d) == 0 {
+		t.Fatal("an omitted message key must be reported")
 	}
 }

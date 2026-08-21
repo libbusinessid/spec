@@ -13,6 +13,11 @@ est la spécification normative commune ; ce document ajoute les décisions prop
 contrainte Go rend l’API proposée impossible : dans ce cas, documente l’écart et
 préserve la sémantique sérialisée commune.
 
+Le moteur ne lit pas le bundle à l'exécution : un générateur le lit à la construction
+et émet du code, comme l'exige `engine.md` section 1.1. Il n'existe donc aucune
+fabrique publique acceptant un bundle en octets, et un jeu de règles personnalisé
+passe par le générateur.
+
 Le résultat doit être une bibliothèque Go de production : sûre, idiomatique,
 documentée, fortement testée et installable comme module public. Ne réalise pas un
 port ligne à ligne d’un autre moteur.

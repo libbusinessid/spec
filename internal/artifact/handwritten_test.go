@@ -3,6 +3,7 @@ package artifact_test
 import (
 	"os"
 	"path/filepath"
+	"regexp"
 	"slices"
 	"strings"
 	"testing"
@@ -50,6 +51,44 @@ func TestEngineDocumentPutsTheVersionChecksFirst(t *testing.T) {
 			"ir.md section 10 puts the version checks first, and the order is the "+
 			"difference between reporting a version gap and reporting a forgery.",
 			version, features, unknown)
+	}
+}
+
+// Every engine contract must point at the rule that the bundle is read by a
+// generator, never interpreted at runtime, and none may declare a factory
+// taking bundle bytes.
+//
+// This is the defect that cost a whole engine. spec.md permitted interpretation
+// in as many words, engine.md said nothing either way, and two contracts
+// required a factory over bytes - which forces the loader and the opcode
+// machine into every caller, an interpreter by another name. The TypeScript
+// engine followed the normative document and built one.
+func TestEveryEngineContractRefusesARuntimeLoader(t *testing.T) {
+	contracts, err := filepath.Glob(filepath.Join("..", "..", "docs", "spec", "engine-*.md"))
+	if err != nil || len(contracts) == 0 {
+		t.Fatalf("no engine contract found: %v", err)
+	}
+	// A declaration, not the sentence explaining why there is none.
+	declaration := regexp.MustCompile(
+		`(?m)^\s*(public |static |func )?(init\(rules|fromRules|from_rules|fromBytes)\b`)
+
+	for _, path := range contracts {
+		t.Run(filepath.Base(path), func(t *testing.T) {
+			text := readDoc(t, path)
+			if m := declaration.FindString(text); m != "" {
+				t.Errorf("%s declares %q.\n"+
+					"A factory taking bundle bytes forces the whole loader and the "+
+					"whole opcode machine into every caller, which is an interpreter.\n"+
+					"engine.md section 1.1 requires a generator.",
+					filepath.Base(path), strings.TrimSpace(m))
+			}
+			if !strings.Contains(text, "section 1.1") {
+				t.Errorf("%s never points at engine.md section 1.1.\n"+
+					"An implementer reading only this document would not learn that "+
+					"the bundle is read by a generator rather than interpreted.",
+					filepath.Base(path))
+			}
+		})
 	}
 }
 
