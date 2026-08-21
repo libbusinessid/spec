@@ -100,6 +100,16 @@ func TestEveryEngineContractRefusesARuntimeLoader(t *testing.T) {
 						"data in the published package.", filepath.Base(path), phrase)
 				}
 			}
+			// A registry lookup carries an API token, so it must never be
+			// reachable from a browser. engine.md section 10 defers the whole
+			// surface, and a public type is a commitment SemVer freezes: a
+			// contract that declares one now cannot take it back.
+			if strings.Contains(text, "RegistryProvider") {
+				t.Errorf("%s declares RegistryProvider.\n"+
+					"engine.md section 10 defers the registry: a public type is a "+
+					"commitment, and this one has not been specified yet.",
+					filepath.Base(path))
+			}
 			if !strings.Contains(text, "section 1.2") {
 				t.Errorf("%s never points at engine.md section 1.2.\n"+
 					"An implementer reading only this document would not learn that "+

@@ -108,22 +108,24 @@ Le moteur par défaut doit charger la ressource une fois, de façon déterminist
 thread-safe. Une absence/corruption de la ressource doit être détectée par les tests
 de packaging et ne doit pas devenir un crash déclenché par une entrée utilisateur.
 
-## Interface registre Swift
+### Registre : rien à livrer en V1
 
-Définir un protocole sans implémentation :
+Ce moteur n'expose aucun type de registre. `engine.md` section 10 diffère la
+consultation d'un registre distant à une version ultérieure, et un moteur qui n'en
+porte pas est pleinement conforme.
 
-```swift
-public protocol RegistryProvider: Sendable {
-    func supports(kind: IdentifierKind, countryCode: String?) -> Bool
-    func lookup(_ input: RegistryInput) async throws -> RegistryResult
-}
-```
+Trois choses à ne pas faire, parce qu'elles fermeraient la porte :
 
-- aucune dépendance URLSession dans le cœur ;
-- aucun provider concret ;
-- `async throws` réservé au registre ;
-- distinguer `notFound` de l’erreur technique ;
-- aucune invocation depuis `validate`.
+- n'exposez aucun type de registre, même marqué expérimental : un type public est un
+  engagement que SemVer fige ;
+- ne rendez aucune méthode de validation asynchrone « au cas où » — la validation
+  locale reste synchrone définitivement ;
+- ne mettez aucune dépendance HTTP dans le paquet du cœur.
+
+Une consultation de registre porte un jeton d'API : elle ne devra jamais être possible
+depuis un navigateur, et vivra donc dans un module séparé, chargé côté serveur
+uniquement.
+
 
 ## SwiftProtobuf
 
@@ -170,7 +172,6 @@ unique. Les tests couvrent :
 - strict concurrency ;
 - canonicalisation Unicode/ASCII exacte ;
 - overflow et bornes d’indices ;
-- interface registre mockée, sans réseau ;
 - exemples DocC compilables.
 
 Ajouter property-based testing avec une dépendance maintenue ou générateurs internes
@@ -234,7 +235,6 @@ un exemple iOS minimal sans en faire une dépendance du package.
 - pas d’API publique en types générés ;
 - pas de `NSRegularExpression` pour les règles ;
 - pas de copie naïve d’interfaces Go/Kotlin ;
-- pas de provider registre concret ;
 - pas de réduction des cas ou seuils.
 
 ## Livrables et définition de terminé
