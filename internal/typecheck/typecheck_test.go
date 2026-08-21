@@ -167,7 +167,10 @@ func TestTypecheckRejections(t *testing.T) {
 		{"type mismatch", `checksum "a" "b" { rule = luhn(length_eq(subject(), 3)) }`, typecheck.CodeTypeMismatch, ""},
 		{"root type", `checksum "a" "b" { rule = subject() }`, typecheck.CodeTypeMismatch, ""},
 		{"arity too few", `checksum "a" "b" { rule = compare_digit(digits_to_integer(slice(subject(),0,2)), subject()) }`, typecheck.CodeArity, "missing argument"},
-		{"arity too many", `checksum "a" "b" { rule = luhn(subject(), subject()) }`, typecheck.CodeArity, ""},
+		// luhn now takes an optional message key after its operand, so two
+		// arguments are legal and three are not.
+		{"arity too many", `checksum "a" "b" { rule = luhn(subject(), "k", "k") }`, typecheck.CodeArity, ""},
+		{"message key must be a literal", `checksum "a" "b" { rule = luhn(subject(), subject()) }`, typecheck.CodeBadConstant, "string literal"},
 		{"subject in canonicalizer", `canonicalizer "a" "b" { steps = [when(is_empty(subject()), trim_whitespace())] }`, typecheck.CodeContext, "subject() is not available"},
 		{"canonicalization in format", `format "a" "b" { checks = [require(is_empty(trim_whitespace()), "empty", "k")] }`, typecheck.CodeContext, "only available in a canonicalizer"},
 		{"assertion in checksum", `checksum "a" "b" { rule = require(is_empty(subject()), "empty", "k") }`, typecheck.CodeContext, "only available in a format rule"},

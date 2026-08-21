@@ -83,7 +83,7 @@ public final class BusinessIDEngine: @unchecked Sendable {
 Il n'y a pas d'initialiseur acceptant un bundle en octets à l'exécution. Une version
 antérieure de ce document déclarait `public init(rules: Data) throws`, ce qui imposait
 de porter le validateur complet et la machine d'exécution de l'IR chez chaque
-appelant — c'est-à-dire un interpréteur, que `engine.md` section 1.1 interdit. Un jeu
+appelant — c'est-à-dire un interpréteur, que `engine.md` section 1.2 interdit. Un jeu
 de règles personnalisé passe par le générateur, à la construction.
 
 N’utilise `@unchecked Sendable` que si l’immuabilité est démontrée et documentée ;

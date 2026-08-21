@@ -34,6 +34,11 @@ checksum "fr" "siret" {
   # own check. Requiring both is a restriction, and it was measured against the
   # whole INSEE stock before being applied: of 43896818 establishments, none has
   # a SIREN that fails.
+  # Each branch carries its own message key, so a refusal says which of the two
+  # checks failed. Without them a caller only learns that the checksum is
+  # invalid, and the two causes are genuinely different: a bad SIREN means the
+  # legal unit is wrong, a bad Luhn over fourteen means the establishment part
+  # is.
   rule = all_checks(
     apply_checksum(checksum.fr.siren, slice(subject(), 0, 9)),
     choose(
@@ -50,7 +55,7 @@ checksum "fr" "siret" {
           ),
         ),
       ),
-      luhn(subject()),
+      luhn(subject(), "fr.siret.luhn"),
     ),
   )
 }
