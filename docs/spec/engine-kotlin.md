@@ -85,14 +85,17 @@ public class BusinessIdEngine private constructor(...) {
 
     public companion object {
         public fun default(): BusinessIdEngine
-        public fun fromRules(bytes: ByteArray): Result<BusinessIdEngine>
     }
 }
 ```
 
-Une factory `fromRules` qui lève une exception typée est aussi acceptable ; choisir
-une convention idiomatique unique. Les entrées métier invalides sont des rapports,
-pas des exceptions.
+Il n’y a pas de fabrique acceptant un bundle en octets à l’exécution : une version
+antérieure de ce document en déclarait une, ce qui imposait de porter le validateur
+complet et la machine d’exécution de l’IR chez chaque appelant — c’est-à-dire un
+interpréteur, que `engine.md` section 1.1 interdit. Un jeu de règles personnalisé
+passe par le générateur, à la construction.
+
+Les entrées métier invalides sont des rapports, pas des exceptions.
 
 Principes :
 

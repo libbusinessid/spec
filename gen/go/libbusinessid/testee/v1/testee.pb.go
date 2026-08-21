@@ -481,9 +481,14 @@ func (x *ObservedValidationReport) GetChecksum() *ObservedStep {
 
 // ObservedStep is one validation level as the engine resolved it.
 type ObservedStep struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Status        v1.StepStatus          `protobuf:"varint,1,opt,name=status,proto3,enum=libbusinessid.conformance.v1.StepStatus" json:"status,omitempty"`
-	ReasonCode    v11.ReasonCode         `protobuf:"varint,2,opt,name=reason_code,json=reasonCode,proto3,enum=libbusinessid.ir.v1.ReasonCode" json:"reason_code,omitempty"`
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	Status     v1.StepStatus          `protobuf:"varint,1,opt,name=status,proto3,enum=libbusinessid.conformance.v1.StepStatus" json:"status,omitempty"`
+	ReasonCode v11.ReasonCode         `protobuf:"varint,2,opt,name=reason_code,json=reasonCode,proto3,enum=libbusinessid.ir.v1.ReasonCode" json:"reason_code,omitempty"`
+	// The message key the rule carries, absent when the result was produced
+	// before any rule assertion. engine.md section 11.2 states that the common
+	// tests compare the code and the key; without this field they compared only
+	// the code, and an engine could emit any key at all without a case noticing.
+	MessageKey    *string `protobuf:"bytes,3,opt,name=message_key,json=messageKey,proto3,oneof" json:"message_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -530,6 +535,13 @@ func (x *ObservedStep) GetReasonCode() v11.ReasonCode {
 		return x.ReasonCode
 	}
 	return v11.ReasonCode(0)
+}
+
+func (x *ObservedStep) GetMessageKey() string {
+	if x != nil && x.MessageKey != nil {
+		return *x.MessageKey
+	}
+	return ""
 }
 
 // ObservedLoad is the outcome of submitting a bundle to the engine or to its
@@ -681,11 +693,14 @@ const file_libbusinessid_testee_v1_testee_proto_rawDesc = "" +
 	"\fcountry_code\x18\x03 \x01(\tH\x00R\vcountryCode\x88\x01\x01\x12=\n" +
 	"\x06format\x18\x04 \x01(\v2%.libbusinessid.testee.v1.ObservedStepR\x06format\x12A\n" +
 	"\bchecksum\x18\x05 \x01(\v2%.libbusinessid.testee.v1.ObservedStepR\bchecksumB\x0f\n" +
-	"\r_country_code\"\x92\x01\n" +
+	"\r_country_code\"\xc8\x01\n" +
 	"\fObservedStep\x12@\n" +
 	"\x06status\x18\x01 \x01(\x0e2(.libbusinessid.conformance.v1.StepStatusR\x06status\x12@\n" +
 	"\vreason_code\x18\x02 \x01(\x0e2\x1f.libbusinessid.ir.v1.ReasonCodeR\n" +
-	"reasonCode\"M\n" +
+	"reasonCode\x12$\n" +
+	"\vmessage_key\x18\x03 \x01(\tH\x00R\n" +
+	"messageKey\x88\x01\x01B\x0e\n" +
+	"\f_message_key\"M\n" +
 	"\fObservedLoad\x12\x1a\n" +
 	"\baccepted\x18\x01 \x01(\bR\baccepted\x12!\n" +
 	"\fengine_error\x18\x02 \x01(\tR\vengineError\"a\n" +
@@ -758,6 +773,7 @@ func file_libbusinessid_testee_v1_testee_proto_init() {
 	}
 	file_libbusinessid_testee_v1_testee_proto_msgTypes[2].OneofWrappers = []any{}
 	file_libbusinessid_testee_v1_testee_proto_msgTypes[3].OneofWrappers = []any{}
+	file_libbusinessid_testee_v1_testee_proto_msgTypes[4].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
