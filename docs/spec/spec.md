@@ -930,24 +930,10 @@ pour faciliter le debug et couverte par un test d’équivalence.
 publie la liste des fonctionnalités supportées. Le chargement échoue si un seul ID
 est inconnu.
 
-Registre initial des capabilities exactes et immuables V1 :
-
-| ID | Nom | Contenu |
-|---:|---|---|
-| 1 | `CORE_GRAPH_V1` | programmes, nœuds topologiques, valeurs typées |
-| 2 | `ASCII_AND_WHITESPACE_V1` | classes ASCII et table whitespace figée |
-| 3 | `CANONICALIZATION_BASIC_V1` | trim, uppercase, remove, prefix, pad, insert |
-| 4 | `CANONICALIZATION_CONDITIONAL_V1` | `when` et prédicats sur valeur courante |
-| 5 | `IDENTIFIER_DISPATCH_V1` | kind/pays/préfixes, alias séparés et sélection en deux phases |
-| 10 | `STRING_VIEWS_V1` | slice, before/after, concat, absence |
-| 11 | `CAPTURES_AND_CALLS_V1` | captures et réutilisation de programmes |
-| 20 | `FORMAT_ASSERTIONS_V1` | prédicats et assertions ordonnées |
-| 21 | `PROFILES_V1` | compatible et strict_current |
-| 30 | `CHECKSUM_TRISTATE_V1` | valid, invalid, unsupported et branchement |
-| 31 | `CHECKSUM_LUHN_V1` | Luhn |
-| 32 | `CHECKSUM_MOD97_V1` | ISO 7064 / modulo 97 |
-| 33 | `CHECKSUM_WEIGHTED_V1` | sommes pondérées, alignements et restes |
-| 40 | `PROVENANCE_V1` | sources liées aux définitions |
+Le registre des capabilities est publié par `docs/features.md`, généré depuis le
+registre Go unique. Il n’est pas recopié ici : une table tenue à la main dérive, et
+celle qui occupait cette place s’était arrêtée à quatorze IDs alors que le bundle en
+portait dix-huit.
 
 Chaque ID désigne l’ensemble exact et figé d’opérations, champs, bornes et sémantiques
 documenté dans `docs/features.md`. Cet ensemble ne peut jamais être élargi ou
@@ -1149,6 +1135,7 @@ registry_not_configured
 incompatible_ruleset
 invalid_ruleset
 input_too_long
+invalid_encoding
 ```
 
 `valid` exige `ok`. `not_run` exige `not_requested`,

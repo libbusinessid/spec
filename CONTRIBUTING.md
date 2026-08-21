@@ -318,9 +318,22 @@ go run ./cmd/businessidc compile --out dist --release --write-docs
 ./tools/sync_engines.sh
 ```
 
-It refreshes the artifacts, rewrites `rules.lock`, and rewrites the header of
-`spec/PROVENANCE.md` so the commit and version it names are the ones the lock
-names. Doing it by hand drifted: three engines carried a lock at `2026.08.2`
+It refreshes the artifacts, copies the contracts an engine is written against
+— `engine.md` and the `engine-<language>.md` for that engine — rewrites
+`rules.lock`, and assembles `spec/PROVENANCE.md` from `docs/spec/provenance/`:
+a common body, the notes for that language, and the figures read from the
+bundle.
+
+`PROVENANCE.md` used to be four hand written files with no source in this
+repository, and they drifted exactly as such files do — still describing seven
+definitions and 185 IR nodes when the bundle carried ninety four and 2375. Edit
+`docs/spec/provenance/body.md` or `docs/spec/provenance/<language>.md`, never
+the copy in an engine checkout.
+
+The contracts were missing from the first version of this script, and it showed
+the only way it could: an engine was told to read documents its checkout did not
+have. An engine repository has to hold everything an implementer needs; it
+cannot be expected to read this one. Doing it by hand drifted: three engines carried a lock at `2026.08.2`
 under a header still claiming `2026.08.0`.
 
 The script writes inside the sibling checkouts and stops there. It creates no

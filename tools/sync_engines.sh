@@ -26,6 +26,16 @@ fi
 
 sha() { sha256sum "$1" | cut -d' ' -f1; }
 
+# The figures PROVENANCE.md quotes come from the bundle, not from anyone's
+# memory of it.
+inspect="$(cd "${here}" && go run ./cmd/businessidc inspect "${dist}/businessid-rules-${version}.binpb")"
+definitions="$(printf '%s\n' "${inspect}" | sed -n 's/^identifiers *\([0-9]*\).*/\1/p')"
+nodes="$(printf '%s\n' "${inspect}" | sed -n 's/^programs *[0-9]* (\([0-9]*\) nodes).*/\1/p')"
+capabilities="$(printf '%s\n' "${inspect}" | grep -cE '^ +[0-9]+ [A-Z]')"
+unused_ops="$(sed -n 's/^\([0-9]*\) of [0-9]* operations.*/\1/p' "${here}/docs/generated/coverage.md" | head -1)"
+total_ops="$(sed -n 's/^[0-9]* of \([0-9]*\) operations.*/\1/p' "${here}/docs/generated/coverage.md" | head -1)"
+used_ops="$((total_ops - unused_ops))"
+
 for engine in businessid-go businessid-swift businessid-kotlin businessid-typescript; do
   target="${root}/${engine}"
   [[ -d "${target}/spec" ]] || { echo "skip ${engine}: no spec directory"; continue; }
@@ -38,6 +48,18 @@ for engine in businessid-go businessid-swift businessid-kotlin businessid-typesc
     cp "${dist}/${f}" "${target}/spec/${f}"
   done
   cp "${here}/docs/spec/spec.md" "${target}/spec/spec.md"
+
+  # The contracts an engine is written against, which it cannot read from here.
+  # They were left out of the first version of this script, and the TypeScript
+  # engine found it the only way anyone could: by being told to read documents
+  # its checkout did not have.
+  cp "${here}/docs/spec/engine.md" "${target}/spec/engine.md"
+  case "${engine}" in
+    businessid-go)         cp "${here}/docs/spec/engine-go.md"         "${target}/spec/engine-go.md" ;;
+    businessid-swift)      cp "${here}/docs/spec/engine-swift.md"      "${target}/spec/engine-swift.md" ;;
+    businessid-kotlin)     cp "${here}/docs/spec/engine-kotlin.md"     "${target}/spec/engine-kotlin.md" ;;
+    businessid-typescript) cp "${here}/docs/spec/engine-typescript.md" "${target}/spec/engine-typescript.md" ;;
+  esac
 
   cat > "${target}/rules.lock" <<LOCK
 # Pre-release lock, produced locally from the spec repository.
@@ -59,6 +81,27 @@ features_doc_sha256 = "$(sha "${dist}/features.md")"
 stability = "$(jq -r .stability "${dist}/businessid-manifest-${version}.json")"
 source_commit = "${commit}"
 LOCK
+
+  # PROVENANCE.md is assembled rather than copied: a common body, the notes for
+  # this language, and the figures read from the bundle. It used to be four hand
+  # written files, and they drifted exactly as hand written files do - still
+  # describing seven definitions and 185 IR nodes when the bundle carried
+  # ninety four and 2375.
+  lang="${engine#businessid-}"
+  {
+    printf '# Where these files come from, and what to build\n\n'
+    printf 'Copied from `github.com/libbusinessid/spec` at commit\n'
+    printf '`%s`, rules version\n`%s`, stability `%s`.\n\n' \
+      "${commit}" "${version}" "$(jq -r .stability "${dist}/businessid-manifest-${version}.json")"
+    sed -e "s/{{DEFINITIONS}}/${definitions}/g" \
+        -e "s/{{NODES}}/${nodes}/g" \
+        -e "s/{{CAPABILITIES}}/${capabilities}/g" \
+        -e "s/{{USED_OPS}}/${used_ops}/g" \
+        -e "s/{{TOTAL_OPS}}/${total_ops}/g" \
+        "${here}/docs/spec/provenance/body.md"
+    printf '\n'
+    cat "${here}/docs/spec/provenance/${lang}.md"
+  } > "${target}/spec/PROVENANCE.md"
 
   # The header of PROVENANCE.md names the same commit and version as the lock.
   # It is the first thing a reader of the engine repository sees, so a stale
