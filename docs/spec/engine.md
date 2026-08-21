@@ -125,8 +125,14 @@ préfixe et le contexte produit `country_mismatch`.
 
 ```text
 ValidationOptions
-  profile: ValidationProfile = compatible
+  profile: ValidationProfile | absent
 ```
+
+Le profil est optionnel et son absence est signifiante : elle laisse la définition
+sélectionnée appliquer son `default_profile`. Une API qui remplirait `compatible`
+par défaut rendrait `default_profile` inatteignable, puisque le moteur ne pourrait
+plus distinguer un appelant silencieux d’un appelant demandant `compatible`. Voir
+`ir.md` section 5.2, et le commentaire du champ 4 de `testee.proto`.
 
 Profils V1 :
 
@@ -186,6 +192,7 @@ registry_not_configured
 incompatible_ruleset
 invalid_ruleset
 input_too_long
+invalid_encoding
 ```
 
 Les moteurs peuvent ajouter un type d’erreur technique, mais ne doivent pas inventer
@@ -327,10 +334,10 @@ Dans cet ordre :
 
 1. taille binaire ≤ 16 MiB ;
 2. décodage Protobuf complet ;
-3. absence de champ inconnu à toute profondeur ; si le runtime ne les expose pas,
+3. `format_version` supportée ;
+4. toutes les `required_feature_ids` connues ;
+5. absence de champ inconnu à toute profondeur ; si le runtime ne les expose pas,
    effectuer un pré-scan wire borné contre les descripteurs ;
-4. `format_version` supportée ;
-5. toutes les `required_feature_ids` connues ;
 6. champs obligatoires sémantiques présents ;
 7. valeurs enum différentes de `UNSPECIFIED` ;
 8. nombres d’objets dans les limites ;
@@ -348,6 +355,20 @@ Dans cet ordre :
 
 L’absence d’un `oneof operation` après décodage doit être refusée. Un moteur ne doit
 jamais exécuter un graphe partiellement validé.
+
+L’ordre des trois premiers contrôles sémantiques porte un sens. Un bundle construit
+contre une version ultérieure porte des champs que ce runtime n’a jamais vus ;
+les signaler comme champs inconnus revient à traiter un écart de version comme une
+contrefaçon. Demander d’abord si le bundle annonce quelque chose de non supporté
+donne la réponse exacte, et dit à un opérateur de mettre à jour plutôt que de
+suspecter le fichier.
+
+Cette distinction ne tient que si le décodage reste au niveau du fil. Un moteur qui
+résout un opcode, une valeur d’énumération ou un identifiant de capacité pendant le
+décodage signale un bundle plus récent au contrôle 2, avant que le contrôle des
+capacités puisse l’excuser, et l’écart de version redevient un bundle malformé.
+`ir.md` section 10 fait foi sur l’ordre complet des vingt-quatre contrôles ; la liste
+ci-dessus en est la vue par famille.
 
 ### 7.4 Protobuf n’est pas l’API publique
 
