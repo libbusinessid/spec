@@ -81,9 +81,9 @@ program may hold at most 100000 operation instances, counted after inlining.
 
 The bound is not a formality. The node count of a program is bounded, but
 the graph is a DAG, and a DAG whose every node reads the previous one twice
-expands exponentially while passing all twenty four load checks. Without a
+expands exponentially while passing every one of the 25 load checks. Without a
 bound, such a bundle is a denial of service against the generator rather
-than against the engine, and the twenty four checks would not see it.
+than against the engine, and those 25 checks would not see it.
 
 Choosing the budget rather than a new number is deliberate: a generated
 program may not carry more instances than an interpreter would have taken
