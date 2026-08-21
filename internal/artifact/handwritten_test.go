@@ -68,14 +68,22 @@ func TestEveryEngineContractRefusesARuntimeLoader(t *testing.T) {
 	if err != nil || len(contracts) == 0 {
 		t.Fatalf("no engine contract found: %v", err)
 	}
-	// A declaration, not the sentence explaining why there is none.
+	// engine.md itself, which is where the contradiction actually was: its
+	// minimal API list still offered engineFromRules and registryLookup, three
+	// sections after forbidding both. Auditing only the per-language contracts
+	// missed the document they all defer to.
+	contracts = append(contracts, filepath.Join("..", "..", "docs", "spec", "engine.md"))
+	// A declaration lives in a code block; the sentences explaining why there is
+	// none live in prose, and must stay. The audit first matched fromRules and
+	// RegistryProvider only, and missed engineFromRules and registryLookup in
+	// the minimal API list - the same commitments under other spellings.
 	declaration := regexp.MustCompile(
-		`(?m)^\s*(public |static |func )?(init\(rules|fromRules|from_rules|fromBytes)\b`)
+		`(?im)\b(init\(rules|from_?rules|fromBytes|engineFromRules|registryLookup|RegistryProvider)\b`)
 
 	for _, path := range contracts {
 		t.Run(filepath.Base(path), func(t *testing.T) {
 			text := readDoc(t, path)
-			if m := declaration.FindString(text); m != "" {
+			if m := declaration.FindString(codeBlocksOf(text)); m != "" {
 				t.Errorf("%s declares %q.\n"+
 					"A factory taking bundle bytes forces the whole loader and the "+
 					"whole opcode machine into every caller, which is an interpreter.\n"+
@@ -104,12 +112,6 @@ func TestEveryEngineContractRefusesARuntimeLoader(t *testing.T) {
 			// reachable from a browser. engine.md section 10 defers the whole
 			// surface, and a public type is a commitment SemVer freezes: a
 			// contract that declares one now cannot take it back.
-			if strings.Contains(text, "RegistryProvider") {
-				t.Errorf("%s declares RegistryProvider.\n"+
-					"engine.md section 10 defers the registry: a public type is a "+
-					"commitment, and this one has not been specified yet.",
-					filepath.Base(path))
-			}
 			if !strings.Contains(text, "section 1.2") {
 				t.Errorf("%s never points at engine.md section 1.2.\n"+
 					"An implementer reading only this document would not learn that "+
@@ -118,6 +120,69 @@ func TestEveryEngineContractRefusesARuntimeLoader(t *testing.T) {
 			}
 		})
 	}
+}
+
+// The hand written documents must not spell out how many load checks there are.
+//
+// A written count is a fact that goes stale the day a check is added, and adding
+// check 14 did exactly that: four documents kept saying twenty four while ir.md
+// enumerated twenty five, including the sentence that delegates authority to
+// ir.md - which named a number that document no longer had. ir.md computes its
+// own count; the others delegate.
+func TestHandWrittenDocumentsDoNotCountTheLoadChecks(t *testing.T) {
+	for _, name := range []string{"engine.md", "spec.md", "engine-go.md",
+		"engine-swift.md", "engine-kotlin.md", "engine-typescript.md"} {
+		path := filepath.Join("..", "..", "docs", "spec", name)
+		if _, err := os.Stat(path); err != nil {
+			continue
+		}
+		t.Run(name, func(t *testing.T) {
+			text := readDoc(t, path)
+			want := loadCheckCount(t)
+			for spelled, n := range map[string]int{
+				"vingt-trois": 23, "vingt-quatre": 24, "vingt-cinq": 25, "vingt-six": 26,
+			} {
+				if !strings.Contains(text, spelled+" contrôles") {
+					continue
+				}
+				if n != want {
+					t.Errorf("%s says %q contrôles where ir.md enumerates %d.\n"+
+						"Either fix the number or delegate without counting.",
+						name, spelled, want)
+				}
+			}
+		})
+	}
+}
+
+// loadCheckCount reads the enumeration out of the generated document.
+func loadCheckCount(t *testing.T) int {
+	t.Helper()
+	ir := readDoc(t, filepath.Join("..", "..", "docs", "ir.md"))
+	start := strings.Index(ir, "1. binary size")
+	end := strings.Index(ir, "A size, structural")
+	if start < 0 || end < 0 {
+		t.Fatal("ir.md no longer carries the load check enumeration")
+	}
+	return len(regexp.MustCompile(`(?m)^\s*\d+\. `).FindAllString(ir[start:end], -1))
+}
+
+// codeBlocksOf returns only what sits inside fenced code blocks, which is where
+// a document declares an API rather than discusses one.
+func codeBlocksOf(text string) string {
+	var out strings.Builder
+	inside := false
+	for _, line := range strings.Split(text, "\n") {
+		if strings.HasPrefix(strings.TrimSpace(line), "```") {
+			inside = !inside
+			continue
+		}
+		if inside {
+			out.WriteString(line)
+			out.WriteString("\n")
+		}
+	}
+	return out.String()
 }
 
 func readDoc(t *testing.T, path string) string {
