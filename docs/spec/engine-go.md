@@ -37,7 +37,6 @@ La bibliothèque doit :
   `load_ruleset` en appelant le générateur, comme le dit le champ 7 de
   `testee.proto` ;
 - exposer les versions moteur/règles/format et capabilities ;
-- définir l’interface de registre, sans provider concret ni dépendance HTTP ;
 - être sûre en concurrence ;
 - ne jamais panic sur une entrée utilisateur ou un bundle non fiable.
 
@@ -126,24 +125,24 @@ Une erreur de bundle embarqué est un défaut de build ; elle doit être exposé
 façon testable sans rendre les entrées utilisateur panics. Une fonction
 `DefaultEngine() (*Engine, error)` peut être préférée si elle rend le contrat plus sûr.
 
-## Interface registre
+### Registre : rien à livrer en V1
 
-Définir une interface idiomatique avec `context.Context` :
+Ce moteur n'expose aucun type de registre. `engine.md` section 10 diffère la
+consultation d'un registre distant à une version ultérieure, et un moteur qui n'en
+porte pas est pleinement conforme.
 
-```go
-type RegistryProvider interface {
-    Supports(kind IdentifierKind, countryCode string) bool
-    Lookup(ctx context.Context, input RegistryInput) (RegistryResult, error)
-}
-```
+Trois choses à ne pas faire, parce qu'elles fermeraient la porte :
 
-- aucun provider concret ;
-- aucun client HTTP dans le module cœur ;
-- contexte en premier paramètre ;
-- distinguer résultat métier et erreur de transport future ;
-- ne pas stocker de `context.Context` dans une struct ;
-- `Validate` ne reçoit pas de contexte car il est purement local, sauf justification
-  API documentée.
+- n'exposez aucun type de registre, même marqué expérimental : un type public est un
+  engagement que SemVer fige ;
+- ne rendez aucune méthode de validation asynchrone « au cas où » — la validation
+  locale reste synchrone définitivement ;
+- ne mettez aucune dépendance HTTP dans le paquet du cœur.
+
+Une consultation de registre porte un jeton d'API : elle ne devra jamais être possible
+depuis un navigateur, et vivra donc dans un module séparé, chargé côté serveur
+uniquement.
+
 
 ## Protobuf et artefacts
 
@@ -259,7 +258,6 @@ Le README doit montrer :
 - interprétation de `unsupported` ;
 - versions des règles ;
 - construction depuis bytes ;
-- interface registre sans implémentation ;
 - limites : format/checksum ne prouvent pas l’existence.
 
 Ajouter `LICENSE`, `SECURITY.md`, `CONTRIBUTING.md`, changelog et exemples. Préparer
@@ -282,7 +280,6 @@ les tags SemVer. Vérifier `go list`, `go test` et documentation pkg.go.dev.
 - API et runtime ;
 - code Protobuf généré et reproductible ;
 - bundle et conformité verrouillés ;
-- interface registre ;
 - tests, fuzzers, benchmarks ;
 - CI et release ;
 - documentation et exemples ;

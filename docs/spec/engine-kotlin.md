@@ -115,21 +115,24 @@ Principes :
 L’instance par défaut doit être initialisée de façon lazy et thread-safe. Après
 construction, le moteur est totalement immuable.
 
-## Interface registre Kotlin
+### Registre : rien à livrer en V1
 
-Définir uniquement l’abstraction :
+Ce moteur n'expose aucun type de registre. `engine.md` section 10 diffère la
+consultation d'un registre distant à une version ultérieure, et un moteur qui n'en
+porte pas est pleinement conforme.
 
-```kotlin
-public interface RegistryProvider {
-    public fun supports(kind: IdentifierKind, countryCode: String?): Boolean
-    public suspend fun lookup(input: RegistryInput): RegistryResult
-}
-```
+Trois choses à ne pas faire, parce qu'elles fermeraient la porte :
 
-Une erreur technique peut être exception typée ou résultat scellé selon la convention
-retenue. Aucun provider, client HTTP ou dépendance coroutines supplémentaire ne doit
-être ajouté si le type `suspend` suffit. `validate` reste synchrone et n’appelle jamais
-le registre.
+- n'exposez aucun type de registre, même marqué expérimental : un type public est un
+  engagement que SemVer fige ;
+- ne rendez aucune méthode de validation asynchrone « au cas où » — la validation
+  locale reste synchrone définitivement ;
+- ne mettez aucune dépendance HTTP dans le paquet du cœur.
+
+Une consultation de registre porte un jeton d'API : elle ne devra jamais être possible
+depuis un navigateur, et vivra donc dans un module séparé, chargé côté serveur
+uniquement.
+
 
 ## Protobuf
 
@@ -175,8 +178,7 @@ publique, ainsi que Dokka pour la documentation.
 - tests de l’API depuis Java pour les points importants ;
 - property-based testing avec Kotest Property ou outil maintenu ;
 - fuzzing JVM via Jazzer ou outil équivalent pour décodeur et runtime ;
-- benchmarks JMH pour chargement et validation ;
-- tests du mock RegistryProvider sans réseau.
+- benchmarks JMH pour chargement et validation.
 
 Utiliser Kover ou JaCoCo avec :
 
