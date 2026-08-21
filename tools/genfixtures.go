@@ -588,7 +588,21 @@ func main() {
 			first = uint32(len(nodes) - 1)
 		}
 		explosive.Programs[2].Nodes = nodes
+		// The root has to reach the chain, or a generator emits none of it and
+		// the fixture proves nothing. The first version pointed the root at the
+		// original checksum node and left forty doubling nodes unreachable: the
+		// Go engine refused it at check 25 for an undeclared capability while
+		// this one refused it at check 14, and the case could not tell them
+		// apart because both answers are invalid_ruleset.
+		explosive.Programs[2].RootNode = first
 	}
+	// CONCAT belongs to STRING_VIEWS_V1, which the base bundle does not declare.
+	// Without it the refusal comes from the undeclared capability rather than
+	// from the bound under test.
+	explosive.RequiredFeatureIds = append(explosive.RequiredFeatureIds, features.StringViewsV1)
+	sort.Slice(explosive.RequiredFeatureIds, func(i, j int) bool {
+		return explosive.RequiredFeatureIds[i] < explosive.RequiredFeatureIds[j]
+	})
 	write(filepath.Join(root, "program_expansion.binpb"), marshal(explosive))
 
 	// A source stating a tier outside the enumeration. UNSPECIFIED is not a
