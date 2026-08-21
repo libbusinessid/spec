@@ -250,3 +250,67 @@ func readVersion(t *testing.T) string {
 	}
 	return string(raw)
 }
+
+// A capture reached by another capture is not a second emission either, and the
+// order the captures are listed in must not change the answer.
+//
+// The TypeScript engine found this: it excluded a capture only when the program
+// root reached it, not when another root did. Ours excludes it whichever root
+// reaches it, but only if that root was seen first - and the capture list is in
+// no particular order. Taking the captures from the highest index down settles
+// it, since an operand always sits at a lower index than the node reading it.
+func TestExpansionIgnoresTheOrderCapturesAreListedIn(t *testing.T) {
+	build := func(order []int) *irv1.Program {
+		p := &irv1.Program{Id: 1, Kind: irv1.ProgramKind_PROGRAM_KIND_FORMAT,
+			Nodes: []*irv1.Node{{
+				OutputType: irv1.ValueType_VALUE_TYPE_STRING,
+				Operation: &irv1.Node_StringOperation{StringOperation: &irv1.StringOperation{
+					Kind: irv1.StringOpKind_STRING_OP_KIND_SUBJECT,
+				}},
+			}},
+		}
+		// A detached chain: node 1 reads node 0, node 2 reads node 1.
+		for i := 1; i <= 2; i++ {
+			p.Nodes = append(p.Nodes, &irv1.Node{
+				OutputType: irv1.ValueType_VALUE_TYPE_STRING,
+				InputNodes: []uint32{uint32(i - 1)},
+				Operation: &irv1.Node_StringOperation{StringOperation: &irv1.StringOperation{
+					Kind: irv1.StringOpKind_STRING_OP_KIND_SLICE_FROM,
+				}},
+			})
+		}
+		// The root is the bare subject and reaches neither capture.
+		p.RootNode = 0
+		for _, n := range order {
+			p.Captures = append(p.Captures, &irv1.Capture{Name: "c", Node: uint32(n)})
+		}
+		return p
+	}
+
+	cost := func(p *irv1.Program) int64 {
+		costs := make([]int64, len(p.GetNodes()))
+		for i, n := range p.GetNodes() {
+			c := int64(1)
+			for _, in := range n.GetInputNodes() {
+				if int(in) < i {
+					c = saturatingAdd(c, costs[in])
+				}
+			}
+			costs[i] = c
+		}
+		var total int64
+		for _, r := range emissionRoots(p, costs) {
+			total = saturatingAdd(total, costs[r])
+		}
+		return total
+	}
+
+	// Capture 2 reaches capture 1, so emitting capture 2 emits both. The answer
+	// is the same whichever order they appear in.
+	high := cost(build([]int{2, 1}))
+	low := cost(build([]int{1, 2}))
+	if high != low {
+		t.Fatalf("the capture order changed the count: %d listed high first, %d low first",
+			high, low)
+	}
+}
