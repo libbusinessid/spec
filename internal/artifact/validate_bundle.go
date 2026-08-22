@@ -376,7 +376,12 @@ func (v *validator) validateDeclaredFeatures() error {
 		}
 	}
 	for _, p := range v.bundle.GetPrograms() {
-		if len(p.GetCaptures()) > 0 {
+		// features.md section 11 freezes Program.subject_node into this
+		// capability alongside the captures. Deriving it from the captures
+		// alone let a bundle declare a subject node without declaring the
+		// capability that owns the field: three engines refused a fixture here
+		// that this loader accepted, and they were reading features.md.
+		if len(p.GetCaptures()) > 0 || p.SubjectNode != nil {
 			v.used.Add(features.CapturesAndCallsV1)
 		}
 	}
