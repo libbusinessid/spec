@@ -1,8 +1,12 @@
 package artifact
 
 import (
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
+
+	"google.golang.org/protobuf/proto"
 
 	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
 )
@@ -60,4 +64,113 @@ func TestSubjectNodeMayNotReadTheSubject(t *testing.T) {
 	if !strings.Contains(err.Error(), "subject") {
 		t.Fatalf("the error must name what is circular, got %v", err)
 	}
+}
+
+// The fixture that exercises the clause must be invalid for that clause alone.
+//
+// Three engines decoded subject_node_circular.binpb and reported the same
+// thing: it declares subject_node without declaring capability 11, which
+// features.md section 11 freezes that field into, so check 25 refuses it on its
+// own. Both checks answer invalid_ruleset, so an engine that never implemented
+// the clause passes the case anyway - which is the engine the case exists to
+// catch.
+//
+// This is the third fixture of that family, after message_key and
+// program_expansion. The test states the property those lacked: remove the
+// fault the case is named for, and nothing else must be wrong.
+func TestTheCircularSubjectFixtureIsInvalidForThatReasonAlone(t *testing.T) {
+	raw := circularSubjectFixture(t)
+
+	if _, err := LoadRuleset(raw); err == nil {
+		t.Fatal("the fixture loads; it is supposed to be refused")
+	}
+
+	// Repair the circularity and nothing else: the subject node stays, so the
+	// capability it uses stays used. Clearing the node instead would remove both
+	// faults at once and prove nothing, which is how the first version of this
+	// test passed against the very fixture it was written to indict.
+	bundle := decodeBundle(t, raw)
+	if repaired := soundenSubjectNodes(bundle); repaired != 1 {
+		t.Fatalf("repaired %d subject nodes, want exactly 1", repaired)
+	}
+	if _, err := LoadRuleset(encodeBundle(t, bundle)); err != nil {
+		t.Fatalf("with a well founded subject node the fixture is still refused: %v\n"+
+			"The case cannot distinguish an engine that implements check 15 from one "+
+			"that does not: both answer invalid_ruleset, for different reasons.", err)
+	}
+}
+
+// features.md section 11 freezes Program.subject_node into CAPTURES_AND_CALLS_V1,
+// so a bundle declaring a subject node without declaring capability 11 uses a
+// capability it never declared, and check 25 must refuse it.
+//
+// This loader derived capability 11 from the captures alone and ignored the
+// subject node, which is why the fixture looked single-faulted here and
+// double-faulted in three other engines. They read features.md; this read its
+// own code.
+func TestASubjectNodeUsesTheCapabilityThatFreezesIt(t *testing.T) {
+	bundle := decodeBundle(t, circularSubjectFixture(t))
+	// Well founded, so check 15 has nothing to say and only the undeclared
+	// capability is left to refuse.
+	soundenSubjectNodes(bundle)
+	ids := bundle.GetRequiredFeatureIds()
+	bundle.RequiredFeatureIds = nil
+	for _, id := range ids {
+		if id != 11 {
+			bundle.RequiredFeatureIds = append(bundle.RequiredFeatureIds, id)
+		}
+	}
+
+	_, err := LoadRuleset(encodeBundle(t, bundle))
+	if err == nil {
+		t.Fatal("a subject node without capability 11 declared must be refused by check 25")
+	}
+	if !strings.Contains(err.Error(), "CAPTURES_AND_CALLS_V1") {
+		t.Fatalf("the refusal must name the undeclared capability, got %v", err)
+	}
+}
+
+func circularSubjectFixture(t *testing.T) []byte {
+	t.Helper()
+	raw, err := os.ReadFile(filepath.Join("..", "..", "testdata", "bundles", "subject_node_circular.binpb"))
+	if err != nil {
+		t.Fatalf("reading the fixture: %v", err)
+	}
+	return raw
+}
+
+func decodeBundle(t *testing.T, raw []byte) *irv1.RuleBundle {
+	t.Helper()
+	var bundle irv1.RuleBundle
+	if err := proto.Unmarshal(raw, &bundle); err != nil {
+		t.Fatalf("decoding the fixture: %v", err)
+	}
+	return &bundle
+}
+
+func encodeBundle(t *testing.T, bundle *irv1.RuleBundle) []byte {
+	t.Helper()
+	raw, err := proto.Marshal(bundle)
+	if err != nil {
+		t.Fatalf("re-encoding the fixture: %v", err)
+	}
+	return raw
+}
+
+// soundenSubjectNodes rebuilds every subject node on the country code, which no
+// subject can be defined in terms of, and reports how many it touched.
+func soundenSubjectNodes(bundle *irv1.RuleBundle) int {
+	repaired := 0
+	for _, p := range bundle.GetPrograms() {
+		if p.SubjectNode == nil {
+			continue
+		}
+		node := p.GetNodes()[p.GetSubjectNode()]
+		node.InputNodes = nil
+		node.Operation = &irv1.Node_StringOperation{StringOperation: &irv1.StringOperation{
+			Kind: irv1.StringOpKind_STRING_OP_KIND_COUNTRY_CODE,
+		}}
+		repaired++
+	}
+	return repaired
 }

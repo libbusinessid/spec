@@ -622,7 +622,14 @@ func main() {
 		subject := uint32(len(p.Nodes) - 1)
 		p.SubjectNode = &subject
 	}
-	circularSubject.RequiredFeatureIds = append(circularSubject.RequiredFeatureIds, features.StringViewsV1)
+	// The subject node is frozen into CAPTURES_AND_CALLS_V1 by features.md
+	// section 11, so the fixture must declare it: without it, check 25 refuses
+	// the bundle on its own, both checks answer invalid_ruleset, and the case is
+	// satisfied by an engine that never implemented check 15's clause - the
+	// engine it exists to catch. Three engines decoded these bytes and reported
+	// it, after message_key and program_expansion had the same shape.
+	circularSubject.RequiredFeatureIds = append(circularSubject.RequiredFeatureIds,
+		features.StringViewsV1, features.CapturesAndCallsV1)
 	sort.Slice(circularSubject.RequiredFeatureIds, func(i, j int) bool {
 		return circularSubject.RequiredFeatureIds[i] < circularSubject.RequiredFeatureIds[j]
 	})
