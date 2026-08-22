@@ -605,6 +605,29 @@ func main() {
 	})
 	write(filepath.Join(root, "program_expansion.binpb"), marshal(explosive))
 
+	// A subject node built from the subject it defines. A generator emitting its
+	// subtree recurses forever; an interpreter exhausts its budget. Found by an
+	// engine that refused it rather than assuming the spec had thought of it.
+	circularSubject := clone(base)
+	{
+		p := circularSubject.Programs[1]
+		p.Nodes = append(p.Nodes, &irv1.Node{
+			OutputType: irv1.ValueType_VALUE_TYPE_STRING,
+			InputNodes: []uint32{0},
+			Operation: &irv1.Node_StringOperation{StringOperation: &irv1.StringOperation{
+				Kind:  irv1.StringOpKind_STRING_OP_KIND_SLICE_FROM,
+				Start: proto.Uint32(0),
+			}},
+		})
+		subject := uint32(len(p.Nodes) - 1)
+		p.SubjectNode = &subject
+	}
+	circularSubject.RequiredFeatureIds = append(circularSubject.RequiredFeatureIds, features.StringViewsV1)
+	sort.Slice(circularSubject.RequiredFeatureIds, func(i, j int) bool {
+		return circularSubject.RequiredFeatureIds[i] < circularSubject.RequiredFeatureIds[j]
+	})
+	write(filepath.Join(root, "subject_node_circular.binpb"), marshal(circularSubject))
+
 	// A source stating a tier outside the enumeration. UNSPECIFIED is not a
 	// refusal - it means the source states no tier - but a value nothing can
 	// read is a forged bundle.

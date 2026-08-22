@@ -115,6 +115,10 @@ func RenderIRDoc() []byte {
 	w("expression, and counting its subtree again charges it twice. This holds for")
 	w("a capture reached by another capture, not only by the program root.")
 	w("")
+	w("Check 14 counts from the roots that check 15 validates, so an engine may run")
+	w("15 first. Both answer `invalid_ruleset`, so the order is not observable, and")
+	w("stating it would constrain an implementation without changing an answer.")
+	w("")
 	w("Take the captures from the highest index down. An operand always sits at a")
 	w("lower index than the node reading it, so a capture reached by another is")
 	w("seen after the one reaching it and one pass settles it. Walking the capture")
@@ -487,7 +491,7 @@ var loadChecks = []string{
 	"only the parameters the operation declares, and every required parameter",
 	"arithmetic bounds: moduli, weights, remainder tables, indices, provable integer widths and the alphabet of a custom mapping",
 	"expansion within the evaluation budget once repeated operands are inlined",
-	"root, subject and capture nodes inside the program and correctly typed",
+	"root, subject and capture nodes inside the program, correctly typed, and a subject node that does not read the subject it defines",
 	"program shape: accepted root per kind, `WHEN` only inside `CHOOSE`, and a " +
 		"pre-canonicalization program restricted to its five permitted operations",
 	"identifier ids unique, kinds and countries well formed, serialization order respected",

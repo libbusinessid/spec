@@ -201,6 +201,9 @@ func (v *validator) validateProgramShape(p *irv1.Program, nodes []*irv1.Node) er
 		if nodes[p.GetSubjectNode()].GetOutputType() != irv1.ValueType_VALUE_TYPE_STRING {
 			return invalidf("program %d has a non string subject node", p.GetId())
 		}
+		if err := checkSubjectNode(p); err != nil {
+			return err
+		}
 	}
 	return validateCaptures(p, nodes)
 }
