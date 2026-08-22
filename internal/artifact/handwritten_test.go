@@ -100,6 +100,13 @@ func TestEveryEngineContractRefusesARuntimeLoader(t *testing.T) {
 				"embarquer `businessid-rules.binpb`",
 				"bytes personnalisés",
 				"go:embed",
+				// The bundle as a resource of the shipped package is the same
+				// mistake in layout form: it makes every caller carry data the
+				// generated code makes pointless, and implies a decoder to read
+				// it. Three contracts had it in their recommended tree.
+				"Resources/businessid-rules",
+				"resources/businessid-rules",
+				"assets/businessid-rules",
 			} {
 				if strings.Contains(text, phrase) {
 					t.Errorf("%s asks for %q.\n"+
