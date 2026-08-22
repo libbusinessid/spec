@@ -249,7 +249,7 @@ func TestNoEngineContractAsksForARegistryOrAPackagedBundle(t *testing.T) {
 		// and a public type is a commitment SemVer freezes.
 		"interface registre":        "engine.md section 10 defers the registry; no engine delivers a type for it",
 		"provider registre injecté": "engine.md section 10 defers the registry; no engine delivers a type for it",
-		"provider registre concret": "engine.md section 10 defers the registry; no engine delivers a type for it",
+		"provider registre concret": "engine.md section 10 defers the registry; no engine delivers a type for it", //nolint:misspell // French, not a typo of concert
 		// The bundle is an input to the generator. Every phrasing below asks the
 		// published package to carry it, which implies a decoder to read it.
 		"ressource SPM":             "the bundle is an input to the generator, not a resource of the package",
