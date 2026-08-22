@@ -21,8 +21,8 @@ testé et publiable sur Maven Central. Ne traduis pas mécaniquement un autre mo
 - plugin Kotlin/JVM stable ;
 - JDK toolchain verrouillé, avec bytecode cible documenté et compatible Android ;
 - aucune dépendance au SDK Android dans le module cœur ;
-- Protobuf officiel Kotlin/Java, de préférence runtime lite si ses capacités
-  couvrent entièrement le schéma et les tests ;
+- Protobuf officiel Kotlin/Java **dans le module générateur uniquement** ; la
+  bibliothèque publiée n'a aucune dépendance Protobuf, puisqu'elle ne décode rien ;
 - versions minimales de Kotlin, JDK et Android consommateur documentées ;
 - publication Maven avec sources, Javadoc/Dokka, POM, checksums et signature.
 
@@ -142,16 +142,25 @@ depuis un navigateur, et vivra donc dans un module séparé, chargé côté serv
 uniquement.
 
 
-## Protobuf
+## Protobuf, dans le générateur
 
-- Générer les classes dans un package `internal` non exposé par l’API.
+Tout ce qui suit concerne le module générateur. La bibliothèque publiée ne décode
+rien, ne dépend d'aucun runtime Protobuf, et ne charge aucune ressource.
+
+- Générer les classes Protobuf dans le module générateur, jamais dans le module publié.
 - Utiliser le plugin Gradle Protobuf avec versions verrouillées.
 - Vérifier si `protobuf-kotlin-lite`/Java lite satisfait unknown fields, oneof et
-  limites nécessaires ; couvrir le choix par tests.
-- Commettre ou régénérer de façon reproductible selon la stratégie documentée.
+  limites nécessaires ; couvrir le choix par tests. Les champs inconnus doivent rester
+  lisibles : le contrôle 5 en dépend, et un runtime qui les jette rend un écart de
+  version indétectable.
 - Ajouter tâches `generateProto` et `checkGenerated`.
-- Charger la ressource via ClassLoader de façon testée dans JAR et Android.
+- Le générateur lit le bundle depuis un chemin, pas depuis le classpath : c'est une
+  entrée de build, pas une ressource.
 - Ne pas utiliser les maps/messages générés comme structures runtime mutables.
+
+Vérifier par un test que le jar publié ne contient aucune classe Protobuf ni aucun
+`.binpb` : c'est ce qui distingue un moteur généré d'un interpréteur, et une
+dépendance Gradle mal portée le trahit silencieusement.
 
 ## Style et qualité Kotlin
 
@@ -178,9 +187,9 @@ publique, ainsi que Dokka pour la documentation.
 
 - `kotlin.test`/JUnit 5 avec convention cohérente ;
 - tests paramétrés pour toutes les opérations ;
-- conformité complète depuis BINPB ;
-- bundles invalides et limites ;
-- resource loading depuis JAR assemblé ;
+- conformité complète : le corpus pilote le code émis, pas un décodeur ;
+- bundles invalides et limites, contre le générateur ;
+- packaging : que le jar publié ne porte ni `.binpb` ni classe Protobuf ;
 - tests multithread avec executors/coroutines si disponibles ;
 - tests de compatibilité Android dans un projet consommateur minimal ;
 - tests de l’API depuis Java pour les points importants ;
@@ -221,7 +230,8 @@ CI planifiée : Jazzer long, mutation testing, benchmarks et versions de toolcha
 ## Documentation et publication
 
 README : installation Gradle/Maven, exemple Kotlin, exemple Java minimal, format seul,
-checksum unsupported, moteur personnalisé, versions et interface registre. Indiquer
+checksum unsupported, jeu de règles personnalisé passant par le générateur et
+versions. Indiquer
 explicitement que JVM/Android est le support V1 et que KMP n’est pas annoncé.
 
 Publier sources et Dokka, signer les artefacts et suivre SemVer. Ajouter SECURITY,
@@ -237,12 +247,11 @@ CONTRIBUTING et changelog.
 - aucune prétention KMP sans conformité sur chaque target ;
 - aucune copie ligne par ligne du moteur Go/Swift ;
 - aucun cas de conformité désactivé ;
-- aucun provider registre concret.
+- aucun type de registre, même expérimental.
 
 ## Livrables et définition de terminé
 
-Livrer build Gradle reproductible, bibliothèque, API, moteur, ressources, interface
-registre, tests, property tests, fuzzing, benchmarks, CI, documentation Dokka et
+Livrer build Gradle reproductible, générateur, bibliothèque, API, moteur, tests, property tests, fuzzing, benchmarks, CI, documentation Dokka et
 publication Maven. Tous les critères `engine.md`, lint, conformité, couverture,
 compatibilité JVM/Android et test consommateur doivent être verts, sans TODO V1 ni
 warning.
