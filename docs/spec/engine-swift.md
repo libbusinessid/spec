@@ -23,7 +23,9 @@ erreurs, protocoles et tests selon les conventions Swift.
 - Tester au minimum macOS et un simulateur iOS.
 - Le cœur doit éviter UIKit/AppKit et rester indépendant de l’UI.
 - Utiliser `apple/swift-protobuf` pour le décodage.
-- Le bundle et la conformité sont des ressources SPM accessibles via `Bundle.module`.
+- Le bundle n'est pas une ressource du paquet : il est lu par le générateur à la
+  construction. Le corpus de conformité reste accessible aux tests, jamais à la
+  bibliothèque.
 - Le module public s’appelle `BusinessID`.
 
 Structure recommandée :
@@ -110,9 +112,10 @@ Principes API :
 - propriétés calculées clairement nommées, sans `isValid` ambigu sur le rapport ;
 - sérialisation Codable conforme aux chaînes de `engine.md` si exposée.
 
-Le moteur par défaut doit charger la ressource une fois, de façon déterministe et
-thread-safe. Une absence/corruption de la ressource doit être détectée par les tests
-de packaging et ne doit pas devenir un crash déclenché par une entrée utilisateur.
+Le moteur par défaut ne charge rien : il est le code généré, disponible sans
+initialisation coûteuse ni verrou, et utilisable depuis plusieurs tâches. Aucune
+entrée utilisateur ne peut le faire échouer, puisque tout ce qu'il contient a été
+produit à partir d'un bundle déjà accepté.
 
 ### Registre : rien à livrer en V1
 
@@ -218,7 +221,7 @@ Créer GitHub Actions pour :
 - couverture et seuil ;
 - conformité ;
 - fuzz smoke et audit dépendances ;
-- vérification code Protobuf généré ;
+- vérification du code émis par le générateur, régénération byte-identique ;
 - test d’intégration d’une application/package consommateur ;
 - validation que `Package.swift` et les tags SemVer permettent la résolution SPM.
 
@@ -245,8 +248,9 @@ un exemple iOS minimal sans en faire une dépendance du package.
 
 ## Livrables et définition de terminé
 
-Livrer package SPM complet, API, moteur, ressources, Protobuf généré, interface
-registre, tests, fuzz harness, benchmarks, CI, DocC et documentation de release.
+Livrer package SPM complet, générateur, API, moteur, code émis, tests, fuzz harness,
+benchmarks, CI, DocC et documentation de release. Aucune ressource `.binpb` dans le
+paquet, aucun type de registre.
 Tous les critères de `engine.md` doivent être satisfaits ; build release, lint,
 conformité, couverture, tests de concurrence et test consommateur doivent être verts,
 sans TODO V1 ni warning.

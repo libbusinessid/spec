@@ -107,6 +107,16 @@ func TestEveryEngineContractRefusesARuntimeLoader(t *testing.T) {
 				"Resources/businessid-rules",
 				"resources/businessid-rules",
 				"assets/businessid-rules",
+				// The same permission stated as prose rather than as a
+				// signature or a path. engine.md still said the engine MAY be
+				// built from bytes and listed loading a bundle from memory,
+				// three sections after 1.2 forbade it, and the Swift contract
+				// still made the bundle an SPM resource one line after saying
+				// it is not one.
+				"Bundle.module",
+				"construction depuis des bytes",
+				"bundle fourni en mémoire",
+				"charger la ressource",
 			} {
 				if strings.Contains(text, phrase) {
 					t.Errorf("%s asks for %q.\n"+
