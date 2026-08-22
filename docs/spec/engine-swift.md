@@ -22,7 +22,9 @@ erreurs, protocoles et tests selon les conventions Swift.
   iOS, macOS, tvOS et watchOS réellement testés.
 - Tester au minimum macOS et un simulateur iOS.
 - Le cœur doit éviter UIKit/AppKit et rester indépendant de l’UI.
-- Utiliser `apple/swift-protobuf` pour le décodage.
+- Utiliser `apple/swift-protobuf` pour le décodage **dans la cible générateur**.
+  SwiftPM résout tout le manifeste : un consommateur récupère la dépendance même
+  s'il ne la lie pas, donc annoncer « aucune dépendance » sans le vérifier est faux.
 - Le bundle n'est pas une ressource du paquet : il est lu par le générateur à la
   construction. Le corpus de conformité reste accessible aux tests, jamais à la
   bibliothèque.

@@ -21,8 +21,8 @@ testé et publiable sur Maven Central. Ne traduis pas mécaniquement un autre mo
 - plugin Kotlin/JVM stable ;
 - JDK toolchain verrouillé, avec bytecode cible documenté et compatible Android ;
 - aucune dépendance au SDK Android dans le module cœur ;
-- Protobuf officiel Kotlin/Java, de préférence runtime lite si ses capacités
-  couvrent entièrement le schéma et les tests ;
+- Protobuf officiel Kotlin/Java **dans le module générateur uniquement** ; la
+  bibliothèque publiée n'a aucune dépendance Protobuf, puisqu'elle ne décode rien ;
 - versions minimales de Kotlin, JDK et Android consommateur documentées ;
 - publication Maven avec sources, Javadoc/Dokka, POM, checksums et signature.
 
@@ -142,16 +142,25 @@ depuis un navigateur, et vivra donc dans un module séparé, chargé côté serv
 uniquement.
 
 
-## Protobuf
+## Protobuf, dans le générateur
 
-- Générer les classes dans un package `internal` non exposé par l’API.
+Tout ce qui suit concerne le module générateur. La bibliothèque publiée ne décode
+rien, ne dépend d'aucun runtime Protobuf, et ne charge aucune ressource.
+
+- Générer les classes Protobuf dans le module générateur, jamais dans le module publié.
 - Utiliser le plugin Gradle Protobuf avec versions verrouillées.
 - Vérifier si `protobuf-kotlin-lite`/Java lite satisfait unknown fields, oneof et
-  limites nécessaires ; couvrir le choix par tests.
-- Commettre ou régénérer de façon reproductible selon la stratégie documentée.
+  limites nécessaires ; couvrir le choix par tests. Les champs inconnus doivent rester
+  lisibles : le contrôle 5 en dépend, et un runtime qui les jette rend un écart de
+  version indétectable.
 - Ajouter tâches `generateProto` et `checkGenerated`.
-- Charger la ressource via ClassLoader de façon testée dans JAR et Android.
+- Le générateur lit le bundle depuis un chemin, pas depuis le classpath : c'est une
+  entrée de build, pas une ressource.
 - Ne pas utiliser les maps/messages générés comme structures runtime mutables.
+
+Vérifier par un test que le jar publié ne contient aucune classe Protobuf ni aucun
+`.binpb` : c'est ce qui distingue un moteur généré d'un interpréteur, et une
+dépendance Gradle mal portée le trahit silencieusement.
 
 ## Style et qualité Kotlin
 

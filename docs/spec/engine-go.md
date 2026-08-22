@@ -48,7 +48,8 @@ La bibliothèque doit :
 - Le package doit fonctionner avec la version stable de Go déclarée dans `go.mod`.
 - Choisir et documenter une version minimale réaliste ; la CI teste cette version et
   la dernière stable.
-- Éviter les dépendances sauf nécessité claire. Protobuf officiel Go est autorisé.
+- La bibliothèque publiée n'a aucune dépendance : elle ne contient que du code émis
+  et ses primitives. Le générateur, lui, utilise le Protobuf officiel Go.
 - Aucun package interne ne doit être importable par les consommateurs.
 
 Structure recommandée :
@@ -146,7 +147,8 @@ uniquement.
 
 ## Protobuf et artefacts
 
-- Utiliser `google.golang.org/protobuf`.
+- Utiliser `google.golang.org/protobuf` **dans le générateur**. Le module publié
+  ne l'importe pas, ce qu'un test doit vérifier plutôt qu'affirmer.
 - Générer les types dans `internal/irpb` et ne pas les exposer.
 - Verrouiller les versions de `protoc`, `protoc-gen-go` ou utiliser Buf selon la CI.
 - Commettre le code généré si cela rend le build consommateur indépendant des outils.
