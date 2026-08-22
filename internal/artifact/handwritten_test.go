@@ -225,3 +225,51 @@ func reasonCodesOfSchema() []string {
 	slices.Sort(out)
 	return out
 }
+
+// No contract may ask an engine to deliver a registry, or to ship the bundle as
+// a packaged resource.
+//
+// The runtime loader guard above reads signatures and prose paragraphs, and both
+// were clean. The residues had retreated into the checklists nobody re-reads: a
+// deliverables line still listing "interface registre", a test list still asking
+// for "resource loading depuis JAR assemblé", a README list still promising a
+// "moteur personnalisé". A checklist is what an implementer works from, so a
+// stale line there costs a week of somebody's work - which is exactly what it
+// cost, twice.
+func TestNoEngineContractAsksForARegistryOrAPackagedBundle(t *testing.T) {
+	contracts, err := filepath.Glob(filepath.Join("..", "..", "docs", "spec", "engine-*.md"))
+	if err != nil || len(contracts) == 0 {
+		t.Fatalf("no engine contract found: %v", err)
+	}
+	contracts = append(contracts, filepath.Join("..", "..", "docs", "spec", "engine.md"))
+
+	forbidden := map[string]string{
+		// engine.md section 10 defers the registry and reserves its shape. A
+		// contract that lists one among the deliverables asks for a public type,
+		// and a public type is a commitment SemVer freezes.
+		"interface registre":        "engine.md section 10 defers the registry; no engine delivers a type for it",
+		"provider registre injecté": "engine.md section 10 defers the registry; no engine delivers a type for it",
+		"provider registre concret": "engine.md section 10 defers the registry; no engine delivers a type for it",
+		// The bundle is an input to the generator. Every phrasing below asks the
+		// published package to carry it, which implies a decoder to read it.
+		"ressource SPM":             "the bundle is an input to the generator, not a resource of the package",
+		"resource loading":          "the bundle is an input to the generator, not a resource of the package",
+		"packaging de la ressource": "the bundle is an input to the generator, not a resource of the package",
+		"bundle embarqué":           "the bundle is an input to the generator, not a resource of the package",
+		// A custom ruleset goes through the generator, at build time. Offering a
+		// "custom engine" in a README is the byte factory under another name.
+		"moteur personnalisé": "a custom ruleset goes through the generator, at build time",
+		"depuis BINPB":        "the corpus drives the emitted code; only the generator decodes",
+	}
+
+	for _, path := range contracts {
+		t.Run(filepath.Base(path), func(t *testing.T) {
+			text := readDoc(t, path)
+			for phrase, why := range forbidden {
+				if strings.Contains(text, phrase) {
+					t.Errorf("%s asks for %q.\n%s.", filepath.Base(path), phrase, why)
+				}
+			}
+		})
+	}
+}

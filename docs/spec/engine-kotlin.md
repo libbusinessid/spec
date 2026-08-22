@@ -187,9 +187,9 @@ publique, ainsi que Dokka pour la documentation.
 
 - `kotlin.test`/JUnit 5 avec convention cohérente ;
 - tests paramétrés pour toutes les opérations ;
-- conformité complète depuis BINPB ;
-- bundles invalides et limites ;
-- resource loading depuis JAR assemblé ;
+- conformité complète : le corpus pilote le code émis, pas un décodeur ;
+- bundles invalides et limites, contre le générateur ;
+- packaging : que le jar publié ne porte ni `.binpb` ni classe Protobuf ;
 - tests multithread avec executors/coroutines si disponibles ;
 - tests de compatibilité Android dans un projet consommateur minimal ;
 - tests de l’API depuis Java pour les points importants ;
@@ -230,7 +230,8 @@ CI planifiée : Jazzer long, mutation testing, benchmarks et versions de toolcha
 ## Documentation et publication
 
 README : installation Gradle/Maven, exemple Kotlin, exemple Java minimal, format seul,
-checksum unsupported, moteur personnalisé, versions et interface registre. Indiquer
+checksum unsupported, jeu de règles personnalisé passant par le générateur et
+versions. Indiquer
 explicitement que JVM/Android est le support V1 et que KMP n’est pas annoncé.
 
 Publier sources et Dokka, signer les artefacts et suivre SemVer. Ajouter SECURITY,
@@ -246,12 +247,11 @@ CONTRIBUTING et changelog.
 - aucune prétention KMP sans conformité sur chaque target ;
 - aucune copie ligne par ligne du moteur Go/Swift ;
 - aucun cas de conformité désactivé ;
-- aucun provider registre concret.
+- aucun type de registre, même expérimental.
 
 ## Livrables et définition de terminé
 
-Livrer build Gradle reproductible, bibliothèque, API, moteur, ressources, interface
-registre, tests, property tests, fuzzing, benchmarks, CI, documentation Dokka et
+Livrer build Gradle reproductible, générateur, bibliothèque, API, moteur, tests, property tests, fuzzing, benchmarks, CI, documentation Dokka et
 publication Maven. Tous les critères `engine.md`, lint, conformité, couverture,
 compatibilité JVM/Android et test consommateur doivent être verts, sans TODO V1 ni
 warning.

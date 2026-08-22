@@ -121,10 +121,9 @@ Types publics :
 - pas d’interface prématurée pour le moteur lui-même ;
 - options fonctionnelles seulement lorsque plusieurs configurations réelles existent.
 
-`Default()` doit être initialisé une seule fois avec `sync.Once` ou équivalent sûr.
-Une erreur de bundle embarqué est un défaut de build ; elle doit être exposée de
-façon testable sans rendre les entrées utilisateur panics. Une fonction
-`DefaultEngine() (*Engine, error)` peut être préférée si elle rend le contrat plus sûr.
+`Default()` ne peut pas échouer et ne retourne donc pas d'erreur : il n'y a rien à
+charger ni à valider à l'exécution, le jeu de règles est du code émis. Un défaut du
+jeu de règles se voit à la génération, où le build s'arrête, jamais chez l'appelant.
 
 ### Registre : rien à livrer en V1
 
@@ -207,7 +206,7 @@ d’un bundle minimal, une opération, un rapport, un cas de conformité, puis �
 
 - tests table-driven pour chaque opération ;
 - sous-tests nommés et `t.Parallel()` lorsque réellement sûrs ;
-- tests du bundle embarqué et personnalisé ;
+- tests du générateur : bundle valide, bundles hostiles, jeu de règles personnalisé ;
 - tests de toutes les limites et erreurs de graphe ;
 - tests JSON si API de sérialisation ;
 - tests de concurrence et `go test -race ./...` ;

@@ -175,8 +175,8 @@ Utiliser Swift Testing ou XCTest selon la version minimale, avec une convention
 unique. Les tests couvrent :
 
 - chaque opération IR et chaque branche ;
-- décodage/validation de bundles malveillants ;
-- ressource SPM dans un vrai test package ;
+- décodage/validation de bundles malveillants, dans le générateur ;
+- packaging : que le paquet publié ne porte ni `.binpb` ni SwiftProtobuf ;
 - API publique et Codable ;
 - conformité commune complète ;
 - exécution parallèle avec task groups ;
@@ -233,7 +233,8 @@ versions réellement testées.
 ## Documentation
 
 Fournir README et DocC avec : installation SPM, exemple de validation, format seul,
-checksum unsupported, moteur personnalisé, versions, concurrence, registre futur et
+checksum unsupported, jeu de règles personnalisé passant par le générateur,
+versions, concurrence et
 limite « aucune preuve d’existence ». Ajouter SECURITY, CONTRIBUTING, changelog et
 un exemple iOS minimal sans en faire une dépendance du package.
 
