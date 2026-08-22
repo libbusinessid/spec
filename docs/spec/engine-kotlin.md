@@ -37,15 +37,23 @@ Structure recommandée :
 ├── src/main/kotlin/io/libbusinessid/
 │   ├── api/
 │   ├── domain/
-│   ├── runtime/
-│   ├── registry/
+│   ├── runtime/          # primitives que le code généré appelle
+│   ├── generated/        # code émis depuis le bundle, jamais édité
 │   └── internal/
-├── src/main/proto/
-├── src/main/resources/businessid-rules.binpb
-├── src/test/resources/businessid-conformance.binpb
+├── generator/            # le générateur : lit le bundle, valide, émet
+│   └── src/main/kotlin/
 ├── src/test/kotlin/
 └── rules.lock
 ```
+
+Le générateur et la bibliothèque sont deux modules Gradle. Le décodage Protobuf, les
+vingt-cinq contrôles de chargement et la connaissance des opcodes vivent dans le
+générateur ; la bibliothèque publiée ne contient que le code émis, les primitives
+qu'il appelle et l'API.
+
+Aucun `.binpb` n'est une ressource du jar. Le bundle est une entrée du générateur, lue
+à la construction — l'embarquer ferait porter à chaque appelant une donnée que le code
+généré rend inutile, et supposerait un décodeur pour la lire.
 
 Si une future structure multiplateforme est préparée, ne prétends pas supporter KMP
 tant que Protobuf et tous les targets ne passent pas la conformité. La V1 annonce

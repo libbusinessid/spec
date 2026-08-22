@@ -34,19 +34,25 @@ Structure recommandée :
 ├── Sources/BusinessID/
 │   ├── API/
 │   ├── Domain/
-│   ├── Runtime/
-│   ├── Rules/
-│   ├── Registry/
-│   ├── Generated/
-│   └── Resources/businessid-rules.binpb
+│   ├── Runtime/          # primitives que le code généré appelle
+│   └── Generated/        # code émis depuis le bundle, jamais édité
+├── Sources/businessid-gen/   # le générateur : lit le bundle, valide, émet
 ├── Tests/BusinessIDTests/
 │   ├── Unit/
 │   ├── Conformance/
-│   ├── Security/
-│   └── Resources/businessid-conformance.binpb
+│   └── Security/
 ├── Examples/
 └── rules.lock
 ```
+
+Le générateur et la bibliothèque sont deux cibles. Le décodage Protobuf, les
+vingt-cinq contrôles de chargement et la connaissance des opcodes vivent dans le
+générateur ; la bibliothèque publiée ne contient que le code émis, les primitives
+qu'il appelle et l'API.
+
+Aucun `.binpb` n'est une ressource du paquet. Le bundle est une entrée du générateur,
+lue à la construction — l'embarquer comme `Resources` ferait porter à chaque appelant
+une donnée que le code généré rend inutile, et supposerait un décodeur pour la lire.
 
 ## API Swift attendue
 
@@ -129,7 +135,7 @@ uniquement.
 
 ## SwiftProtobuf
 
-- Code généré sous `Sources/BusinessID/Generated`, visibilité internal.
+- Code généré sous `Sources/BusinessID/Generated`, visibilité internal, jamais édité à la main.
 - Version de `protoc-gen-swift` alignée avec le runtime et verrouillée.
 - Commandes de génération et de vérification documentées.
 - Ne pas exposer `SwiftProtobuf.Message` publiquement.
