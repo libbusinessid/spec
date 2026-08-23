@@ -1488,8 +1488,11 @@ moteur, chez un consommateur comme en intégration continue, n’exige ni résea
 accès au dépôt `spec`, conformément à 2.5. La régénération est une opération
 volontaire de mainteneur, jamais une étape de build.
 
-Un moteur PEUT malgré tout embarquer le bundle s’il choisit de l’interpréter ; il
-applique alors les mêmes vérifications de digest et d’attestation avant usage.
+Un moteur N’EMBARQUE PAS le bundle et ne l’interprète pas : `engine.md` section 1.2
+l’interdit, et cette phrase disait le contraire. Elle a survécu à quatre audits parce
+que les gardes mécaniques lisaient `engine.md` et les contrats par langage, jamais ce
+document-ci. Le bundle est une entrée du générateur, vérifiée par digest et par
+attestation à la construction, et rien de lui ne voyage dans le paquet publié.
 
 Format de `rules.lock` :
 
@@ -1498,6 +1501,7 @@ rules_version = "2026.08.0"
 format_version = 1
 rules_sha256 = "..."
 conformance_sha256 = "..."
+conformance_jsonl_sha256 = "..."
 rules_proto_sha256 = "..."
 conformance_proto_sha256 = "..."
 testee_proto_sha256 = "..."

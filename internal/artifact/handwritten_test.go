@@ -72,7 +72,14 @@ func TestEveryEngineContractRefusesARuntimeLoader(t *testing.T) {
 	// minimal API list still offered engineFromRules and registryLookup, three
 	// sections after forbidding both. Auditing only the per-language contracts
 	// missed the document they all defer to.
-	contracts = append(contracts, filepath.Join("..", "..", "docs", "spec", "engine.md"))
+	//
+	// And spec.md, which none of these guards read for four audits. It still
+	// said an engine MAY embed the bundle and interpret it, in the very section
+	// that documents rules.lock, which is the sentence a TypeScript engine was
+	// built on before section 1.2 existed.
+	contracts = append(contracts,
+		filepath.Join("..", "..", "docs", "spec", "engine.md"),
+		filepath.Join("..", "..", "docs", "spec", "spec.md"))
 	// A declaration lives in a code block; the sentences explaining why there is
 	// none live in prose, and must stay. The audit first matched fromRules and
 	// RegistryProvider only, and missed engineFromRules and registryLookup in
