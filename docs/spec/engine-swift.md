@@ -179,6 +179,24 @@ unique. Les tests couvrent :
 - packaging : que le paquet publié ne porte ni `.binpb` ni SwiftProtobuf ;
 - API publique et Codable ;
 - conformité commune complète ;
+
+Le runner de conformité vient de `spec`, jamais de ce dépôt. Il s'exécute épinglé au
+commit que `rules.lock` enregistre sous `source_commit` :
+
+```bash
+go run github.com/libbusinessid/spec/cmd/conformance-runner@<source_commit> \
+  -corpus spec/businessid-conformance.binpb -- .build/debug/businessid-testee
+```
+
+N'écris pas de comparateur : un moteur qui juge lui-même ses propres résultats peut
+se déclarer conforme en comparant trop faiblement. Ce que tu écris, c'est le testee,
+et les tests qui prouvent qu'il ne triche pas.
+
+`invalid_encoding` ne peut pas être un cas de conformité — `ir.md` section 5 étape 1
+dit pourquoi. Épingle-le par un test natif : `String` étant toujours bien formé en Swift,
+la branche est inatteignable par cette API. Documente-le, avec la raison, plutôt
+que d'ajouter un point d'entrée orienté octets qui n'existerait que pour elle.
+
 - exécution parallèle avec task groups ;
 - strict concurrency ;
 - canonicalisation Unicode/ASCII exacte ;

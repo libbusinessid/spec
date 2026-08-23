@@ -273,3 +273,39 @@ func TestNoEngineContractAsksForARegistryOrAPackagedBundle(t *testing.T) {
 		})
 	}
 }
+
+// Every engine contract must point at the shared runner, and none may ask for a
+// comparator of its own.
+//
+// spec.md section 8.7 has always said the comparison logic exists exactly once,
+// and gave the reason: an engine that reads the expected results itself can
+// declare conformance by comparing too weakly. But none of the five contracts -
+// the documents an implementer actually works from - ever said where the runner
+// comes from, and no release existed to download one. Two engines wrote their
+// own. The root cause is the one the checklists had: a rule stated in a document
+// nobody reads while implementing.
+func TestEveryEngineContractPointsAtTheSharedRunner(t *testing.T) {
+	contracts, err := filepath.Glob(filepath.Join("..", "..", "docs", "spec", "engine-*.md"))
+	if err != nil || len(contracts) == 0 {
+		t.Fatalf("no engine contract found: %v", err)
+	}
+	contracts = append(contracts, filepath.Join("..", "..", "docs", "spec", "engine.md"))
+
+	for _, path := range contracts {
+		t.Run(filepath.Base(path), func(t *testing.T) {
+			text := readDoc(t, path)
+			if !strings.Contains(text, "conformance-runner@") {
+				t.Errorf("%s never says where the conformance runner comes from.\n"+
+					"An implementer reading only this document writes one, and then the "+
+					"engine and its judge are the same code.", filepath.Base(path))
+			}
+			// The step that no case can carry. A contract that stays silent about
+			// it leaves a public reason code with no coverage anywhere.
+			if !strings.Contains(text, "invalid_encoding") {
+				t.Errorf("%s never requires a native test for invalid_encoding.\n"+
+					"No conformance case can carry an ill formed input, so the branch is "+
+					"covered by that test or by nothing.", filepath.Base(path))
+			}
+		})
+	}
+}
