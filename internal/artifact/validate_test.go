@@ -97,22 +97,27 @@ func TestBundleRejections(t *testing.T) {
 		{"wrong output type", func(b *irv1.RuleBundle) {
 			b.Programs[1].Nodes[0].OutputType = irv1.ValueType_VALUE_TYPE_INTEGER
 		}, artifact.ErrInvalid, "declares output"},
+		// Appended rather than substituted for node 0. Replacing a node the
+		// SEQUENCE root reads breaks the operand type too, and the operand types
+		// are check 11 while the categories are check 16: the bundle would be
+		// refused for the wrong fault, and the case would stop proving the rule
+		// it names. The corpus has been bitten by exactly that five times.
 		{"category not allowed", func(b *irv1.RuleBundle) {
-			b.Programs[0].Nodes[0] = &irv1.Node{
+			b.Programs[0].Nodes = append(b.Programs[0].Nodes, &irv1.Node{
 				OutputType: irv1.ValueType_VALUE_TYPE_CHECKSUM_OUTCOME,
 				Operation: &irv1.Node_ChecksumOperation{ChecksumOperation: &irv1.ChecksumOperation{
 					Kind:       irv1.ChecksumOpKind_CHECKSUM_OP_KIND_UNSUPPORTED,
 					ReasonCode: reasonPtr(irv1.ReasonCode_REASON_CODE_UNSUPPORTED_CHECKSUM),
 				}},
-			}
+			})
 		}, artifact.ErrInvalid, "is not allowed in a"},
 		{"subject in canonicalization", func(b *irv1.RuleBundle) {
-			b.Programs[0].Nodes[0] = &irv1.Node{
+			b.Programs[0].Nodes = append(b.Programs[0].Nodes, &irv1.Node{
 				OutputType: irv1.ValueType_VALUE_TYPE_STRING,
 				Operation: &irv1.Node_StringOperation{StringOperation: &irv1.StringOperation{
 					Kind: irv1.StringOpKind_STRING_OP_KIND_SUBJECT,
 				}},
-			}
+			})
 		}, artifact.ErrInvalid, "is not allowed in a"},
 		{"too few operands", func(b *irv1.RuleBundle) { b.Programs[1].Nodes[1].InputNodes = nil },
 			artifact.ErrInvalid, "expects at least"},

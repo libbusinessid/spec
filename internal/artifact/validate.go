@@ -191,6 +191,24 @@ func (v *validator) validatePrograms() error {
 }
 
 func (v *validator) validateProgramShape(p *irv1.Program, nodes []*irv1.Node) error {
+	// ir.md section 2 states, one row per program kind, which operation
+	// categories that kind accepts. It belongs to the shape, so it runs here
+	// rather than in the per node pass: the arithmetic bounds speak first, and
+	// this loader used to answer the misplaced category instead. That is how one
+	// fixture read as refused by check 13 to one engine and by check 16 to
+	// another, leaving nobody able to say which fault the case was proving.
+	for i, n := range nodes {
+		shape, err := shapeOf(n)
+		if err != nil {
+			return invalidf("program %d node %d: %v", p.GetId(), i, err)
+		}
+		if v.categoryAllowed(p.GetKind(), shape.category, shape.code) {
+			continue
+		}
+		op, _ := features.LookupOp(shape.category, shape.code)
+		return invalidf("program %d node %d: %s is not allowed in a %v program",
+			p.GetId(), i, op.Symbol, p.GetKind())
+	}
 	if err := v.validateProgramRoot(p, nodes); err != nil {
 		return err
 	}

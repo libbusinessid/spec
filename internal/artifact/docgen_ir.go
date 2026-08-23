@@ -504,7 +504,8 @@ var loadChecks = []string{
 	"arithmetic bounds: moduli, weights, remainder tables, indices, provable integer widths and the alphabet of a custom mapping",
 	"expansion within the evaluation budget once repeated operands are inlined",
 	"root, subject and capture nodes inside the program, correctly typed, and a subject node that does not read the subject it defines",
-	"program shape: accepted root per kind, `WHEN` only inside `CHOOSE`, and a " +
+	"program shape: the accepted root and the accepted operation categories of the " +
+		"kind, both as section 2 states them, `WHEN` only inside `CHOOSE`, and a " +
 		"pre-canonicalization program restricted to its five permitted operations",
 	"identifier ids unique, kinds and countries well formed, serialization order respected",
 	"exactly one checksum program or one absence reason per definition",
