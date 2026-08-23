@@ -469,17 +469,42 @@ func main() {
 	// A left_pad asking for more code points than a slice bound allows. An
 	// engine that compiles the rules ahead of time sizes its work buffer from
 	// this number, so an unbounded length is an allocation primitive.
+	// The padding node belongs to the canonicalization program: it was placed in
+	// the format program and rooted there, so a canonicalization operation was
+	// refused for being in a format program and the length of its name never
+	// counted. Bring the length under the bound and the bundle stayed refused,
+	// for a reason the case is not about - an engine with no bound on left_pad
+	// passed it. The Swift engine measured that.
+	//
+	// So the node joins the canonicalization sequence, reachable from a root of
+	// the kind that program requires, and its length is the only thing wrong.
 	longPad := clone(base)
-	longPad.Programs[1].Nodes = append(longPad.Programs[1].Nodes,
-		&irv1.Node{
-			OutputType: irv1.ValueType_VALUE_TYPE_CANONICALIZATION_STEP,
-			Operation: &irv1.Node_CanonicalizationOperation{CanonicalizationOperation: &irv1.CanonicalizationOperation{
-				Kind:   irv1.CanonicalizationOpKind_CANONICALIZATION_OP_KIND_LEFT_PAD,
-				Text:   s("0"),
-				Length: u(limits.MaxIndex + 1),
-			}},
+	{
+		// The base bundle uses program 1 both as the definition's
+		// canonicalization and as the dispatcher's pre-canonicalization, and
+		// LEFT_PAD is forbidden in a pre-canonicalization program. So the
+		// padding gets a canonicalization program of its own, referenced by the
+		// definition, and the pre-canonicalizer keeps program 1.
+		sequence := proto.Clone(base.Programs[0].Nodes[base.Programs[0].RootNode]).(*irv1.Node)
+		sequence.InputNodes = []uint32{0}
+		longPad.Programs = append(longPad.Programs, &irv1.Program{
+			Id:   4,
+			Kind: irv1.ProgramKind_PROGRAM_KIND_CANONICALIZATION,
+			Nodes: []*irv1.Node{
+				{
+					OutputType: irv1.ValueType_VALUE_TYPE_CANONICALIZATION_STEP,
+					Operation: &irv1.Node_CanonicalizationOperation{CanonicalizationOperation: &irv1.CanonicalizationOperation{
+						Kind:   irv1.CanonicalizationOpKind_CANONICALIZATION_OP_KIND_LEFT_PAD,
+						Text:   s("0"),
+						Length: u(limits.MaxIndex + 1),
+					}},
+				},
+				sequence,
+			},
+			RootNode: 1,
 		})
-	longPad.Programs[1].RootNode = uint32(len(longPad.Programs[1].Nodes) - 1)
+		longPad.Identifiers[0].CanonicalizationProgram = 4
+	}
 	write(filepath.Join(root, "left_pad_length.binpb"), marshal(longPad))
 
 	// A message key that is present and empty. Absence and emptiness are
