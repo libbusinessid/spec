@@ -73,6 +73,11 @@ rules_version = "${version}"
 format_version = 1
 rules_sha256 = "$(sha "${dist}/businessid-rules-${version}.binpb")"
 conformance_sha256 = "$(sha "${dist}/businessid-conformance-${version}.binpb")"
+# The JSONL is shipped decompressed, so its digest is taken on what lands in
+# spec/ rather than on the archive. It went unlisted for a while: an engine
+# could not verify it, verify-lock.sh would not have noticed a drift, and
+# engine tests cite its case ids as provenance. Found by the Swift engine.
+conformance_jsonl_sha256 = "$(gzip -dc "${dist}/businessid-conformance-${version}.jsonl.gz" | sha256sum | cut -d' ' -f1)"
 rules_proto_sha256 = "$(sha "${dist}/rules.proto")"
 conformance_proto_sha256 = "$(sha "${dist}/conformance.proto")"
 testee_proto_sha256 = "$(sha "${dist}/testee.proto")"
