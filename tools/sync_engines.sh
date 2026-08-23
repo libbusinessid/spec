@@ -77,6 +77,16 @@ conformance_sha256 = "$(sha "${dist}/businessid-conformance-${version}.binpb")"
 # spec/ rather than on the archive. It went unlisted for a while: an engine
 # could not verify it, verify-lock.sh would not have noticed a drift, and
 # engine tests cite its case ids as provenance. Found by the Swift engine.
+#
+# Decompressed is also the only stable choice. The archive embeds a timestamp
+# taken from SOURCE_DATE_EPOCH, so its digest moves with the source commit while
+# its content does not: reproducible at a fixed commit, different across two.
+#
+# And expect this field to stay put while conformance_sha256 moves. That looks
+# exactly like the drift it was added to catch, and is not: the JSONL is the
+# reviewed source and carries no rules version, while the compiled corpus injects
+# one into every expected report. A version bump alone moves one and not the
+# other. Both measured by the Swift engine, on the release archive.
 conformance_jsonl_sha256 = "$(gzip -dc "${dist}/businessid-conformance-${version}.jsonl.gz" | sha256sum | cut -d' ' -f1)"
 rules_proto_sha256 = "$(sha "${dist}/rules.proto")"
 conformance_proto_sha256 = "$(sha "${dist}/conformance.proto")"
