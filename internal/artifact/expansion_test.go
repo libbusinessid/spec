@@ -6,6 +6,8 @@ import (
 	"strings"
 	"testing"
 
+	"google.golang.org/protobuf/proto"
+
 	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
 	"github.com/libbusinessid/spec/internal/limits"
 )
@@ -312,5 +314,58 @@ func TestExpansionIgnoresTheOrderCapturesAreListedIn(t *testing.T) {
 	if high != low {
 		t.Fatalf("the capture order changed the count: %d listed high first, %d low first",
 			high, low)
+	}
+}
+
+// The fixture that exercises check 14 must be invalid for check 14 alone.
+//
+// It was wrong twice. First the root did not reach the chain, so forty doubling
+// nodes were unreachable and the refusal came from an undeclared capability.
+// Then the root was pointed at the chain itself, which made a checksum program
+// rooted in a string: the TypeScript engine measured that a bundle whose
+// expansion is brought under the budget is still refused, for a reason that has
+// nothing to do with the bound.
+//
+// Both answers are invalid_ruleset, so the case passed either way - including
+// for an engine that never implemented the bound the case is named for. Fourth
+// fixture of this family, after message_key, subject_node_circular and this
+// one's own first version.
+func TestTheExpansionFixtureIsInvalidForThatReasonAlone(t *testing.T) {
+	raw, err := os.ReadFile(filepath.Join("..", "..", "testdata", "bundles", "program_expansion.binpb"))
+	if err != nil {
+		t.Fatalf("reading the fixture: %v", err)
+	}
+	if _, err = LoadRuleset(raw); err == nil {
+		t.Fatal("the fixture loads; it is supposed to be refused")
+	}
+	if !strings.Contains(err.Error(), "expands to more than") {
+		t.Fatalf("the fixture must be refused by the expansion bound, got %v", err)
+	}
+
+	// Bring the expansion under the budget and change nothing else: shorten the
+	// doubling chain, keeping the root and the node it reads. Every remaining
+	// node stays reachable, so what is left is the fixture minus its one fault.
+	var bundle irv1.RuleBundle
+	if err = proto.Unmarshal(raw, &bundle); err != nil {
+		t.Fatalf("decoding the fixture: %v", err)
+	}
+	for _, p := range bundle.GetPrograms() {
+		nodes := p.GetNodes()
+		if len(nodes) < 30 || p.GetKind() != irv1.ProgramKind_PROGRAM_KIND_CHECKSUM {
+			continue
+		}
+		const keep = 12
+		root := nodes[p.GetRootNode()]
+		root.InputNodes = []uint32{uint32(keep - 1)}
+		shortened := make([]*irv1.Node, 0, keep+1)
+		shortened = append(shortened, nodes[:keep]...)
+		shortened = append(shortened, root)
+		p.Nodes = shortened
+		p.RootNode = uint32(keep)
+	}
+	if _, err = LoadRuleset(encodeBundle(t, &bundle)); err != nil {
+		t.Fatalf("with its expansion under the budget the fixture is still refused: %v\n"+
+			"The case cannot distinguish an engine that implements check 14 from one "+
+			"that does not: both answer invalid_ruleset, for different reasons.", err)
 	}
 }

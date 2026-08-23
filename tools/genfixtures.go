@@ -5,6 +5,15 @@
 // to the engine repositories.
 //
 // Run it with `go run tools/genfixtures.go`.
+//
+// Every hostile fixture must be invalid for exactly one reason: repair the fault
+// the case is named for, and the bundle must load. Four of them failed that, and
+// each time the same way - message_key, subject_node_circular, and
+// program_expansion twice. Every load failure answers invalid_ruleset, so a
+// second, unrelated fault makes the case pass for an engine that never
+// implemented the rule under test, which is the engine the case exists to catch.
+// Nothing here can detect it: write the repair as a test beside the fixture,
+// watch it fail against the broken version, and only then trust the case.
 package main
 
 import (
@@ -587,14 +596,24 @@ func main() {
 			})
 			first = uint32(len(nodes) - 1)
 		}
-		explosive.Programs[2].Nodes = nodes
 		// The root has to reach the chain, or a generator emits none of it and
 		// the fixture proves nothing. The first version pointed the root at the
 		// original checksum node and left forty doubling nodes unreachable: the
 		// Go engine refused it at check 25 for an undeclared capability while
 		// this one refused it at check 14, and the case could not tell them
 		// apart because both answers are invalid_ruleset.
-		explosive.Programs[2].RootNode = first
+		//
+		// The second version pointed the root at the chain instead, and traded
+		// one independent fault for another: a checksum program must be rooted
+		// in a checksum outcome, and the chain produces a string. The TypeScript
+		// engine measured it. So the chain feeds a checksum node appended after
+		// it - reachable from the root, strictly lower operand indices, and the
+		// root still produces what its program kind requires.
+		root := proto.Clone(explosive.Programs[2].Nodes[explosive.Programs[2].RootNode]).(*irv1.Node)
+		root.InputNodes = []uint32{first}
+		nodes = append(nodes, root)
+		explosive.Programs[2].Nodes = nodes
+		explosive.Programs[2].RootNode = uint32(len(nodes) - 1)
 	}
 	// CONCAT belongs to STRING_VIEWS_V1, which the base bundle does not declare.
 	// Without it the refusal comes from the undeclared capability rather than
