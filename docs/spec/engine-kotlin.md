@@ -188,6 +188,23 @@ publique, ainsi que Dokka pour la documentation.
 - `kotlin.test`/JUnit 5 avec convention cohérente ;
 - tests paramétrés pour toutes les opérations ;
 - conformité complète : le corpus pilote le code émis, pas un décodeur ;
+
+Le runner de conformité vient de `spec`, jamais de ce dépôt. Il s'exécute épinglé au
+commit que `rules.lock` enregistre sous `source_commit` :
+
+```bash
+go run github.com/libbusinessid/spec/cmd/conformance-runner@<source_commit> \
+  -corpus spec/businessid-conformance.binpb -- ./gradlew -q runTestee
+```
+
+N'écris pas de comparateur : un moteur qui juge lui-même ses propres résultats peut
+se déclarer conforme en comparant trop faiblement. Ce que tu écris, c'est le testee,
+et les tests qui prouvent qu'il ne triche pas.
+
+`invalid_encoding` ne peut pas être un cas de conformité — `ir.md` section 5 étape 1
+dit pourquoi. Épingle-le par un test natif portant une `String` contenant une demi-paire
+de substitution non appariée, que le type `String` de Kotlin admet.
+
 - bundles invalides et limites, contre le générateur ;
 - packaging : que le jar publié ne porte ni `.binpb` ni classe Protobuf ;
 - tests multithread avec executors/coroutines si disponibles ;
