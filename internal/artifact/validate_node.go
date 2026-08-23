@@ -101,10 +101,6 @@ func (v *validator) validateNode(p *irv1.Program, index int, n *irv1.Node, maxLe
 		return invalidf("program %d node %d: declares output %v but %s produces %v",
 			p.GetId(), index, n.GetOutputType(), op.Symbol, op.Output)
 	}
-	if !v.categoryAllowed(p.GetKind(), shape.category, shape.code) {
-		return invalidf("program %d node %d: %s is not allowed in a %v program",
-			p.GetId(), index, op.Symbol, p.GetKind())
-	}
 	inputs := n.GetInputNodes()
 	if len(inputs) < op.MinOperands() {
 		return invalidf("program %d node %d: %s expects at least %d operand(s), got %d",
