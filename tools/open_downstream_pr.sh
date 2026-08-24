@@ -50,8 +50,15 @@ git -c user.name="libbusinessid-bot" -c user.email="bot@libbusinessid.invalid" \
 # --force-with-lease did on the second attempt. So the branch is fetched first
 # when it exists, and pushed plainly when it does not.
 if git ls-remote --exit-code --heads origin "${branch}" >/dev/null 2>&1; then
-  git fetch --depth 1 origin "${branch}"
-  git push --force-with-lease --set-upstream origin "${branch}"
+  # The refspec, so the fetch writes a remote-tracking ref rather than only
+  # FETCH_HEAD -- a bare fetch leaves the lease nothing to read.
+  git fetch --depth 1 origin "+${branch}:refs/remotes/origin/${branch}"
+  # And the expected value spelled out, because a shallow clone cannot establish
+  # the history relationship a bare --force-with-lease needs: it refuses with
+  # "stale info" even once the tracking ref exists. Verified against a real
+  # engine repository with --dry-run before being written here.
+  git push "--force-with-lease=${branch}:$(git rev-parse "refs/remotes/origin/${branch}")" \
+    --set-upstream origin "${branch}"
 else
   git push --set-upstream origin "${branch}"
 fi
