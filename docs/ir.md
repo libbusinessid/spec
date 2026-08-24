@@ -572,6 +572,8 @@ True when `expr` is present and starts with at least one element of `values`. `v
 
 That refusal takes the evidence with it. Every `prefix_in` a bundle may now carry holds one length, so no conformance case can distinguish a search run per length from one run over the whole table: the shape that separates them is the shape the loader refuses. An engine MUST therefore pin the semantics below its loader, by a native test comparing its search against the definition transcribed literally -- some element is a prefix of the subject -- over tables of mixed lengths. This is the second rule the corpus cannot carry, alongside `invalid_encoding`, and for the same kind of reason: what makes a case expressible and what makes a rule worth stating are not the same thing.
 
+The unit is bytes because the search is over bytes, and an engine working in another unit may group more finely without contradicting this: two elements of the same byte length can differ in code points, since `PZ` and `é` are both two bytes and are not both two code points. A finer grouping refuses nothing this accepts. No conformance case separates the two readings, because every element of the published bundle is ASCII, where they agree.
+
 #### `PREDICATE_OP_KIND_CHAR_AT_IN`
 
 Surface syntax: `char_at_in(expr, index, chars)`.

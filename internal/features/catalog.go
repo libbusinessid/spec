@@ -389,7 +389,13 @@ var ops = []Op{
 			"search against the definition transcribed literally -- some element is a prefix of the " +
 			"subject -- over tables of mixed lengths. This is the second rule the corpus cannot carry, " +
 			"alongside `invalid_encoding`, and for the same kind of reason: what makes a case " +
-			"expressible and what makes a rule worth stating are not the same thing.",
+			"expressible and what makes a rule worth stating are not the same thing.\n\n" +
+			"The unit is bytes because the search is over bytes, and an engine working in another " +
+			"unit may group more finely without contradicting this: two elements of the same byte " +
+			"length can differ in code points, since `PZ` and `\u00e9` are both two bytes and are not " +
+			"both two code points. A finer grouping refuses nothing this accepts. No conformance " +
+			"case separates the two readings, because every element of the published bundle is " +
+			"ASCII, where they agree.",
 	},
 	{
 		Category: CategoryPredicate, Code: int32(irv1.PredicateOpKind_PREDICATE_OP_KIND_CHAR_AT_IN),
