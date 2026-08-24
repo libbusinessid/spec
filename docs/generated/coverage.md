@@ -682,7 +682,7 @@ It shrinks when a rule needs one of them, and it must not grow silently.
 
 ## Conformance statistics
 
-Total cases: **668**.
+Total cases: **669**.
 
 | Kind | Cases |
 |---|---:|
@@ -702,7 +702,7 @@ Total cases: **668**.
 | `ein` | 3 |
 | `enterprise_number` | 12 |
 | `eori` | 4 |
-| `euid` | 128 |
+| `euid` | 129 |
 | `firmenbuchnummer` | 4 |
 | `fr_siren` | 2 |
 | `gemi` | 3 |
@@ -780,9 +780,9 @@ Total cases: **668**.
 | `pre-partition` | 1 |
 | `prefix` | 40 |
 | `profile` | 8 |
-| `real` | 66 |
+| `real` | 67 |
 | `reason-code` | 1 |
-| `register` | 2 |
+| `register` | 3 |
 | `regression` | 2 |
 | `security` | 37 |
 | `shape` | 30 |
@@ -796,13 +796,13 @@ Total cases: **668**.
 | `types` | 1 |
 | `unknown-field` | 1 |
 | `unsupported` | 31 |
-| `valid` | 279 |
+| `valid` | 280 |
 | `variant` | 2 |
 | `version` | 4 |
 | `weighted` | 4 |
 
 | Data classification | Cases |
 |---|---:|
-| `public_business_identifier` | 66 |
+| `public_business_identifier` | 67 |
 | `synthetic` | 602 |
 
