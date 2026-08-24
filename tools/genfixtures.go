@@ -760,6 +760,23 @@ func main() {
 		})
 	write(filepath.Join(root, "prefix_in_unsorted.binpb"), marshal(unsortedValues))
 
+	// A prefix_in mixing element lengths. Sorted and deduplicated, so only the
+	// mixed lengths are wrong: ["AB", "ABA"] against "ABCD" is where a search
+	// for the greatest element not after the input finds "ABA", not a prefix,
+	// while "AB" is one. All four prefix_in nodes of the published bundle hold a
+	// single length, so nothing else in the corpus reaches this.
+	mixedLengths := clone(base)
+	mixedLengths.Programs[1].Nodes = append(mixedLengths.Programs[1].Nodes,
+		&irv1.Node{
+			OutputType: irv1.ValueType_VALUE_TYPE_BOOLEAN,
+			InputNodes: []uint32{0},
+			Operation: &irv1.Node_PredicateOperation{PredicateOperation: &irv1.PredicateOperation{
+				Kind:   irv1.PredicateOpKind_PREDICATE_OP_KIND_PREFIX_IN,
+				Values: []string{"AB", "ABA"},
+			}},
+		})
+	write(filepath.Join(root, "prefix_in_mixed_lengths.binpb"), marshal(mixedLengths))
+
 	// A GLOBAL target declaring a prefix.
 	globalPrefix := clone(base)
 	globalPrefix.Dispatchers[0].Targets[0].AcceptedPrefixes = []string{"XX"}

@@ -2,7 +2,7 @@
 
 # Rule coverage
 
-Rules version `2026.09.1`, IR format version `1`.
+Rules version `2026.09.2`, IR format version `1`.
 
 ## Country by kind matrix
 
@@ -683,12 +683,12 @@ It shrinks when a rule needs one of them, and it must not grow silently.
 
 ## Conformance statistics
 
-Total cases: **675**.
+Total cases: **676**.
 
 | Kind | Cases |
 |---|---:|
 | `  VAT  ` | 1 |
-| `(loader)` | 37 |
+| `(loader)` | 38 |
 | `VAT!` | 1 |
 | `cegjegyzekszam` | 2 |
 | `cnpj` | 19 |
@@ -769,7 +769,7 @@ Total cases: **675**.
 | `letter` | 3 |
 | `letters-first` | 3 |
 | `limits` | 3 |
-| `loader` | 10 |
+| `loader` | 11 |
 | `luhn` | 3 |
 | `message_key` | 1 |
 | `mismatch` | 1 |
@@ -786,14 +786,14 @@ Total cases: **675**.
 | `register` | 6 |
 | `regression` | 2 |
 | `section` | 1 |
-| `security` | 39 |
+| `security` | 40 |
 | `shape` | 30 |
 | `short` | 2 |
 | `sole_trader` | 4 |
 | `strict` | 6 |
 | `structure` | 2 |
 | `suffix` | 4 |
-| `synthetic` | 579 |
+| `synthetic` | 580 |
 | `truncation` | 1 |
 | `types` | 1 |
 | `unknown-field` | 1 |
@@ -806,5 +806,5 @@ Total cases: **675**.
 | Data classification | Cases |
 |---|---:|
 | `public_business_identifier` | 68 |
-| `synthetic` | 607 |
+| `synthetic` | 608 |
 
