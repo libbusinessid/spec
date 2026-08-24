@@ -15,6 +15,11 @@ branch="rules/${version}"
 work="$(mktemp -d)"
 trap 'rm -rf "${work}"' EXIT
 
+# gh authenticates its own API calls from GH_TOKEN, but git does not: the clone
+# succeeded, the branch and the commit were made, and the push then asked for a
+# username on a runner with no terminal. This wires the token into git's
+# credential helper for the whole script.
+gh auth setup-git
 gh repo clone "${repo}" "${work}/engine" -- --depth 1
 cd "${work}/engine"
 
