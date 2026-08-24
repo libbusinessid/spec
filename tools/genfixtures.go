@@ -739,6 +739,27 @@ func main() {
 		})
 	write(filepath.Join(root, "when_unreferenced.binpb"), marshal(unreferencedWhen))
 
+	// prefix_in values out of order. ir.md section 9 puts them under the
+	// normative order and requires a refusal, and this loader did not check it:
+	// invisible while every engine scanned the list, load bearing the moment
+	// section 14 required the lookup not to be linear, because a binary search
+	// over an unsorted list answers wrongly rather than slowly.
+	//
+	// The base bundle carries no prefix_in, so the node is appended rather than
+	// mutated: the first version reversed a list it never found and produced a
+	// fixture that loaded clean.
+	unsortedValues := clone(base)
+	unsortedValues.Programs[1].Nodes = append(unsortedValues.Programs[1].Nodes,
+		&irv1.Node{
+			OutputType: irv1.ValueType_VALUE_TYPE_BOOLEAN,
+			InputNodes: []uint32{0},
+			Operation: &irv1.Node_PredicateOperation{PredicateOperation: &irv1.PredicateOperation{
+				Kind:   irv1.PredicateOpKind_PREDICATE_OP_KIND_PREFIX_IN,
+				Values: []string{"CD", "AB"},
+			}},
+		})
+	write(filepath.Join(root, "prefix_in_unsorted.binpb"), marshal(unsortedValues))
+
 	// A GLOBAL target declaring a prefix.
 	globalPrefix := clone(base)
 	globalPrefix.Dispatchers[0].Targets[0].AcceptedPrefixes = []string{"XX"}

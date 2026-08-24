@@ -338,12 +338,29 @@ func validatePredicateNode(n *irv1.Node, fail func(string, ...any) error) error 
 		}
 	default:
 	}
-	for _, value := range s.GetValues() {
+	// ir.md section 9 puts values and lengths under the normative order and says
+	// an engine refuses a bundle that does not respect it. This was unchecked
+	// here, and invisible while every engine scanned the list: a scan does not
+	// care about order. Section 14 now requires the lookup not to be linear, and
+	// a binary search over an unsorted list does not answer slowly, it answers
+	// wrongly -- so an unordered bundle accepted here would be mis-answered by a
+	// conforming engine. The TypeScript engine found it in its own loader.
+	for i, value := range s.GetValues() {
 		if value == "" {
 			return fail("prefix_in must not carry an empty value")
 		}
 		if len(value) > limits.MaxConstantBytes {
 			return fail("constant exceeds %d bytes", limits.MaxConstantBytes)
+		}
+		if i > 0 && value <= s.GetValues()[i-1] {
+			return fail("values must be ascending and deduplicated, %q follows %q",
+				value, s.GetValues()[i-1])
+		}
+	}
+	for i, length := range s.GetLengths() {
+		if i > 0 && length <= s.GetLengths()[i-1] {
+			return fail("lengths must be ascending and deduplicated, %d follows %d",
+				length, s.GetLengths()[i-1])
 		}
 	}
 	return nil

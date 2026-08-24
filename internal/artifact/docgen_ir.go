@@ -512,7 +512,7 @@ var loadChecks = []string{
 	"every operation known, with its declared output type",
 	"operand count, operand types and strictly lower operand indices",
 	"only the parameters the operation declares, and every required parameter",
-	"arithmetic bounds: moduli, weights, remainder tables, indices, provable integer widths and the alphabet of a custom mapping",
+	"arithmetic bounds: moduli, weights, remainder tables, indices, provable integer widths and the alphabet of a custom mapping, and the declared order of a parameter list as section 9 states it",
 	"expansion within the evaluation budget once repeated operands are inlined",
 	"root, subject and capture nodes inside the program, correctly typed, and a subject node that does not read the subject it defines",
 	"program shape: the accepted root and the accepted operation categories of the " +
