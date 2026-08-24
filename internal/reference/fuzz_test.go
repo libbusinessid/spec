@@ -20,7 +20,7 @@ func FuzzValidateInput(f *testing.F) {
 		{"siren", "012345674", "FR", true, "compatible"},
 		{"vat", "BE0123456749", "", false, "compatible"},
 		{"vat", "GR012345670", "EL", true, "strict_current"},
-		{"euid", "FRTVX.012345674", "", false, "compatible"},
+		{"euid", "FR7501.012345674", "", false, "compatible"},
 		{"lei", "00000000000000000098", "fr", true, "compatible"},
 		{"", "", "", false, ""},
 		{"vat", " \ufeff BE0123456749", "", false, "compatible"},

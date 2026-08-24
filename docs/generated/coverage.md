@@ -2,7 +2,7 @@
 
 # Rule coverage
 
-Rules version `2026.08.27`, IR format version `1`.
+Rules version `2026.08.29`, IR format version `1`.
 
 ## Country by kind matrix
 
@@ -32,7 +32,7 @@ Rules version `2026.08.27`, IR format version `1`.
 | `euid` | `EL` | 23 | 177 | - | `compatible` | 1 |
 | `euid` | `ES` | 24 | 178 | 110 | `compatible` | 2 |
 | `euid` | `FI` | 25 | 179 | 111 | `compatible` | 2 |
-| `euid` | `FR` | 26 | 180 | 112 | `compatible` | 2 |
+| `euid` | `FR` | 26 | 180 | 112 | `compatible` | 3 |
 | `euid` | `HR` | 27 | 181 | - | `compatible` | 1 |
 | `euid` | `HU` | 28 | 182 | - | `compatible` | 1 |
 | `euid` | `IE` | 29 | 183 | - | `compatible` | 1 |
@@ -495,19 +495,19 @@ Kind aliases: `business_id`, `fi_y_tunnus`.
 | `INTEGER_OP_KIND_WEIGHTED_SUM` | 32 |
 | `PREDICATE_OP_KIND_ALL` | 7 |
 | `PREDICATE_OP_KIND_ANY` | 11 |
-| `PREDICATE_OP_KIND_ASCII_ALPHANUMERIC` | 37 |
+| `PREDICATE_OP_KIND_ASCII_ALPHANUMERIC` | 36 |
 | `PREDICATE_OP_KIND_ASCII_CHARSET` | 1 |
-| `PREDICATE_OP_KIND_ASCII_DIGITS` | 66 |
+| `PREDICATE_OP_KIND_ASCII_DIGITS` | 67 |
 | `PREDICATE_OP_KIND_ASCII_UPPER_LETTERS` | 1 |
 | `PREDICATE_OP_KIND_CHAR_AT_IN` | 14 |
 | `PREDICATE_OP_KIND_CONTAINS` | 27 |
 | `PREDICATE_OP_KIND_INTEGER_IS` | 4 |
 | `PREDICATE_OP_KIND_IS_ABSENT` | 27 |
 | `PREDICATE_OP_KIND_IS_EMPTY` | 94 |
-| `PREDICATE_OP_KIND_LENGTH_BETWEEN` | 37 |
-| `PREDICATE_OP_KIND_LENGTH_EQ` | 65 |
+| `PREDICATE_OP_KIND_LENGTH_BETWEEN` | 36 |
+| `PREDICATE_OP_KIND_LENGTH_EQ` | 66 |
 | `PREDICATE_OP_KIND_NOT` | 98 |
-| `PREDICATE_OP_KIND_PREFIX_IN` | 1 |
+| `PREDICATE_OP_KIND_PREFIX_IN` | 2 |
 | `PREDICATE_OP_KIND_PROFILE_IS` | 1 |
 | `PREDICATE_OP_KIND_STARTS_WITH` | 63 |
 | `STRING_OP_KIND_AFTER_FIRST` | 42 |
@@ -631,6 +631,7 @@ It shrinks when a rule needs one of them, and it must not grow silently.
 | [`fi-prh-ytunnus`](https://www.prh.fi) | Patentti- ja rekisterihallitus (PRH) | FI | 2026-08-20 | Finnish public sector information |
 | [`fi-vat-check`](https://en.wikipedia.org/wiki/VAT_identification_number) | Wikipedia | FI | 2026-08-20 | CC BY-SA 4.0, cited as a description and not redistributed |
 | [`fi-ytunnus-mod11`](https://en.wikipedia.org/wiki/VAT_identification_number) | Wikipedia | FI | 2026-08-20 | CC BY-SA 4.0, cited as a description and not redistributed |
+| [`fr-cngtc-greffes`](https://www.data.gouv.fr/datasets/liste-des-greffes) | Conseil national des greffiers des tribunaux de commerce, diffused by Infogreffe | FR | 2026-08-24 | Licence Ouverte / Open Licence v2.0 |
 | [`fr-dgfip-vat`](https://entreprendre.service-public.fr/vosdroits/F23570) | Direction de l'information legale et administrative, for the DGFiP | FR | 2026-08-18 | Licence Ouverte / Open Licence (Etalab), public sector information |
 | [`fr-insee-siren`](https://www.insee.fr/fr/information/2015441) | Institut national de la statistique et des etudes economiques (INSEE) | FR | 2026-08-18 | Licence Ouverte / Open Licence (Etalab), public sector information |
 | [`gb-companies-house-data`](https://download.companieshouse.gov.uk/en_output.html) | Companies House | GB | 2026-08-20 | Crown copyright, Open Government Licence v3.0 |
@@ -681,7 +682,7 @@ It shrinks when a rule needs one of them, and it must not grow silently.
 
 ## Conformance statistics
 
-Total cases: **666**.
+Total cases: **669**.
 
 | Kind | Cases |
 |---|---:|
@@ -701,7 +702,7 @@ Total cases: **666**.
 | `ein` | 3 |
 | `enterprise_number` | 12 |
 | `eori` | 4 |
-| `euid` | 126 |
+| `euid` | 129 |
 | `firmenbuchnummer` | 4 |
 | `fr_siren` | 2 |
 | `gemi` | 3 |
@@ -760,7 +761,7 @@ Total cases: **666**.
 | `group` | 1 |
 | `hole` | 6 |
 | `implicit` | 1 |
-| `invalid` | 309 |
+| `invalid` | 310 |
 | `iso7064` | 2 |
 | `legacy` | 4 |
 | `length` | 74 |
@@ -779,8 +780,9 @@ Total cases: **666**.
 | `pre-partition` | 1 |
 | `prefix` | 40 |
 | `profile` | 8 |
-| `real` | 66 |
+| `real` | 67 |
 | `reason-code` | 1 |
+| `register` | 3 |
 | `regression` | 2 |
 | `security` | 37 |
 | `shape` | 30 |
@@ -789,18 +791,18 @@ Total cases: **666**.
 | `strict` | 6 |
 | `structure` | 2 |
 | `suffix` | 4 |
-| `synthetic` | 572 |
+| `synthetic` | 574 |
 | `truncation` | 1 |
 | `types` | 1 |
 | `unknown-field` | 1 |
 | `unsupported` | 31 |
-| `valid` | 278 |
+| `valid` | 280 |
 | `variant` | 2 |
 | `version` | 4 |
 | `weighted` | 4 |
 
 | Data classification | Cases |
 |---|---:|
-| `public_business_identifier` | 66 |
-| `synthetic` | 600 |
+| `public_business_identifier` | 67 |
+| `synthetic` | 602 |
 
