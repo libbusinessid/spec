@@ -40,6 +40,9 @@ for schema in rules.proto conformance.proto testee.proto ir.md features.md; do
   cp "${GITHUB_WORKSPACE}/artifacts/${schema}" "spec/${schema}"
 done
 cp "${GITHUB_WORKSPACE}/rules.lock" rules.lock
+# Assembled by the same script the developer sync calls, so the header can no
+# longer name one commit while the lock beside it names another.
+cp "${GITHUB_WORKSPACE}/provenance.md" spec/PROVENANCE.md
 git add spec rules.lock
 git -c user.name="libbusinessid-bot" -c user.email="bot@libbusinessid.invalid" \
   commit -m "rules: update to ${version}"
