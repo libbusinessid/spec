@@ -74,8 +74,11 @@ jobs:
             "businessid-rules-${version}.binpb" \
             "businessid-conformance-${version}.binpb" \
             "businessid-manifest-${version}.json"; do
+            # --owner and --repo are mutually exclusive: passing both made gh
+            # refuse the arguments, so this step failed before verifying
+            # anything. It failed loudly, which is the only reason the release
+            # that first exercised it did not ship an unverified attestation.
             gh attestation verify "artifacts/${artifact}" \
-              --owner "${{ github.repository_owner }}" \
               --repo "${{ github.repository }}" \
               --signer-workflow "${{ github.repository }}/${expected_workflow}" \
               --source-ref "refs/tags/${{ inputs.tag }}"
