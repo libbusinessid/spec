@@ -10,7 +10,7 @@ permissions:
 
 env:
   BUF_VERSION: "1.72.0"
-  GOLANGCI_LINT_VERSION: "v2.12.2"
+  GOLANGCI_LINT_VERSION: "v2.13.1"
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -117,7 +117,8 @@ jobs:
         run: go run ./cmd/businessidc verify
       - name: Conformance through the engine protocol
         run: |
-          export SOURCE_DATE_EPOCH="$(git log -1 --pretty=%ct)"
+          SOURCE_DATE_EPOCH="$(git log -1 --pretty=%ct)"
+          export SOURCE_DATE_EPOCH
           make conformance
       - name: Coverage thresholds
         run: make cover
@@ -156,7 +157,8 @@ jobs:
       - name: Compile from two distinct absolute paths
         run: |
           set -euo pipefail
-          export SOURCE_DATE_EPOCH="$(git log -1 --pretty=%ct)"
+          SOURCE_DATE_EPOCH="$(git log -1 --pretty=%ct)"
+          export SOURCE_DATE_EPOCH
           root="$PWD"
           for suffix in alpha beta-longer-path; do
             target="${RUNNER_TEMP}/build-${suffix}"
@@ -166,12 +168,14 @@ jobs:
           diff -r "${RUNNER_TEMP}/build-alpha/dist" "${RUNNER_TEMP}/build-beta-longer-path/dist"
       - name: check-generated
         run: |
-          export SOURCE_DATE_EPOCH="$(git log -1 --pretty=%ct)"
+          SOURCE_DATE_EPOCH="$(git log -1 --pretty=%ct)"
+          export SOURCE_DATE_EPOCH
           go run ./cmd/businessidc check-generated
       - name: Cross-check the canonical digests with the independent implementation
         run: |
           set -euo pipefail
-          export SOURCE_DATE_EPOCH="$(git log -1 --pretty=%ct)"
+          SOURCE_DATE_EPOCH="$(git log -1 --pretty=%ct)"
+          export SOURCE_DATE_EPOCH
           go run ./cmd/businessidc compile --out dist --release >/dev/null
           version="$(cat RULES_VERSION)"
           manifest="dist/businessid-manifest-${version}.json"

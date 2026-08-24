@@ -44,7 +44,8 @@ jobs:
         id: build
         run: |
           set -euo pipefail
-          export SOURCE_DATE_EPOCH="$(git log -1 --pretty=%ct)"
+          SOURCE_DATE_EPOCH="$(git log -1 --pretty=%ct)"
+          export SOURCE_DATE_EPOCH
           commit="$(git rev-parse HEAD)"
           for suffix in one two-with-a-longer-name; do
             go run ./cmd/businessidc compile \
