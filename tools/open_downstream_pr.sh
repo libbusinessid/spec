@@ -43,10 +43,18 @@ cp "${GITHUB_WORKSPACE}/rules.lock" rules.lock
 git add spec rules.lock
 git -c user.name="libbusinessid-bot" -c user.email="bot@libbusinessid.invalid" \
   commit -m "rules: update to ${version}"
-# --force-with-lease so a re-run after a fixed defect replaces its own branch
-# instead of being refused as non fast forward. The first release needed four
-# attempts, and each left a branch behind that the next could not push over.
-git push --force-with-lease --set-upstream origin "${branch}"
+# A re-run after a fixed defect has to replace its own branch rather than be
+# refused as non fast forward, and --force-with-lease is the safe way to do it.
+# But a lease needs something to compare against: in a shallow clone that never
+# fetched this branch git refuses with "stale info", which is what a plain
+# --force-with-lease did on the second attempt. So the branch is fetched first
+# when it exists, and pushed plainly when it does not.
+if git ls-remote --exit-code --heads origin "${branch}" >/dev/null 2>&1; then
+  git fetch --depth 1 origin "${branch}"
+  git push --force-with-lease --set-upstream origin "${branch}"
+else
+  git push --set-upstream origin "${branch}"
+fi
 
 # --head and --base explicitly: gh infers them from the checkout it is run in,
 # and inside a shallow clone of another repository it refused with "you must
