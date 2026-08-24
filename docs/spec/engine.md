@@ -758,6 +758,62 @@ exigée :
 Les requêtes de ces tests sont inventées sur place : le test d'honnêteté n'ouvre
 pas le corpus non plus, sinon il démontrerait le contraire de ce qu'il affirme.
 
+## 11.4 Le moteur se synchronise lui-même
+
+Quand `spec` publie une release, **c'est le moteur qui va la chercher**, pas la
+release qui vient le trouver.
+
+Chaque moteur porte un workflow de synchronisation. Il se déclenche sur une
+horloge et à la demande, compare la dernière release de `spec` à son propre
+`rules.lock`, et ne fait rien quand elles concordent. Sinon il fait, dans cet
+ordre :
+
+1. télécharge les artefacts de la release ;
+2. vérifie les `SHA256SUMS`, **puis l'attestation de provenance** — propriétaire,
+   dépôt, workflow signataire et tag ;
+3. écrit `spec/`, `rules.lock` et `spec/PROVENANCE.md` ;
+4. **régénère le code émis** ;
+5. exécute le point d'entrée de la section 12.5 ;
+6. ouvre une pull request avec le tout, verte ou rouge.
+
+Rien n'est écrit avant que l'étape 2 ne passe. Une release dont l'attestation ne
+vérifie pas ne doit pas même toucher l'arbre de travail.
+
+### Pourquoi le moteur et pas la release
+
+**La régénération demande la chaîne d'outils du moteur**, que `spec` n'a pas et
+n'aura jamais : ni Gradle, ni SwiftPM, ni pnpm. Une release qui pousse chez les
+moteurs ouvre donc structurellement des pull requests incomplètes — elle livre le
+bundle et laisse le code émis sur l'ancienne version, ce qui a produit quatre
+CI rouges à la première release.
+
+**Et elle supprime un secret à portée croisée.** Pour pousser une branche chez
+quatre moteurs, `spec` devait détenir un jeton en écriture sur les quatre. Un
+moteur qui se synchronise lui-même écrit chez lui, avec le jeton que GitHub lui
+donne déjà. Un secret de moins, et le rayon d'action d'une compromission de
+`spec` s'arrête à `spec`.
+
+C'est aussi pour cela que le déclenchement est une horloge et non un événement
+poussé : un `repository_dispatch` reprendrait d'une main le jeton qu'on retire de
+l'autre. La latence d'une horloge quotidienne est le prix de cette propriété, et
+le déclenchement manuel existe pour le jour où elle coûte trop cher.
+
+### Ce que devient une pull request rouge
+
+Une nouvelle règle métier ne demande aucun changement de générateur : c'est de la
+donnée, et le code émis suit. La pull request est donc verte par défaut, et elle
+se merge sur ses propres mérites.
+
+Elle passe au rouge quand la release apporte quelque chose que le moteur ne sait
+pas encore faire — une capacité qu'il ne déclare pas, un contrôle de chargement
+qu'il n'applique pas, une sémantique qu'il lit autrement. **Le tri se fait donc
+tout seul** : le mécanique passe sans intervention, et ce qui reste rouge est
+exactement ce qui méritait un humain ou un agent. Personne n'a à décider à
+l'avance de quel côté tombe une release.
+
+Une pull request rouge n'est jamais mergée pour débloquer la chaîne. Elle est
+corrigée, ou la release est refusée avec la raison écrite.
+
 ## 12. Exigences qualité
 
 ### 12.1 TDD
