@@ -160,6 +160,11 @@ func build(opts buildOptions) (*buildResult, *diagnostics.Bag) {
 		"reference-bundle.binpb":      inputs.referenceBundle,
 		"reference-conformance.binpb": inputs.referenceSuite,
 	}
+	files["spec.md"] = inputs.specDoc
+	files["engine.md"] = inputs.engineDoc
+	for name, body := range inputs.engineDocs {
+		files[name] = body
+	}
 	files["SHA256SUMS"] = renderSums(files)
 	return &buildResult{
 		rules:        rules,
@@ -216,6 +221,9 @@ type buildInputs struct {
 	rulesProto       []byte
 	conformanceProto []byte
 	testeeProto      []byte
+	specDoc          []byte
+	engineDoc        []byte
+	engineDocs       map[string][]byte
 	referenceBundle  []byte
 	referenceSuite   []byte
 	modulePath       string
@@ -238,6 +246,18 @@ func readBuildInputs(bag *diagnostics.Bag, opts buildOptions) (buildInputs, bool
 		opts.moduleRoot, "proto", "libbusinessid", "conformance", "v1", "conformance.proto")
 	out.testeeProto = read("CLI023", "testee.proto",
 		opts.moduleRoot, "proto", "libbusinessid", "testee", "v1", "testee.proto")
+	// The prose contracts travel with the release. An engine that only fetches
+	// releases could otherwise never update the contract it is written against:
+	// spec.md, engine.md and its own engine-<lang>.md reached it solely through
+	// a local sync, so a self synchronizing engine would take the data and keep
+	// a stale contract. The Go engine measured that against section 11.4.
+	out.specDoc = read("CLI024", "spec.md", opts.moduleRoot, "docs", "spec", "spec.md")
+	out.engineDoc = read("CLI025", "engine.md", opts.moduleRoot, "docs", "spec", "engine.md")
+	out.engineDocs = map[string][]byte{}
+	for _, lang := range []string{"go", "swift", "kotlin", "typescript"} {
+		name := "engine-" + lang + ".md"
+		out.engineDocs[name] = read("CLI026", name, opts.moduleRoot, "docs", "spec", name)
+	}
 	out.referenceBundle = read("CLI021", "the reference bundle",
 		opts.fixtures, "bundles", "minimal_valid.binpb")
 	out.referenceSuite = read("CLI022", "the reference conformance suite",

@@ -778,7 +778,9 @@ ordre :
 1. télécharge les artefacts de la release ;
 2. vérifie les `SHA256SUMS`, **puis l'attestation de provenance** — propriétaire,
    dépôt, workflow signataire et tag ;
-3. écrit `spec/`, `rules.lock` et `spec/PROVENANCE.md` ;
+3. écrit `spec/`, `rules.lock` et `spec/PROVENANCE.md` — **les contrats en prose
+   compris**, `spec.md`, `engine.md` et son `engine-<langage>.md`, que la release
+   publie et atteste au même titre que les schémas ;
 4. **régénère le code émis** ;
 5. exécute le point d'entrée de la section 12.5 ;
 6. ouvre une pull request avec le tout, verte ou rouge.
