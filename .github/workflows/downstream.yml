@@ -110,6 +110,23 @@ jobs:
       - name: Check the artifacts against rules.lock
         run: ./spec/tools/check_lock.sh rules.lock artifacts "${{ inputs.rules_version }}"
 
+      # PROVENANCE.md quotes figures read from the bundle, so writing it needs
+      # the compiler. GOTOOLCHAIN is auto because setup-go pins it to local and
+      # the spec module asks for a newer Go than a runner's default.
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: spec/go.mod
+          cache: false
+
+      - name: Write PROVENANCE.md
+        env:
+          GOTOOLCHAIN: auto
+        run: |
+          ./spec/tools/write_provenance.sh \
+            ./spec artifacts "${{ inputs.rules_version }}" \
+            "$(jq -r .sourceCommit "artifacts/businessid-manifest-${{ inputs.rules_version }}.json")" \
+            "${{ matrix.engine }}" provenance.md
+
       - name: Open the synchronization pull request
         if: inputs.dry_run != true
         env:

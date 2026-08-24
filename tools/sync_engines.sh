@@ -97,26 +97,11 @@ stability = "$(jq -r .stability "${dist}/businessid-manifest-${version}.json")"
 source_commit = "${commit}"
 LOCK
 
-  # PROVENANCE.md is assembled rather than copied: a common body, the notes for
-  # this language, and the figures read from the bundle. It used to be four hand
-  # written files, and they drifted exactly as hand written files do - still
-  # describing seven definitions and 185 IR nodes when the bundle carried
-  # ninety four and 2375.
-  lang="${engine#businessid-}"
-  {
-    printf '# Where these files come from, and what to build\n\n'
-    printf 'Copied from `github.com/libbusinessid/spec` at commit\n'
-    printf '`%s`, rules version\n`%s`, stability `%s`.\n\n' \
-      "${commit}" "${version}" "$(jq -r .stability "${dist}/businessid-manifest-${version}.json")"
-    sed -e "s/{{DEFINITIONS}}/${definitions}/g" \
-        -e "s/{{NODES}}/${nodes}/g" \
-        -e "s/{{CAPABILITIES}}/${capabilities}/g" \
-        -e "s/{{USED_OPS}}/${used_ops}/g" \
-        -e "s/{{TOTAL_OPS}}/${total_ops}/g" \
-        "${here}/docs/spec/provenance/body.md"
-    printf '\n'
-    cat "${here}/docs/spec/provenance/${lang}.md"
-  } > "${target}/spec/PROVENANCE.md"
+  # One writer, in tools/write_provenance.sh: this used to assemble it here
+  # while the release automation copied nine files and not this one, so a
+  # released engine named one commit beside a lock naming another.
+  "${here}/tools/write_provenance.sh" "${here}" "${dist}" "${version}" \
+    "${commit}" "${engine}" "${target}/spec/PROVENANCE.md"
 
   # The header of PROVENANCE.md names the same commit and version as the lock.
   # It is the first thing a reader of the engine repository sees, so a stale
