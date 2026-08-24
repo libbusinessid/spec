@@ -94,6 +94,7 @@ jobs:
             printf 'format_version = %s\n' "$(jq -r .formatVersion "$manifest")"
             printf 'rules_sha256 = "%s"\n' "$(jq -r .artifactSha256 "$manifest")"
             printf 'conformance_sha256 = "%s"\n' "$(jq -r .conformanceSha256 "$manifest")"
+            printf 'conformance_jsonl_sha256 = "%s"\n' "$(jq -r .conformanceJsonlSha256 "$manifest")"
             printf 'rules_proto_sha256 = "%s"\n' "$(jq -r .rulesProtoSha256 "$manifest")"
             printf 'conformance_proto_sha256 = "%s"\n' "$(jq -r .conformanceProtoSha256 "$manifest")"
             printf 'testee_proto_sha256 = "%s"\n' "$(jq -r .testeeProtoSha256 "$manifest")"

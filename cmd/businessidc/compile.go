@@ -129,6 +129,7 @@ func build(opts buildOptions) (*buildResult, *diagnostics.Bag) {
 		rules:        rules,
 		suite:        suite,
 		inputs:       inputs,
+		jsonl:        jsonl,
 		jsonlGz:      jsonlGz,
 		irDoc:        irDoc,
 		featuresDoc:  featuresDoc,
@@ -264,6 +265,7 @@ type manifestInput struct {
 	rules        *artifact.CompileResult
 	suite        *conformance.CompileResult
 	inputs       buildInputs
+	jsonl        []byte
 	jsonlGz      []byte
 	irDoc        []byte
 	featuresDoc  []byte
@@ -294,6 +296,7 @@ func buildManifest(in manifestInput) *artifact.Manifest {
 		ArtifactSha256:            artifact.SHA256Hex(in.rules.Bytes),
 		ConformanceSha256:         artifact.SHA256Hex(in.suite.Bytes),
 		ConformanceJsonlGzSha256:  artifact.SHA256Hex(in.jsonlGz),
+		ConformanceJsonlSha256:    artifact.SHA256Hex(in.jsonl),
 		CompilerVersion:           version.Compiler,
 		SourceCommit:              in.opts.sourceCommit,
 		GeneratedAt:               in.generatedAt,
