@@ -231,3 +231,68 @@ applies identically to the four engines.
 **Implemented by** `internal/reference/exec.go` (`machine.charge`),
 `internal/reference/format.go` and `internal/limits/limits.go`
 (`CodePointsPerStep`).
+
+---
+
+## ND-011 - The EUID register identifier is checked in shape, not in membership
+
+**Wording.** Commission Implementing Regulation (EU) 2021/1042, which replaced
+(EU) 2015/884, builds the EUID from a country code, a **register identifier** and
+a registration number. It specifies the *structure* and requires ISO 6523
+compliance; it does not enumerate the register identifier values.
+
+**Question.** The twenty seven EUID rules validate the registration number by
+composing the national rule in full — `FRTVX.012345674` is refused when its SIREN
+checksum fails, and the corpus proves it by sweeping all ten final digits. The
+register identifier is validated only for shape: one to eight ASCII alphanumeric
+characters. Measured against `2026.08.26`, all four of these are accepted:
+
+```
+FRTVX.012345674   valid    a plausible register
+FRRCS.012345674   valid    a plausible register
+FRZZZZ.012345674  valid    no such register
+FRQ.012345674     valid    one character
+```
+
+**Decision, for now: keep the shape check, and do not invent a list.**
+
+Three findings from the research support it, and each is a reason the work is
+larger than it looks.
+
+1. **There is no EU wide published table.** The regulation defines the element
+   and leaves its values to the Member States. Neither the e-Justice portal's
+   business register pages nor the BRIS material published by the Commission
+   carries a per country list of the codes as of 2026-08-24.
+
+2. **The values are national, and there are many per country.** North Data's own
+   EUID is `DEK1101R.HRB116737`: `K1101R` is the XJustiz court code of the
+   Amtsgericht Hamburg. Germany therefore has one register identifier per
+   register court, not one per country. France is described by its registrars as
+   using a code designating the greffe of registration, which is again one per
+   court rather than one per country.
+
+3. **A national authoritative list does exist, at least for Germany.** The
+   XJustiz code list `urn:xoev-de:xjustiz:codeliste:gds.gerichte`, published on
+   XRepository by the BLK-AG IT-Standards in der Justiz, carries every court code
+   including `K1101R` and `V1109V`. It is versioned and downloadable, so Germany
+   is tractable — but it lists all courts, not only the register courts that can
+   appear in an EUID, so the usable subset still has to be established.
+
+**Why not encode a partial list meanwhile.** An allowlist that is wrong or stale
+**refuses a real company**, which is the worst failure this library can produce:
+a permissive shape check never rejects a valid EUID, while a missing code does.
+The register identifiers also change — courts merge and are renumbered — so a
+static list is a maintenance commitment, not a one time addition.
+
+**What would settle it,** per country, is an authoritative published list with a
+source, an access date and terms, exactly as `DATA_POLICY.md` section 3 requires
+of any other business data. Germany's is identified above. The others are open.
+
+**Shape of the eventual rule.** Where a country has a single register
+identifier, it belongs in the rule as a literal, alongside the `FR` prefix that
+is already written there. Where a country has several, the rule constrains the
+capture to that country's set, so `FR` and the code that follows it must agree —
+which is the coherence this decision currently does not enforce.
+
+**Implemented by** `rules/euid/*.hcl`, `format.euid.<country>`, the
+`capture "register"` check.
