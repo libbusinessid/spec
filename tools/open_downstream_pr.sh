@@ -43,10 +43,18 @@ cp "${GITHUB_WORKSPACE}/rules.lock" rules.lock
 git add spec rules.lock
 git -c user.name="libbusinessid-bot" -c user.email="bot@libbusinessid.invalid" \
   commit -m "rules: update to ${version}"
-git push --set-upstream origin "${branch}"
+# --force-with-lease so a re-run after a fixed defect replaces its own branch
+# instead of being refused as non fast forward. The first release needed four
+# attempts, and each left a branch behind that the next could not push over.
+git push --force-with-lease --set-upstream origin "${branch}"
 
+# --head and --base explicitly: gh infers them from the checkout it is run in,
+# and inside a shallow clone of another repository it refused with "you must
+# first push the current branch to a remote" on a branch it had just pushed.
 gh pr create \
   --repo "${repo}" \
+  --head "${branch}" \
+  --base main \
   --title "rules: update to ${version}" \
   --body "$(cat <<BODY
 Automated synchronization of the LibBusinessID rules.
