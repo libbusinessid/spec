@@ -814,6 +814,28 @@ l'avance de quel côté tombe une release.
 Une pull request rouge n'est jamais mergée pour débloquer la chaîne. Elle est
 corrigée, ou la release est refusée avec la raison écrite.
 
+### Verte, elle se merge seule
+
+Le workflow active l'auto-merge sur la pull request qu'il ouvre. Une synchronisation
+mécanique n'a alors besoin de personne : la release paraît, chaque moteur la
+récupère, régénère, se vérifie et se met à jour. Ce qui demande une attention est
+exactement ce qui est resté rouge.
+
+Trois conditions, et un moteur qui n'en remplit pas une le dit plutôt que de
+contourner :
+
+- l'auto-merge doit être autorisé sur le dépôt, et une protection de branche doit
+  exiger le point d'entrée de la section 12.5 ; sans elle, l'auto-merge fusionne
+  dès que rien ne le bloque, ce qui n'est pas la même chose que sur vert ;
+- **le point d'entrée est la seule vérification exigée**, sinon « vert » aurait
+  deux définitions et l'auto-merge suivrait la plus faible ;
+- le tag et la publication restent manuels. Merger du code vérifié et publier un
+  paquet ne sont pas le même acte, et le second est le seul irréversible.
+
+Un moteur qui ne peut pas activer l'auto-merge avec le jeton dont il dispose nomme
+le réglage qui manque. Il ne demande pas un secret plus large : le rayon d'action
+réduit est ce que cette section a acheté.
+
 ## 12. Exigences qualité
 
 ### 12.1 TDD
