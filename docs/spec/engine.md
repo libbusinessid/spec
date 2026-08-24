@@ -788,7 +788,9 @@ ordre :
    dépôt, workflow signataire et tag ;
 3. écrit `spec/`, `rules.lock` et `spec/PROVENANCE.md` — **les contrats en prose
    compris**, `spec.md`, `engine.md` et son `engine-<langage>.md`, que la release
-   publie et atteste au même titre que les schémas ;
+   publie et atteste au même titre que les schémas. La note de provenance est
+   publiée assemblée, une par moteur : un moteur qui a vérifié une release n'a
+   ainsi rien à cloner pour écrire le dernier fichier de sa synchronisation ;
 4. **régénère le code émis** ;
 5. exécute le point d'entrée de la section 12.5 ;
 6. ouvre une pull request avec le tout, verte ou rouge.

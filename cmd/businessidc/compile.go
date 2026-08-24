@@ -160,6 +160,21 @@ func build(opts buildOptions) (*buildResult, *diagnostics.Bag) {
 		"reference-bundle.binpb":      inputs.referenceBundle,
 		"reference-conformance.binpb": inputs.referenceSuite,
 	}
+	// One provenance note per engine, assembled here so it travels with the
+	// release and is attested with everything else. An engine that has verified
+	// a release no longer has to clone spec to write the last file of its sync.
+	figures := artifact.FiguresOf(rules.Ruleset.Bundle)
+	for lang, notes := range inputs.provenanceNotes {
+		files["provenance-"+lang+".md"] = artifact.RenderProvenance(
+			artifact.ProvenanceInput{
+				Commit:    opts.sourceCommit,
+				Version:   rulesVersion,
+				Stability: stability,
+				Figures:   figures,
+				Body:      inputs.provenanceBody,
+				Notes:     notes,
+			})
+	}
 	files["spec.md"] = inputs.specDoc
 	files["engine.md"] = inputs.engineDoc
 	for name, body := range inputs.engineDocs {
@@ -224,6 +239,8 @@ type buildInputs struct {
 	specDoc          []byte
 	engineDoc        []byte
 	engineDocs       map[string][]byte
+	provenanceBody   []byte
+	provenanceNotes  map[string][]byte
 	referenceBundle  []byte
 	referenceSuite   []byte
 	modulePath       string
@@ -251,6 +268,19 @@ func readBuildInputs(bag *diagnostics.Bag, opts buildOptions) (buildInputs, bool
 	// spec.md, engine.md and its own engine-<lang>.md reached it solely through
 	// a local sync, so a self synchronizing engine would take the data and keep
 	// a stale contract. The Go engine measured that against section 11.4.
+	// The provenance body and the per language notes, so the assembled file can
+	// travel with the release too. Its only writer used to live in this
+	// repository and read four files that are not artefacts, so a workflow that
+	// had verified a release still had to clone spec to write it -- and the
+	// writer postdates both published tags, which made every published release
+	// unsynchronizable. The Swift engine measured that and proposed this.
+	out.provenanceBody = read("CLI027", "provenance body",
+		opts.moduleRoot, "docs", "spec", "provenance", "body.md")
+	out.provenanceNotes = map[string][]byte{}
+	for _, lang := range []string{"go", "swift", "kotlin", "typescript"} {
+		out.provenanceNotes[lang] = read("CLI028", "provenance notes for "+lang,
+			opts.moduleRoot, "docs", "spec", "provenance", lang+".md")
+	}
 	out.specDoc = read("CLI024", "spec.md", opts.moduleRoot, "docs", "spec", "spec.md")
 	out.engineDoc = read("CLI025", "engine.md", opts.moduleRoot, "docs", "spec", "engine.md")
 	out.engineDocs = map[string][]byte{}

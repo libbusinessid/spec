@@ -349,6 +349,13 @@ func TestCompileReportsMissingInputs(t *testing.T) {
 				"engine-swift.md", "engine-kotlin.md", "engine-typescript.md"} {
 				writeFile(t, filepath.Join(root, "docs", "spec", name), "x")
 			}
+			// The provenance note is assembled here too, so that an engine which
+			// has verified a release has nothing left to clone.
+			mkdirAll(t, filepath.Join(root, "docs", "spec", "provenance"))
+			for _, name := range []string{"body.md", "go.md", "swift.md",
+				"kotlin.md", "typescript.md"} {
+				writeFile(t, filepath.Join(root, "docs", "spec", "provenance", name), "x")
+			}
 		}, "cannot parse go.mod"},
 	}
 	for _, tc := range tests {

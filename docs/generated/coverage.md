@@ -2,7 +2,7 @@
 
 # Rule coverage
 
-Rules version `2026.08.35`, IR format version `1`.
+Rules version `2026.08.36`, IR format version `1`.
 
 ## Country by kind matrix
 
