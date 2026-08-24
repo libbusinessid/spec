@@ -80,6 +80,7 @@ func TestEveryEngineContractRefusesARuntimeLoader(t *testing.T) {
 	contracts = append(contracts,
 		filepath.Join("..", "..", "docs", "spec", "engine.md"),
 		filepath.Join("..", "..", "docs", "spec", "spec.md"))
+
 	// A declaration lives in a code block; the sentences explaining why there is
 	// none live in prose, and must stay. The audit first matched fromRules and
 	// RegistryProvider only, and missed engineFromRules and registryLookup in
@@ -312,6 +313,39 @@ func TestEveryEngineContractPointsAtTheSharedRunner(t *testing.T) {
 				t.Errorf("%s never requires a native test for invalid_encoding.\n"+
 					"No conformance case can carry an ill formed input, so the branch is "+
 					"covered by that test or by nothing.", filepath.Base(path))
+			}
+		})
+	}
+}
+
+// The tooling may not put the bundle where the doctrine forbids it either.
+//
+// open_downstream_pr.sh copied it into Sources/BusinessID/Resources and
+// src/main/resources on every release, carrying the exact phrases the contract
+// guard forbids -- while that guard read the documents and never the scripts
+// that act on them. A rule stated in prose and contradicted by the automation
+// is the automation's reading that wins, because the automation is what runs.
+func TestTheToolingDoesNotShipTheBundleAsAResource(t *testing.T) {
+	scripts, err := filepath.Glob(filepath.Join("..", "..", "tools", "*.sh"))
+	if err != nil || len(scripts) == 0 {
+		t.Fatalf("no tooling found: %v", err)
+	}
+	for _, path := range scripts {
+		t.Run(filepath.Base(path), func(t *testing.T) {
+			text := readDoc(t, path)
+			for _, phrase := range []string{
+				"Resources/businessid-rules",
+				"resources/businessid-rules",
+				"assets/businessid-rules",
+				"internal/rules/businessid-rules",
+				"src/rules/businessid-rules",
+			} {
+				if strings.Contains(text, phrase) {
+					t.Errorf("%s writes the bundle to %q.\n"+
+						"That is the bundle as a resource of the published package, which "+
+						"engine.md section 1.2 forbids: it belongs under spec/, as an input "+
+						"to the engine's generator.", filepath.Base(path), phrase)
+				}
 			}
 		})
 	}

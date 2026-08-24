@@ -113,7 +113,12 @@ jobs:
         if: inputs.dry_run != true
         env:
           GH_TOKEN: ${{ secrets.DOWNSTREAM_TOKEN }}
-        run: ./spec/tools/open_downstream_pr.sh \
-          "${{ github.repository_owner }}/${{ matrix.engine }}" \
-          "${{ inputs.rules_version }}" \
-          "${{ inputs.tag }}"
+        # A block scalar, not a folded one: with `run:` on a plain scalar the
+        # newlines fold into spaces, the backslashes become escaped spaces, and
+        # every argument arrives with one leading space. gh then reported it
+        # could not resolve a repository named " libbusinessid/businessid-go".
+        run: |
+          ./spec/tools/open_downstream_pr.sh \
+            "${{ github.repository_owner }}/${{ matrix.engine }}" \
+            "${{ inputs.rules_version }}" \
+            "${{ inputs.tag }}"
