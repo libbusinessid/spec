@@ -94,8 +94,8 @@ func TestPilotCanonicalize(t *testing.T) {
 			"EL012345670", ptr("GR"), reference.StatusValid, irv1.ReasonCode_REASON_CODE_OK, "vat"},
 		{"vat gr country alias", reference.Input{Kind: "vat", Value: "012345670", CountryCode: ptr("EL")},
 			"EL012345670", ptr("GR"), reference.StatusValid, irv1.ReasonCode_REASON_CODE_OK, "vat"},
-		{"euid", reference.Input{Kind: "euid", Value: "fr tvx.012345674"},
-			"FRTVX.012345674", ptr("FR"), reference.StatusValid, irv1.ReasonCode_REASON_CODE_OK, "euid"},
+		{"euid", reference.Input{Kind: "euid", Value: "fr 7501.012345674"},
+			"FR7501.012345674", ptr("FR"), reference.StatusValid, irv1.ReasonCode_REASON_CODE_OK, "euid"},
 		{"lei global keeps country context", reference.Input{Kind: "lei", Value: "0000-0000-0000-0000-0098", CountryCode: ptr("fr")},
 			"00000000000000000098", ptr("FR"), reference.StatusValid, irv1.ReasonCode_REASON_CODE_OK, "lei"},
 		{"unknown kind", reference.Input{Kind: "Unknown-Kind", Value: "X"},
@@ -161,7 +161,7 @@ func TestPilotCanonicalizationIsIdempotent(t *testing.T) {
 		{Kind: "vat", Value: "BE 0123.456.749"},
 		{Kind: "vat", Value: "BE123456749"},
 		{Kind: "vat", Value: "GR012345670"},
-		{Kind: "euid", Value: "FRTVX.012345674"},
+		{Kind: "euid", Value: "FR7501.012345674"},
 		{Kind: "lei", Value: "0000-0000-0000-0000-0098"},
 	}
 	for _, in := range values {

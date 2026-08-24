@@ -118,12 +118,12 @@ func TestPilotValidate(t *testing.T) {
 		{"vat gr checksum mutation", reference.Input{Kind: "vat", Value: "EL012345671"}, "",
 			"EL012345671", step{reference.StatusValid, ok, ""}, step{reference.StatusInvalid, badChecksum, ""}},
 
-		{"euid valid", reference.Input{Kind: "euid", Value: "FRTVX.012345674"}, "",
-			"FRTVX.012345674", step{reference.StatusValid, ok, ""}, step{reference.StatusValid, ok, ""}},
-		{"euid bad siren length", reference.Input{Kind: "euid", Value: "FRTVX.01234567"}, "",
-			"FRTVX.01234567", step{reference.StatusInvalid, badLength, "fr.siren.length"}, step{reference.StatusNotRun, notRunInvalid, ""}},
-		{"euid bad siren checksum", reference.Input{Kind: "euid", Value: "FRTVX.012345675"}, "",
-			"FRTVX.012345675", step{reference.StatusValid, ok, ""}, step{reference.StatusInvalid, badChecksum, ""}},
+		{"euid valid", reference.Input{Kind: "euid", Value: "FR7501.012345674"}, "",
+			"FR7501.012345674", step{reference.StatusValid, ok, ""}, step{reference.StatusValid, ok, ""}},
+		{"euid bad siren length", reference.Input{Kind: "euid", Value: "FR7501.01234567"}, "",
+			"FR7501.01234567", step{reference.StatusInvalid, badLength, "fr.siren.length"}, step{reference.StatusNotRun, notRunInvalid, ""}},
+		{"euid bad siren checksum", reference.Input{Kind: "euid", Value: "FR7501.012345675"}, "",
+			"FR7501.012345675", step{reference.StatusValid, ok, ""}, step{reference.StatusInvalid, badChecksum, ""}},
 		{"euid missing separator", reference.Input{Kind: "euid", Value: "FRTVX012345674"}, "",
 			"FRTVX012345674", step{reference.StatusInvalid, badFormat, "euid.fr.separator"}, step{reference.StatusNotRun, notRunInvalid, ""}},
 

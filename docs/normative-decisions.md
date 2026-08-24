@@ -234,65 +234,57 @@ applies identically to the four engines.
 
 ---
 
-## ND-011 - The EUID register identifier is checked in shape, not in membership
+## ND-011 - The EUID register identifier, checked in membership where a list exists
 
 **Wording.** Commission Implementing Regulation (EU) 2021/1042, which replaced
 (EU) 2015/884, builds the EUID from a country code, a **register identifier** and
 a registration number. It specifies the *structure* and requires ISO 6523
-compliance; it does not enumerate the register identifier values.
+compliance; it does not enumerate the register identifier values, and no EU wide
+table of them is published. The values are national, and there are many per
+country: an EUID of the form `DEK1101R.HRB116737` carries the XJustiz court code
+of the Amtsgericht Hamburg, so Germany has one identifier per register court, and
+France has one per greffe.
 
-**Question.** The twenty seven EUID rules validate the registration number by
-composing the national rule in full — `FRTVX.012345674` is refused when its SIREN
-checksum fails, and the corpus proves it by sweeping all ten final digits. The
-register identifier is validated only for shape: one to eight ASCII alphanumeric
-characters. Measured against `2026.08.26`, all four of these are accepted:
+**Decision.** Where an authoritative list of a country's register identifiers is
+published and obtainable, the rule checks **membership**, so that the country
+code and the code that follows it must agree. Where no such list is obtainable,
+the rule checks **shape only**, and says so.
 
-```
-FRTVX.012345674   valid    a plausible register
-FRRCS.012345674   valid    a plausible register
-FRZZZZ.012345674  valid    no such register
-FRQ.012345674     valid    one character
-```
+The condition is on the list, not on the country. A list that is authoritative
+but unobtainable is the same as no list: it cannot be reviewed, and a rule built
+on an unverifiable transcription is a rule without provenance.
 
-**Decision, for now: keep the shape check, and do not invent a list.**
-
-Three findings from the research support it, and each is a reason the work is
-larger than it looks.
-
-1. **There is no EU wide published table.** The regulation defines the element
-   and leaves its values to the Member States. Neither the e-Justice portal's
-   business register pages nor the BRIS material published by the Commission
-   carries a per country list of the codes as of 2026-08-24.
-
-2. **The values are national, and there are many per country.** North Data's own
-   EUID is `DEK1101R.HRB116737`: `K1101R` is the XJustiz court code of the
-   Amtsgericht Hamburg. Germany therefore has one register identifier per
-   register court, not one per country. France is described by its registrars as
-   using a code designating the greffe of registration, which is again one per
-   court rather than one per country.
-
-3. **A national authoritative list does exist, at least for Germany.** The
-   XJustiz code list `urn:xoev-de:xjustiz:codeliste:gds.gerichte`, published on
-   XRepository by the BLK-AG IT-Standards in der Justiz, carries every court code
-   including `K1101R` and `V1109V`. It is versioned and downloadable, so Germany
-   is tractable — but it lists all courts, not only the register courts that can
-   appear in an EUID, so the usable subset still has to be established.
-
-**Why not encode a partial list meanwhile.** An allowlist that is wrong or stale
+**Why membership is not the safer default.** An allowlist that is wrong or stale
 **refuses a real company**, which is the worst failure this library can produce:
-a permissive shape check never rejects a valid EUID, while a missing code does.
-The register identifiers also change — courts merge and are renumbered — so a
-static list is a maintenance commitment, not a one time addition.
+a shape check never rejects a valid EUID, while a missing code does. Membership
+is therefore only worth its risk when the list is complete, sourced and
+maintained, and each country that adopts it takes on the obligation to re-check
+the source.
 
-**What would settle it,** per country, is an authoritative published list with a
-source, an access date and terms, exactly as `DATA_POLICY.md` section 3 requires
-of any other business data. Germany's is identified above. The others are open.
+**France, done.** The registrars publish `Liste des greffes` on data.gouv.fr
+under the Open Licence v2.0: 148 codes in the `code_greffe` column, every one
+exactly four digits, all distinct, `3102` being Toulouse. The dataset content is
+behind an account on the publisher portal, so the codes are transcribed into
+`rules/euid/fr.hcl` with their source, authority, licence and access date rather
+than fetched by the build. Membership is expressed as an exact length followed by
+`PREFIX_IN`: the capture is four digits and every code is four digits, so
+starting with one of them is equalling it, and no new capability is needed.
 
-**Shape of the eventual rule.** Where a country has a single register
-identifier, it belongs in the rule as a literal, alongside the `FR` prefix that
-is already written there. Where a country has several, the rule constrains the
-capture to that country's set, so `FR` and the code that follows it must agree —
-which is the coherence this decision currently does not enforce.
+Measured before and after, on inputs the rule used to accept:
 
-**Implemented by** `rules/euid/*.hcl`, `format.euid.<country>`, the
-`capture "register"` check.
+```
+FRZZZZ.012345674   valid -> invalid, invalid_characters   letters, not digits
+FRQ.012345674      valid -> invalid, invalid_length       one digit, not four
+FR9999.012345674   valid -> invalid, invalid_format       four digits, no such greffe
+```
+
+**Germany, obtainable and not yet done.** The XJustiz code list
+`urn:xoev-de:xjustiz:codeliste:gds.gerichte`, published on XRepository by the
+BLK-AG IT-Standards in der Justiz, is versioned and open. It lists every court
+rather than only the register courts that can appear in an EUID, so the usable
+subset has to be established before it can be encoded.
+
+**The other twenty five stay on shape**, until a list is found for each.
+
+**Implemented by** `rules/euid/fr.hcl`, `format.euid.fr`, the `capture "register"`
+checks.
