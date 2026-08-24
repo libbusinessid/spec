@@ -191,6 +191,32 @@ func (v *validator) validatePrograms() error {
 }
 
 func (v *validator) validateProgramShape(p *irv1.Program, nodes []*irv1.Node) error {
+	// A WHEN branch is accepted only as a direct operand of a CHOOSE. Checking
+	// each node's parents misses the one case with no parent: section 2 permits
+	// unreachable nodes, so a dead WHEN is otherwise well formed and nothing
+	// else catches it. This loader accepted one until the Kotlin engine read the
+	// rule as written and refused it.
+	referenced := make([]bool, len(nodes))
+	// root_node is a reference, so a program rooted in a WHEN keeps its own
+	// rule and its own message rather than being swallowed by this one.
+	if int(p.GetRootNode()) < len(referenced) {
+		referenced[p.GetRootNode()] = true
+	}
+	for _, n := range nodes {
+		for _, in := range n.GetInputNodes() {
+			if int(in) < len(referenced) {
+				referenced[in] = true
+			}
+		}
+	}
+	for i, n := range nodes {
+		op := n.GetChecksumOperation()
+		if op == nil || op.GetKind() != irv1.ChecksumOpKind_CHECKSUM_OP_KIND_WHEN || referenced[i] {
+			continue
+		}
+		return invalidf("program %d node %d: a WHEN branch is only accepted as a direct operand of CHOOSE",
+			p.GetId(), i)
+	}
 	// ir.md section 2 states, one row per program kind, which operation
 	// categories that kind accepts. It belongs to the shape, so it runs here
 	// rather than in the per node pass: the arithmetic bounds speak first, and
