@@ -103,6 +103,10 @@ cases address the engine through the protocol above.
 ## Verifying integrity
 
 Every digest in `rules.lock` is a SHA-256 of the corresponding file. Verify them
-before starting. `rules.lock` carries no `attestation_identity` because no
-release exists yet; its header explains this.
+before starting.
+
+`attestation_identity` names the workflow and tag that produced these files, and
+its presence is what distinguishes an attested release from a local build. When
+it is there, verify the attestation itself and not only the digests: digests
+prove the files did not change, an attestation proves who made them.
 

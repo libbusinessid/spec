@@ -764,8 +764,15 @@ Quand `spec` publie une release, **c'est le moteur qui va la chercher**, pas la
 release qui vient le trouver.
 
 Chaque moteur porte un workflow de synchronisation. Il se déclenche sur une
-horloge et à la demande, compare la dernière release de `spec` à son propre
-`rules.lock`, et ne fait rien quand elles concordent. Sinon il fait, dans cet
+horloge et à la demande, compare la release la plus récente de `spec` à son propre
+`rules.lock`, et ne fait rien quand elles concordent.
+
+**La plus récente, pas « latest ».** Tant que la stabilité n'est pas `stable`, le
+workflow de release marque chaque publication comme pré-release, et l'endpoint
+`releases/latest` de GitHub les exclut — `gh release view` répond « release not
+found » alors que la release existe. Un moteur qui interroge cet endpoint ne se
+synchroniserait jamais pendant toute la phase alpha. Il liste les releases et
+prend la plus récente qui n'est pas un brouillon. Sinon il fait, dans cet
 ordre :
 
 1. télécharge les artefacts de la release ;
@@ -825,12 +832,24 @@ Trois conditions, et un moteur qui n'en remplit pas une le dit plutôt que de
 contourner :
 
 - l'auto-merge doit être autorisé sur le dépôt, et une protection de branche doit
-  exiger le point d'entrée de la section 12.5 ; sans elle, l'auto-merge fusionne
-  dès que rien ne le bloque, ce qui n'est pas la même chose que sur vert ;
+  exiger le verdict du point d'entrée de la section 12.5 ; sans elle, l'auto-merge
+  fusionne dès que rien ne le bloque, ce qui n'est pas la même chose que sur vert ;
 - **le point d'entrée est la seule vérification exigée**, sinon « vert » aurait
   deux définitions et l'auto-merge suivrait la plus faible ;
 - le tag et la publication restent manuels. Merger du code vérifié et publier un
   paquet ne sont pas le même acte, et le second est le seul irréversible.
+
+**Le verdict est publié par le workflow lui-même, en statut de commit.** Une pull
+request ouverte avec le `GITHUB_TOKEN` d'un dépôt ne déclenche aucun workflow
+`pull_request` — GitHub coupe là pour empêcher une action de se rappeler en boucle.
+Une protection exigeant un check qui ne démarre jamais laisserait donc chaque
+synchronisation en attente éternelle, et l'auto-merge ne partirait pas.
+
+Le workflow exécute déjà le point d'entrée : il en publie le résultat comme statut
+de commit, sous le nom que la protection exige. Le verdict existe et porte le nom
+attendu sans qu'un second workflow ait à le recalculer, et sans jeton plus large
+puisqu'un dépôt écrit ses propres statuts. Le moteur Kotlin a mesuré le blocage et
+l'a laissé à trancher plutôt que de le contourner.
 
 Un moteur qui ne peut pas activer l'auto-merge avec le jeton dont il dispose nomme
 le réglage qui manque. Il ne demande pas un secret plus large : le rayon d'action
