@@ -52,6 +52,7 @@ func TestEachHostileFixtureIsRefusedByTheSameRuleAsBefore(t *testing.T) {
 		"node_out_of_range.binpb":           "has an out of range root node",
 		"orphan_definition.binpb":           "identifier 2 is not referenced by any dispatch target",
 		"predicate_constant.binpb":          "constant 1000000001 is outside the accepted range",
+		"prefix_in_unsorted.binpb":          "values must be ascending and deduplicated",
 		"program_expansion.binpb":           "expands to more than 100000 operation instances",
 		"rules_version_shape.binpb":         `rules_version holds '\x00'`,
 		"short_digest.binpb":                "source_digest must hold exactly 32 bytes, got 16",

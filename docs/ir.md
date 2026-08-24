@@ -1318,7 +1318,7 @@ An engine performs these checks, in this order, before executing anything:
 10. every operation known, with its declared output type
 11. operand count, operand types and strictly lower operand indices
 12. only the parameters the operation declares, and every required parameter
-13. arithmetic bounds: moduli, weights, remainder tables, indices, provable integer widths and the alphabet of a custom mapping
+13. arithmetic bounds: moduli, weights, remainder tables, indices, provable integer widths and the alphabet of a custom mapping, and the declared order of a parameter list as section 9 states it
 14. expansion within the evaluation budget once repeated operands are inlined
 15. root, subject and capture nodes inside the program, correctly typed, and a subject node that does not read the subject it defines
 16. program shape: the accepted root and the accepted operation categories of the kind, both as section 2 states them, `WHEN` only inside `CHOOSE`, and a pre-canonicalization program restricted to its five permitted operations
