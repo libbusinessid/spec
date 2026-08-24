@@ -2,7 +2,7 @@
 
 # Rule coverage
 
-Rules version `2026.08.29`, IR format version `1`.
+Rules version `2026.08.30`, IR format version `1`.
 
 ## Country by kind matrix
 
@@ -26,7 +26,7 @@ Rules version `2026.08.29`, IR format version `1`.
 | `euid` | `BG` | 17 | 171 | 106 | `compatible` | 2 |
 | `euid` | `CY` | 18 | 172 | - | `compatible` | 1 |
 | `euid` | `CZ` | 19 | 173 | 107 | `compatible` | 2 |
-| `euid` | `DE` | 20 | 174 | - | `compatible` | 1 |
+| `euid` | `DE` | 20 | 174 | - | `compatible` | 2 |
 | `euid` | `DK` | 21 | 175 | 108 | `compatible` | 2 |
 | `euid` | `EE` | 22 | 176 | 109 | `compatible` | 2 |
 | `euid` | `EL` | 23 | 177 | - | `compatible` | 1 |
@@ -493,8 +493,8 @@ Kind aliases: `business_id`, `fi_y_tunnus`.
 | `INTEGER_OP_KIND_MOD_DIGITS` | 3 |
 | `INTEGER_OP_KIND_REMAINDER_MAP` | 25 |
 | `INTEGER_OP_KIND_WEIGHTED_SUM` | 32 |
-| `PREDICATE_OP_KIND_ALL` | 7 |
-| `PREDICATE_OP_KIND_ANY` | 11 |
+| `PREDICATE_OP_KIND_ALL` | 8 |
+| `PREDICATE_OP_KIND_ANY` | 12 |
 | `PREDICATE_OP_KIND_ASCII_ALPHANUMERIC` | 36 |
 | `PREDICATE_OP_KIND_ASCII_CHARSET` | 1 |
 | `PREDICATE_OP_KIND_ASCII_DIGITS` | 67 |
@@ -505,9 +505,9 @@ Kind aliases: `business_id`, `fi_y_tunnus`.
 | `PREDICATE_OP_KIND_IS_ABSENT` | 27 |
 | `PREDICATE_OP_KIND_IS_EMPTY` | 94 |
 | `PREDICATE_OP_KIND_LENGTH_BETWEEN` | 36 |
-| `PREDICATE_OP_KIND_LENGTH_EQ` | 66 |
+| `PREDICATE_OP_KIND_LENGTH_EQ` | 67 |
 | `PREDICATE_OP_KIND_NOT` | 98 |
-| `PREDICATE_OP_KIND_PREFIX_IN` | 2 |
+| `PREDICATE_OP_KIND_PREFIX_IN` | 3 |
 | `PREDICATE_OP_KIND_PROFILE_IS` | 1 |
 | `PREDICATE_OP_KIND_STARTS_WITH` | 63 |
 | `STRING_OP_KIND_AFTER_FIRST` | 42 |
@@ -615,6 +615,7 @@ It shrinks when a rule needs one of them, and it must not grow silently.
 | [`cz-vat-check`](https://en.wikipedia.org/wiki/VAT_identification_number) | Wikipedia | CZ | 2026-08-20 | CC BY-SA 4.0, cited as a description and not redistributed |
 | [`de-bzst-ustid`](https://www.bzst.de/DE/Unternehmen/Identifikationsnummern/Umsatzsteuer-Identifikationsnummer/umsatzsteuer-identifikationsnummer_node.html) | Bundeszentralamt fuer Steuern (BZSt) | DE | 2026-08-18 | Public sector information published by the German federal tax administration |
 | [`de-handelsregister`](https://www.handelsregister.de) | Justizministerien der Laender | DE | 2026-08-20 | German public sector information |
+| [`de-xjustiz-gerichte`](https://www.xrepository.de/details/urn:xoev-de:xjustiz:codeliste:gds.gerichte) | BLK-AG IT-Standards in der Justiz | DE | 2026-08-24 | XRepository, free reuse of XOEV code lists |
 | [`dk-cvr-mod11`](https://en.wikipedia.org/wiki/VAT_identification_number) | Wikipedia | DK | 2026-08-20 | CC BY-SA 4.0, cited as a description and not redistributed |
 | [`dk-erhvervsstyrelsen-cvr`](https://erhvervsstyrelsen.dk/cvr-numre-p-numre-og-se-numre) | Erhvervsstyrelsen (Danish Business Authority) | DK | 2026-08-20 | Danish public sector information |
 | [`dk-vat-check`](https://en.wikipedia.org/wiki/VAT_identification_number) | Wikipedia | DK | 2026-08-20 | CC BY-SA 4.0, cited as a description and not redistributed |
@@ -682,7 +683,7 @@ It shrinks when a rule needs one of them, and it must not grow silently.
 
 ## Conformance statistics
 
-Total cases: **669**.
+Total cases: **672**.
 
 | Kind | Cases |
 |---|---:|
@@ -702,7 +703,7 @@ Total cases: **669**.
 | `ein` | 3 |
 | `enterprise_number` | 12 |
 | `eori` | 4 |
-| `euid` | 129 |
+| `euid` | 132 |
 | `firmenbuchnummer` | 4 |
 | `fr_siren` | 2 |
 | `gemi` | 3 |
@@ -735,7 +736,7 @@ Total cases: **669**.
 | `alias` | 5 |
 | `alphanumeric` | 4 |
 | `arithmetic` | 2 |
-| `boundary` | 19 |
+| `boundary` | 20 |
 | `bounds` | 2 |
 | `branch` | 3 |
 | `canonicalization` | 20 |
@@ -761,7 +762,7 @@ Total cases: **669**.
 | `group` | 1 |
 | `hole` | 6 |
 | `implicit` | 1 |
-| `invalid` | 310 |
+| `invalid` | 312 |
 | `iso7064` | 2 |
 | `legacy` | 4 |
 | `length` | 74 |
@@ -780,9 +781,9 @@ Total cases: **669**.
 | `pre-partition` | 1 |
 | `prefix` | 40 |
 | `profile` | 8 |
-| `real` | 67 |
+| `real` | 68 |
 | `reason-code` | 1 |
-| `register` | 3 |
+| `register` | 6 |
 | `regression` | 2 |
 | `security` | 37 |
 | `shape` | 30 |
@@ -791,18 +792,18 @@ Total cases: **669**.
 | `strict` | 6 |
 | `structure` | 2 |
 | `suffix` | 4 |
-| `synthetic` | 574 |
+| `synthetic` | 576 |
 | `truncation` | 1 |
 | `types` | 1 |
 | `unknown-field` | 1 |
 | `unsupported` | 31 |
-| `valid` | 280 |
+| `valid` | 281 |
 | `variant` | 2 |
 | `version` | 4 |
 | `weighted` | 4 |
 
 | Data classification | Cases |
 |---|---:|
-| `public_business_identifier` | 67 |
-| `synthetic` | 602 |
+| `public_business_identifier` | 68 |
+| `synthetic` | 604 |
 

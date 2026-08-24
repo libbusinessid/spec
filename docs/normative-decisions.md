@@ -278,11 +278,32 @@ FRQ.012345674      valid -> invalid, invalid_length       one digit, not four
 FR9999.012345674   valid -> invalid, invalid_format       four digits, no such greffe
 ```
 
-**Germany, obtainable and not yet done.** The XJustiz code list
-`urn:xoev-de:xjustiz:codeliste:gds.gerichte`, published on XRepository by the
-BLK-AG IT-Standards in der Justiz, is versioned and open. It lists every court
-rather than only the register courts that can appear in an EUID, so the usable
-subset has to be established before it can be encoded.
+**Germany, done, and with one limit stated.** The XJustiz code list
+`GDS.Gerichte`, published on XRepository by the BLK-AG IT-Standards in der
+Justiz, carries 2566 nationwide court codes in version 3.4: 1748 of five
+characters and 818 of six. `K1101R` is the centralised Handelsregister of the
+Amtsgericht Hamburg, `F1103` the Amtsgericht Charlottenburg.
+
+The list marks no register courts as such, and `K1101R` is not among the forty
+five entries whose name says `Registergericht` -- only its name says
+`Handelsregister`. Narrowing by name would be our inference rather than the
+publisher's statement, and it would refuse a real company the day a register
+court is named without the word. So the membership establishes that the code is
+**a court**, not that the court keeps a register. That is what the source
+supports, and it still refuses everything that is not a court code.
+
+The France trick does not transfer: **782 of the 818 six character codes begin
+with a five character code**, so over one list, starting with a code would not
+mean being one. The check splits by length, and at a fixed length starting with
+a code is equalling it, which keeps an exact membership expressible without a
+new operation.
+
+```
+DEK1101R.HRB116737   valid     six characters, a real code
+DEF1103.HRB12345     valid     five characters, a real code
+DEZZZZZ.HRB12345     invalid   no court carries it
+DEB1000X.HRB12345    invalid   a real five character code and one more character
+```
 
 **The other twenty five stay on shape**, until a list is found for each.
 
