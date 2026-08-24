@@ -693,6 +693,14 @@ n'entre ni dans le paquet publié ni dans ses dépendances.
 toolchain. L'étape du runner doit donc poser `GOTOOLCHAIN: auto` ; le testee, lui,
 reste construit avec la toolchain épinglée du moteur.
 
+**Sur l'étape, pas sur le workflow.** `setup-go` n'écrit pas la variable dans son
+propre environnement : il l'exporte par `$GITHUB_ENV`, ce qui l'emporte sur les
+blocs `env` du workflow et du job. Un `GOTOOLCHAIN: auto` posé en tête de fichier
+vaut donc pour les étapes qui précèdent `setup-go` et pour aucune de celles qui le
+suivent — dont les seules qui exécutent Go. Le moteur TypeScript l'a mesuré en
+lisant l'environnement à chaque étape : `auto` avant, `local` après, et **rien
+n'échouait**, ce qui est exactement pourquoi personne ne l'aurait vu.
+
 La condition exacte est la ligne `go` du module `spec`, pas sa ligne `toolchain` :
 c'est la première qui lie. Un moteur épinglant un Go antérieur échoue sur la
 résolution de la toolchain, pas sur un écart de conformité — c'est arrivé au moteur
