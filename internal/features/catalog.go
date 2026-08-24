@@ -375,7 +375,13 @@ var ops = []Op{
 		Symbol: "PREDICATE_OP_KIND_PREFIX_IN", HCL: "prefix_in(expr, prefixes)", Output: tBool,
 		Operands: []Operand{str("expr")}, Required: []Param{ParamValues},
 		Features: []uint32{CoreGraphV1, FormatAssertionsV1},
-		Doc:      "True when `expr` is present and starts with at least one element of `values`. `values` is non empty, sorted and deduplicated by the compiler, and every element is non empty.",
+		Doc: "True when `expr` is present and starts with at least one element of `values`. " +
+			"`values` is non empty, sorted and deduplicated by the compiler, and every element is non empty. " +
+			"Every element has the same length, and a bundle mixing lengths is refused: over one sorted list " +
+			"of mixed lengths, a search for the greatest element not after `expr` answers wrongly rather than " +
+			"slowly, since `[\"AB\", \"ABA\"]` against `\"ABCD\"` finds `ABA`, which is not a prefix, while `AB` is. " +
+			"At one length, starting with an element is equalling its opening of that length, so the search is " +
+			"exact. Mixed lengths are written as one `prefix_in` per length under an `any`.",
 	},
 	{
 		Category: CategoryPredicate, Code: int32(irv1.PredicateOpKind_PREDICATE_OP_KIND_CHAR_AT_IN),

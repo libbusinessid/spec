@@ -568,7 +568,7 @@ Parameters: `values` (required); any other field present in the message is refus
 
 Capabilities: `CORE_GRAPH_V1` (1), `FORMAT_ASSERTIONS_V1` (20).
 
-True when `expr` is present and starts with at least one element of `values`. `values` is non empty, sorted and deduplicated by the compiler, and every element is non empty.
+True when `expr` is present and starts with at least one element of `values`. `values` is non empty, sorted and deduplicated by the compiler, and every element is non empty. Every element has the same length, and a bundle mixing lengths is refused: over one sorted list of mixed lengths, a search for the greatest element not after `expr` answers wrongly rather than slowly, since `["AB", "ABA"]` against `"ABCD"` finds `ABA`, which is not a prefix, while `AB` is. At one length, starting with an element is equalling its opening of that length, so the search is exact. Mixed lengths are written as one `prefix_in` per length under an `any`.
 
 #### `PREDICATE_OP_KIND_CHAR_AT_IN`
 

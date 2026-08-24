@@ -345,6 +345,18 @@ func validatePredicateNode(n *irv1.Node, fail func(string, ...any) error) error 
 	// a binary search over an unsorted list does not answer slowly, it answers
 	// wrongly -- so an unordered bundle accepted here would be mis-answered by a
 	// conforming engine. The TypeScript engine found it in its own loader.
+	if err := validateOrderedLists(s, fail); err != nil {
+		return err
+	}
+	return nil
+}
+
+// validateOrderedLists checks the two repeated parameters a predicate can carry.
+//
+// ir.md section 9 puts values and lengths under the normative order, ascending
+// and deduplicated, and requires a refusal. A prefix_in also carries one element
+// length: the reasons for both live with the checks themselves.
+func validateOrderedLists(s *irv1.PredicateOperation, fail func(string, ...any) error) error {
 	for i, value := range s.GetValues() {
 		if value == "" {
 			return fail("prefix_in must not carry an empty value")
@@ -355,6 +367,21 @@ func validatePredicateNode(n *irv1.Node, fail func(string, ...any) error) error 
 		if i > 0 && value <= s.GetValues()[i-1] {
 			return fail("values must be ascending and deduplicated, %q follows %q",
 				value, s.GetValues()[i-1])
+		}
+		// One element length per prefix_in. "Starts with one of these" over a
+		// sorted list of mixed lengths is a trap: with ["AB", "ABA"] and the
+		// input "ABCD", a search for the greatest element not after the input
+		// finds "ABA", which is not a prefix, while "AB" is. The search has to
+		// run once per distinct length, and nothing said so.
+		//
+		// The corpus cannot catch an engine that gets it wrong, because all four
+		// prefix_in nodes of the published bundle hold one length each. Rather
+		// than leave every engine to re-derive it, the shape is refused. Nothing
+		// is lost: mixed lengths are one prefix_in per length under an any(),
+		// which is what the German register rule already does.
+		if i > 0 && len(value) != len(s.GetValues()[i-1]) {
+			return fail("prefix_in mixes element lengths %d and %d; write one prefix_in per length under an any()",
+				len(s.GetValues()[i-1]), len(value))
 		}
 	}
 	for i, length := range s.GetLengths() {
