@@ -17,7 +17,17 @@ format "lu" "rcs_number" {
   checks = [
     require(not(is_empty(subject())), "empty", "lu.rcs_number.empty"),
     require(length_between(subject(), 5, 7), "invalid_length", "lu.rcs_number.length"),
-    require(starts_with(subject(), "B"), "invalid_format", "lu.rcs_number.prefix"),
+    # The letter marks the section of the register, and the register enrols
+    # twelve categories of persons: the law of 19 December 2002 lists them, from
+    # commercants personnes physiques to fondations and associations agricoles.
+    # This rule accepted B alone, so a sole trader's number was refused - a real
+    # entity turned away, which is the worst answer this library can give.
+    #
+    # No published source states which letters are in use, and the law does not
+    # define the number's shape at all. So the letter is constrained to being a
+    # letter rather than to a list nobody publishes: a weaker claim needs no
+    # source, while the stronger one this replaces never had one.
+    require(char_at_in(subject(), 0, "ABCDEFGHIJKLMNOPQRSTUVWXYZ"), "invalid_format", "lu.rcs_number.prefix"),
     require(ascii_digits(slice_from(subject(), 1)), "invalid_characters", "lu.rcs_number.characters"),
   ]
 }
@@ -51,7 +61,7 @@ identifier "rcs_number" "LU" {
     accessed_at      = "2026-08-20"
     jurisdiction     = "LU"
     language         = "fr"
-    notes            = "The register publishes a number formed of the letter B followed by digits."
+    notes            = "The register publishes a number formed of a section letter followed by digits. Which letters are in use is not published, and the law of 19 December 2002 defines the categories enrolled without defining the number, so the letter is not constrained to a list."
     license_or_terms = "Luxembourg public sector information"
     tier             = "primary"
   }

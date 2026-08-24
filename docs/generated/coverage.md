@@ -2,7 +2,7 @@
 
 # Rule coverage
 
-Rules version `2026.08.30`, IR format version `1`.
+Rules version `2026.08.31`, IR format version `1`.
 
 ## Country by kind matrix
 
@@ -499,7 +499,7 @@ Kind aliases: `business_id`, `fi_y_tunnus`.
 | `PREDICATE_OP_KIND_ASCII_CHARSET` | 1 |
 | `PREDICATE_OP_KIND_ASCII_DIGITS` | 67 |
 | `PREDICATE_OP_KIND_ASCII_UPPER_LETTERS` | 1 |
-| `PREDICATE_OP_KIND_CHAR_AT_IN` | 14 |
+| `PREDICATE_OP_KIND_CHAR_AT_IN` | 15 |
 | `PREDICATE_OP_KIND_CONTAINS` | 27 |
 | `PREDICATE_OP_KIND_INTEGER_IS` | 4 |
 | `PREDICATE_OP_KIND_IS_ABSENT` | 27 |
@@ -509,7 +509,7 @@ Kind aliases: `business_id`, `fi_y_tunnus`.
 | `PREDICATE_OP_KIND_NOT` | 98 |
 | `PREDICATE_OP_KIND_PREFIX_IN` | 3 |
 | `PREDICATE_OP_KIND_PROFILE_IS` | 1 |
-| `PREDICATE_OP_KIND_STARTS_WITH` | 63 |
+| `PREDICATE_OP_KIND_STARTS_WITH` | 62 |
 | `STRING_OP_KIND_AFTER_FIRST` | 42 |
 | `STRING_OP_KIND_BEFORE_FIRST` | 27 |
 | `STRING_OP_KIND_SLICE` | 48 |
@@ -683,7 +683,7 @@ It shrinks when a rule needs one of them, and it must not grow silently.
 
 ## Conformance statistics
 
-Total cases: **672**.
+Total cases: **673**.
 
 | Kind | Cases |
 |---|---:|
@@ -720,7 +720,7 @@ Total cases: **672**.
 | `nif` | 4 |
 | `nipc` | 3 |
 | `organisationsnummer` | 4 |
-| `rcs_number` | 4 |
+| `rcs_number` | 5 |
 | `registracijas_numurs` | 3 |
 | `registrikood` | 3 |
 | `siren` | 40 |
@@ -785,6 +785,7 @@ Total cases: **672**.
 | `reason-code` | 1 |
 | `register` | 6 |
 | `regression` | 2 |
+| `section` | 1 |
 | `security` | 37 |
 | `shape` | 30 |
 | `short` | 2 |
@@ -792,12 +793,12 @@ Total cases: **672**.
 | `strict` | 6 |
 | `structure` | 2 |
 | `suffix` | 4 |
-| `synthetic` | 576 |
+| `synthetic` | 577 |
 | `truncation` | 1 |
 | `types` | 1 |
 | `unknown-field` | 1 |
 | `unsupported` | 31 |
-| `valid` | 281 |
+| `valid` | 282 |
 | `variant` | 2 |
 | `version` | 4 |
 | `weighted` | 4 |
@@ -805,5 +806,5 @@ Total cases: **672**.
 | Data classification | Cases |
 |---|---:|
 | `public_business_identifier` | 68 |
-| `synthetic` | 604 |
+| `synthetic` | 605 |
 
