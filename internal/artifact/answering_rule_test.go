@@ -67,6 +67,7 @@ func TestEachHostileFixtureIsRefusedByTheSameRuleAsBefore(t *testing.T) {
 		"unknown_feature.binpb":             "unknown capability id 9999",
 		"unknown_field_root.binpb":          "unknown Protobuf field at",
 		"unspecified_enum.binpb":            "program 1 has an unspecified kind",
+		"when_unreferenced.binpb":           "a WHEN branch is only accepted as a direct operand of CHOOSE",
 		"unsupported_format_version.binpb":  "unsupported format_version 2",
 	}
 

@@ -713,6 +713,32 @@ func main() {
 	strayWhen.Programs[2].RootNode = 3
 	write(filepath.Join(root, "stray_when_branch.binpb"), marshal(strayWhen))
 
+	// The same rule reached from the one side no fixture covered: a WHEN branch
+	// that nothing references. The root case above was already refused, so the
+	// clause forbidding a WHEN outside a CHOOSE had no case at all - the
+	// TypeScript engine measured that the thirty five answers did not move when
+	// the clause was added, which is what a rule with no case looks like.
+	//
+	// The program keeps its original root, so it is the absence of a parent and
+	// nothing else that makes this bundle invalid.
+	unreferencedWhen := clone(base)
+	unreferencedWhen.Programs[2].Nodes = append(unreferencedWhen.Programs[2].Nodes,
+		&irv1.Node{
+			OutputType: irv1.ValueType_VALUE_TYPE_BOOLEAN,
+			InputNodes: []uint32{0},
+			Operation: &irv1.Node_PredicateOperation{PredicateOperation: &irv1.PredicateOperation{
+				Kind: irv1.PredicateOpKind_PREDICATE_OP_KIND_ASCII_DIGITS,
+			}},
+		},
+		&irv1.Node{
+			OutputType: irv1.ValueType_VALUE_TYPE_CHECKSUM_OUTCOME,
+			InputNodes: []uint32{2, 1},
+			Operation: &irv1.Node_ChecksumOperation{ChecksumOperation: &irv1.ChecksumOperation{
+				Kind: irv1.ChecksumOpKind_CHECKSUM_OP_KIND_WHEN,
+			}},
+		})
+	write(filepath.Join(root, "when_unreferenced.binpb"), marshal(unreferencedWhen))
+
 	// A GLOBAL target declaring a prefix.
 	globalPrefix := clone(base)
 	globalPrefix.Dispatchers[0].Targets[0].AcceptedPrefixes = []string{"XX"}
