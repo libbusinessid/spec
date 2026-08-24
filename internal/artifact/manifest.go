@@ -11,14 +11,20 @@ import (
 // Manifest is the external release manifest. It is the only artifact carrying a
 // timestamp, always derived from SOURCE_DATE_EPOCH in a reproducible build.
 type Manifest struct {
-	RulesVersion              string            `json:"rulesVersion"`
-	FormatVersion             uint32            `json:"formatVersion"`
-	RequiredFeatures          []Feature         `json:"requiredFeatures"`
-	SourceDigest              string            `json:"sourceDigest"`
-	ConformanceSourceDigest   string            `json:"conformanceSourceDigest"`
-	ArtifactSha256            string            `json:"artifactSha256"`
-	ConformanceSha256         string            `json:"conformanceSha256"`
-	ConformanceJsonlGzSha256  string            `json:"conformanceJsonlGzSha256"`
+	RulesVersion             string    `json:"rulesVersion"`
+	FormatVersion            uint32    `json:"formatVersion"`
+	RequiredFeatures         []Feature `json:"requiredFeatures"`
+	SourceDigest             string    `json:"sourceDigest"`
+	ConformanceSourceDigest  string    `json:"conformanceSourceDigest"`
+	ArtifactSha256           string    `json:"artifactSha256"`
+	ConformanceSha256        string    `json:"conformanceSha256"`
+	ConformanceJsonlGzSha256 string    `json:"conformanceJsonlGzSha256"`
+	// The decompressed JSONL, because that is what an engine receives and what
+	// rules.lock attests. The archive digest moves with SOURCE_DATE_EPOCH while
+	// its content does not, so the two answer different questions. The lock
+	// carried this field before the manifest did, so the release built a lock
+	// of seven digests where every engine verifies eight and refused it.
+	ConformanceJsonlSha256    string            `json:"conformanceJsonlSha256"`
 	CompilerVersion           string            `json:"compilerVersion"`
 	SourceCommit              string            `json:"sourceCommit"`
 	GeneratedAt               string            `json:"generatedAt"`
