@@ -20,25 +20,22 @@ cd "${work}/engine"
 
 git switch -c "${branch}"
 
-resources="$(cat <<'EOF'
-businessid-go:internal/rules/businessid-rules.binpb:internal/rules/businessid-conformance.binpb
-businessid-swift:Sources/BusinessID/Resources/businessid-rules.binpb:Tests/BusinessIDTests/Resources/businessid-conformance.binpb
-businessid-kotlin:src/main/resources/businessid-rules.binpb:src/test/resources/businessid-conformance.binpb
-businessid-typescript:src/rules/businessid-rules.binpb:test/resources/businessid-conformance.binpb
-EOF
-)"
-
-name="${repo##*/}"
-line="$(printf '%s\n' "${resources}" | grep "^${name}:")"
-rules_path="$(printf '%s' "${line}" | cut -d: -f2)"
-conformance_path="$(printf '%s' "${line}" | cut -d: -f3)"
-
-mkdir -p "$(dirname "${rules_path}")" "$(dirname "${conformance_path}")"
-cp "${GITHUB_WORKSPACE}/artifacts/businessid-rules-${version}.binpb" "${rules_path}"
-cp "${GITHUB_WORKSPACE}/artifacts/businessid-conformance-${version}.binpb" "${conformance_path}"
+# The bundle is an input to the engine's generator, so it lands under spec/
+# beside the schemas and the corpus -- the same place tools/sync_engines.sh
+# writes, and the same place the engine's own lock attests. This script used to
+# copy it into Sources/BusinessID/Resources and src/main/resources, which is the
+# bundle as a resource of the published package: engine.md section 1.2 forbids
+# exactly that, and the guard that catches the phrase read the documents and
+# never the tooling.
+mkdir -p spec
+cp "${GITHUB_WORKSPACE}/artifacts/businessid-rules-${version}.binpb" spec/businessid-rules.binpb
+cp "${GITHUB_WORKSPACE}/artifacts/businessid-conformance-${version}.binpb" spec/businessid-conformance.binpb
+gzip -dc "${GITHUB_WORKSPACE}/artifacts/businessid-conformance-${version}.jsonl.gz" > spec/businessid-conformance.jsonl
+for schema in rules.proto conformance.proto testee.proto ir.md features.md; do
+  cp "${GITHUB_WORKSPACE}/artifacts/${schema}" "spec/${schema}"
+done
 cp "${GITHUB_WORKSPACE}/rules.lock" rules.lock
-
-git add "${rules_path}" "${conformance_path}" rules.lock
+git add spec rules.lock
 git -c user.name="libbusinessid-bot" -c user.email="bot@libbusinessid.invalid" \
   commit -m "rules: update to ${version}"
 git push --set-upstream origin "${branch}"
