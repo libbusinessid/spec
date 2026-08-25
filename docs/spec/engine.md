@@ -1079,6 +1079,33 @@ rules.lock
 
 Le chemin exact varie selon le langage.
 
+`rules.lock` porte exactement ces champs, dans cet ordre :
+
+```lock-fields
+rules_version
+format_version
+rules_sha256
+conformance_sha256
+conformance_jsonl_sha256
+rules_proto_sha256
+conformance_proto_sha256
+testee_proto_sha256
+ir_doc_sha256
+features_doc_sha256
+stability
+source_commit
+```
+
+Cette liste est normative. Un moteur vérifie chaque champ que le lock déclare,
+donc un champ qu'un écrivain porte et qu'un autre omet est une release que les
+moteurs refusent -- c'est arrivé : `conformance_jsonl_sha256` a existé d'un côté
+seulement, et la première release a livré un lock de sept digests là où les
+quatre moteurs en vérifient huit.
+
+`attestation_identity` s'ajoute en treizième position sur une release attestée,
+et sur elle seule. Une synchronisation locale ne l'invente pas : elle laisse un
+commentaire à sa place, pour qu'une absence se lise plutôt qu'elle ne se devine.
+
 La PR automatique de mise à jour doit :
 
 1. vérifier les SHA-256 ;

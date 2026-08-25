@@ -219,7 +219,6 @@ La structure cible est :
 │   ├── workflows/
 │   │   ├── ci.yml
 │   │   ├── release.yml
-│   │   └── downstream.yml
 │   └── dependabot.yml
 ├── cmd/entidc/
 ├── cmd/conformance-runner/
@@ -1479,13 +1478,21 @@ sont hors périmètre V1.
 
 ## 11. Synchronisation des dépôts moteurs
 
-Après publication d’une release :
+Après publication d’une release, **le moteur va la chercher ; la release ne
+pousse rien**. Chaque dépôt moteur porte un workflow `rules-sync` déclenché par
+une horloge, et non par un événement émis depuis `spec` : un `repository_dispatch`
+rendrait d’une main le jeton inter-dépôts que cette inversion retire de l’autre.
+`spec` n’a donc aucun droit d’écriture sur les quatre moteurs, et le rayon
+d’impact d’une compromission de `spec` s’arrête à `spec`. Le prix est une journée
+de latence au pire ; le déclenchement manuel existe pour le jour où elle coûte
+trop cher.
 
-1. `downstream.yml` ouvre une PR dans `entid-go`, `entid-swift`,
-   `entid-kotlin` et `entid-typescript` ;
-2. la PR met à jour `rules.lock`, et lui seul ;
+1. le workflow `rules-sync` de `entid-go`, `entid-swift`, `entid-kotlin` et
+   `entid-typescript` découvre la nouvelle release et ouvre une PR chez lui ;
+2. la PR met à jour `rules.lock` et le code généré ;
 3. le générateur du moteur récupère les artefacts de la release désignée, vérifie
-   tous les SHA-256 et l’attestation, puis régénère le code ;
+   tous les SHA-256 et l’attestation, puis régénère le code — la régénération
+   demande la chaîne d’outils du moteur, que `spec` n’a pas et n’aura pas ;
 4. le code généré est committé ; les artefacts binaires ne le sont pas ;
 5. chaque CI exécute toute la conformité et ses tests propres ;
 6. aucune publication de package n’est automatique avant succès de ses quality gates.
@@ -1712,7 +1719,8 @@ Le dépôt V1 est terminé lorsque :
   écart lorsqu’une réponse diffère, y compris sur un seul champ ;
 - le protocole de testee est documenté et son schéma est publié, de sorte qu’une
   implémentation tierce puisse se déclarer conforme sans modifier ce dépôt ;
-- une release de test peut ouvrir les quatre PR downstream ;
+- une release de test est découverte par les quatre moteurs, qui ouvrent chacun
+  leur PR de synchronisation ;
 - le pilote couvre toutes les familles d’opérations nécessaires ;
 - README, CONTRIBUTING, SECURITY, DATA_POLICY et guide de langage permettent une
   contribution autonome.
