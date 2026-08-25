@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"strings"
 
-	conformancev1 "github.com/libbusinessid/spec/gen/go/libbusinessid/conformance/v1"
-	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
-	"github.com/libbusinessid/spec/internal/features"
+	conformancev1 "github.com/entid-org/spec/gen/go/entid/conformance/v1"
+	irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
+	"github.com/entid-org/spec/internal/features"
 )
 
 // CoverageInput carries everything the generated documentation needs.
@@ -427,7 +427,7 @@ func RenderProvenance(in ProvenanceInput) []byte {
 	}
 	var b strings.Builder
 	b.WriteString("# Where these files come from, and what to build\n\n")
-	b.WriteString("Copied from `github.com/libbusinessid/spec` at commit\n")
+	b.WriteString("Copied from `github.com/entid-org/spec` at commit\n")
 	fmt.Fprintf(&b, "`%s`, rules version\n`%s`, stability `%s`.\n\n",
 		in.Commit, in.Version, in.Stability)
 	b.WriteString(body)

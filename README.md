@@ -1,6 +1,6 @@
-# LibBusinessID - `spec`
+# EntID - `spec`
 
-`spec` is the source of truth of LibBusinessID. It holds the authoring language,
+`spec` is the source of truth of EntID. It holds the authoring language,
 the intermediate representation, the official rules, the shared conformance
 suite and the compiler that turns all of it into the artifacts the engines
 consume.
@@ -12,7 +12,7 @@ visible rather than implied.
 
 ## What this project does, and what it does not
 
-LibBusinessID answers two precise questions about a business identifier:
+EntID answers two precise questions about a business identifier:
 
 - **format valid**: the shape is compatible with a documented variant;
 - **checksum valid**: the documented internal check is satisfied.
@@ -30,9 +30,9 @@ considered the most serious defect of the project.
 
 ```text
 proto/          the IR and conformance Protobuf schemas
-rules/          the official rules, written in the LibBusinessID HCL language
+rules/          the official rules, written in the EntID HCL language
 conformance/    the reviewed JSONL corpus shared by every engine
-cmd/businessidc the compiler, linker, linter, inspector and publisher
+cmd/entidc the compiler, linker, linter, inspector and publisher
 internal/       the compiler stages and the internal reference interpreter
 docs/           the language guide and the generated normative references
 testdata/       the decoder fixtures and the minimal reference bundle
@@ -57,7 +57,7 @@ rules/*.hcl + conformance/*.jsonl
                  |
         +--------+---------+
         v                  v
-businessid-rules.binpb  businessid-conformance.binpb
+entid-rules.binpb  entid-conformance.binpb
         |                  |
         +--------+---------+
                  v
@@ -65,7 +65,7 @@ businessid-rules.binpb  businessid-conformance.binpb
 ```
 
 HCL is an authoring language only. No production engine parses HCL: every
-symbolic reference is resolved by `businessidc`.
+symbolic reference is resolved by `entidc`.
 
 ## Getting started
 
@@ -77,17 +77,17 @@ make compile      # rebuild every artifact under dist/
 make ci           # everything the pull request pipeline runs
 ```
 
-## `businessidc`
+## `entidc`
 
 ```text
-businessidc fmt [--check] [paths...]
-businessidc lint [--rules rules] [--cases conformance]
-businessidc compile --rules rules --cases conformance --out dist [--write-docs] [--release] [--optimize=false]
-businessidc verify --rules rules --cases conformance
-businessidc inspect [--json] dist/businessid-rules-<version>.binpb
-businessidc diff [--json] old.binpb new.binpb
-businessidc check-generated
-businessidc version
+entidc fmt [--check] [paths...]
+entidc lint [--rules rules] [--cases conformance]
+entidc compile --rules rules --cases conformance --out dist [--write-docs] [--release] [--optimize=false]
+entidc verify --rules rules --cases conformance
+entidc inspect [--json] dist/entid-rules-<version>.binpb
+entidc diff [--json] old.binpb new.binpb
+entidc check-generated
+entidc version
 ```
 
 Every command accepts `--json` to emit machine readable output on stdout; human
@@ -126,7 +126,7 @@ make conformance   # runs the whole corpus against the reference testee
 To qualify your own engine:
 
 ```sh
-conformance-runner --corpus businessid-conformance-<version>.binpb -- ./your-testee
+conformance-runner --corpus entid-conformance-<version>.binpb -- ./your-testee
 ```
 
 Because the testee never sees an expected result, it cannot declare itself
@@ -136,15 +136,15 @@ on the reference interpreter.
 
 This is also how a third-party engine, in a language this project does not
 publish, qualifies without any change here. Section 8.7 of the specification is
-normative; `proto/libbusinessid/testee/v1/testee.proto` carries the schema.
+normative; `proto/entid/testee/v1/testee.proto` carries the schema.
 
 ## Published artifacts
 
 ```text
-businessid-rules-YYYY.MM.PATCH.binpb
-businessid-conformance-YYYY.MM.PATCH.binpb
-businessid-conformance-YYYY.MM.PATCH.jsonl.gz
-businessid-manifest-YYYY.MM.PATCH.json
+entid-rules-YYYY.MM.PATCH.binpb
+entid-conformance-YYYY.MM.PATCH.binpb
+entid-conformance-YYYY.MM.PATCH.jsonl.gz
+entid-manifest-YYYY.MM.PATCH.json
 reference-bundle.binpb            (minimal bundle for a new engine)
 reference-conformance.binpb       (its conformance suite)
 rules.proto
@@ -174,7 +174,7 @@ A release publishes artifacts, not the specification. One release is one
 `rulesVersion` and one immutable Git tag `v<rulesVersion>`; the patch number
 carries every rule change, so the specification can stay untouched across dozens
 of releases. Two artifacts must never share a `rulesVersion`: `rules.lock`
-identifies a bundle by that version and its SHA-256, and `businessidc diff`, the
+identifies a bundle by that version and its SHA-256, and `entidc diff`, the
 revocation list and the downstream verification all rely on that being unique.
 
 `RULES_STABILITY` declares the maturity of the **contract**, never the extent of

@@ -10,9 +10,9 @@ import (
 	"strings"
 	"testing"
 
-	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
-	"github.com/libbusinessid/spec/internal/artifact"
-	"github.com/libbusinessid/spec/internal/features"
+	irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
+	"github.com/entid-org/spec/internal/artifact"
+	"github.com/entid-org/spec/internal/features"
 )
 
 func loadMinimal(t *testing.T) []byte {
@@ -132,7 +132,7 @@ func TestMarshalIsDeterministic(t *testing.T) {
 }
 
 func TestGzipIsReproducible(t *testing.T) {
-	payload := []byte(strings.Repeat("libbusinessid\n", 100))
+	payload := []byte(strings.Repeat("entid\n", 100))
 	first, err := artifact.Gzip(payload, 1755475200)
 	if err != nil {
 		t.Fatal(err)
@@ -239,7 +239,7 @@ func TestFormatEpochAndHexDigest(t *testing.T) {
 }
 
 func TestParseGoModAndSBOM(t *testing.T) {
-	goMod := `module github.com/libbusinessid/spec
+	goMod := `module github.com/entid-org/spec
 
 go 1.24.0
 
@@ -254,7 +254,7 @@ require github.com/zclconf/go-cty v1.16.3 // indirect
 	if err != nil {
 		t.Fatal(err)
 	}
-	if path != "github.com/libbusinessid/spec" || len(modules) != 3 {
+	if path != "github.com/entid-org/spec" || len(modules) != 3 {
 		t.Fatalf("unexpected parse: %q %+v", path, modules)
 	}
 	if modules[0].Path != "github.com/hashicorp/hcl/v2" {

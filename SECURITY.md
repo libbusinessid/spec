@@ -3,7 +3,7 @@
 ## Reporting a vulnerability
 
 Report privately through the GitHub security advisories of
-`libbusinessid/spec`. Never open a public issue for:
+`entid-org/spec`. Never open a public issue for:
 
 - a supply chain compromise;
 - a forged bundle accepted by an engine;
@@ -27,7 +27,7 @@ The repository considers the following threats:
 | ReDoS | The IR holds no generic regular expression. |
 | Rule cycle | The call graph is proven acyclic at compile time and at load time. |
 | Checksum executed on a non conforming input | The format always acts as a guard; a failed format makes the checksum `not_run`. |
-| Wrong or obsolete business source | Every rejecting rule carries a source; `businessidc diff` classifies restrictions as high risk changes. |
+| Wrong or obsolete business source | Every rejecting rule carries a source; `entidc diff` classifies restrictions as high risk changes. |
 | Supply chain attack | Locked tool versions, SBOM, dependency audit, OIDC attestation of the release, downstream verification of the SHA-256 and of the attestation. |
 
 ## Untrusted inputs

@@ -1,4 +1,4 @@
-module github.com/libbusinessid/spec/tools/pinned
+module github.com/entid-org/spec/tools/pinned
 
 go 1.25.0
 

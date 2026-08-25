@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/libbusinessid/spec/internal/runner"
+	"github.com/entid-org/spec/internal/runner"
 )
 
 const fixtures = "../../internal/runner/testdata"
@@ -15,7 +15,7 @@ func testeeCommand(t *testing.T) []string {
 	t.Helper()
 	bin := filepath.Join(t.TempDir(), "testee")
 	out, err := exec.Command("go", "build", "-o", bin,
-		"github.com/libbusinessid/spec/cmd/conformance-testee").CombinedOutput()
+		"github.com/entid-org/spec/cmd/conformance-testee").CombinedOutput()
 	if err != nil {
 		t.Fatalf("cannot build the testee: %v\n%s", err, out)
 	}

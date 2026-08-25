@@ -5,10 +5,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
-	"github.com/libbusinessid/spec/internal/artifact"
-	"github.com/libbusinessid/spec/internal/features"
-	"github.com/libbusinessid/spec/internal/reference"
+	irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
+	"github.com/entid-org/spec/internal/artifact"
+	"github.com/entid-org/spec/internal/features"
+	"github.com/entid-org/spec/internal/reference"
 )
 
 // probeEngine compiles the synthetic rule set exercising every V1 operation.

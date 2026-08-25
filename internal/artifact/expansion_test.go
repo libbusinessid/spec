@@ -8,8 +8,8 @@ import (
 
 	"google.golang.org/protobuf/proto"
 
-	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
-	"github.com/libbusinessid/spec/internal/limits"
+	irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
+	"github.com/entid-org/spec/internal/limits"
 )
 
 // A DAG whose every node reads the previous one twice expands exponentially
@@ -205,9 +205,9 @@ func TestExpansionCountsWhatAGeneratorEmits(t *testing.T) {
 // to look.
 func TestExpansionProfileOfTheShippedBundle(t *testing.T) {
 	raw, err := os.ReadFile(filepath.Join("..", "..", "dist",
-		"businessid-rules-"+strings.TrimSpace(readVersion(t))+".binpb"))
+		"entid-rules-"+strings.TrimSpace(readVersion(t))+".binpb"))
 	if err != nil {
-		t.Skip("no compiled bundle in dist; run businessidc compile first")
+		t.Skip("no compiled bundle in dist; run entidc compile first")
 	}
 	rs, err := LoadRuleset(raw)
 	if err != nil {

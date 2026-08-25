@@ -9,9 +9,9 @@ import (
 	"sort"
 	"strings"
 
-	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
-	"github.com/libbusinessid/spec/internal/artifact"
-	"github.com/libbusinessid/spec/internal/features"
+	irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
+	"github.com/entid-org/spec/internal/artifact"
+	"github.com/entid-org/spec/internal/features"
 )
 
 // inspection is the machine readable description of a bundle.
@@ -136,7 +136,7 @@ func runInspect(args []string, stdout, stderr io.Writer) int {
 		return exitUsage
 	}
 	if fs.NArg() != 1 {
-		_, _ = fmt.Fprintln(stderr, "usage: businessidc inspect [--json] <bundle.binpb>")
+		_, _ = fmt.Fprintln(stderr, "usage: entidc inspect [--json] <bundle.binpb>")
 		return exitUsage
 	}
 	raw, err := os.ReadFile(fs.Arg(0))

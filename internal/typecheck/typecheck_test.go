@@ -4,12 +4,12 @@ import (
 	"strings"
 	"testing"
 
-	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
-	"github.com/libbusinessid/spec/internal/ast"
-	"github.com/libbusinessid/spec/internal/features"
-	"github.com/libbusinessid/spec/internal/hcllang"
-	"github.com/libbusinessid/spec/internal/linker"
-	"github.com/libbusinessid/spec/internal/typecheck"
+	irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
+	"github.com/entid-org/spec/internal/ast"
+	"github.com/entid-org/spec/internal/features"
+	"github.com/entid-org/spec/internal/hcllang"
+	"github.com/entid-org/spec/internal/linker"
+	"github.com/entid-org/spec/internal/typecheck"
 )
 
 func check(t *testing.T, src string) (*typecheck.Unit, string) {

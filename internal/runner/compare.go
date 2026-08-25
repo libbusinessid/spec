@@ -3,9 +3,9 @@ package runner
 import (
 	"fmt"
 
-	conformancev1 "github.com/libbusinessid/spec/gen/go/libbusinessid/conformance/v1"
-	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
-	testeev1 "github.com/libbusinessid/spec/gen/go/libbusinessid/testee/v1"
+	conformancev1 "github.com/entid-org/spec/gen/go/entid/conformance/v1"
+	irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
+	testeev1 "github.com/entid-org/spec/gen/go/entid/testee/v1"
 )
 
 // Diff is one field on which an engine departed from the corpus.

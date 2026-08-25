@@ -11,12 +11,12 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/libbusinessid/spec/internal/artifact"
-	"github.com/libbusinessid/spec/internal/conformance"
-	"github.com/libbusinessid/spec/internal/diagnostics"
-	"github.com/libbusinessid/spec/internal/features"
-	"github.com/libbusinessid/spec/internal/reference"
-	"github.com/libbusinessid/spec/internal/version"
+	"github.com/entid-org/spec/internal/artifact"
+	"github.com/entid-org/spec/internal/conformance"
+	"github.com/entid-org/spec/internal/diagnostics"
+	"github.com/entid-org/spec/internal/features"
+	"github.com/entid-org/spec/internal/reference"
+	"github.com/entid-org/spec/internal/version"
 )
 
 // buildOptions are the inputs shared by compile, verify and check-generated.
@@ -143,17 +143,17 @@ func build(opts buildOptions) (*buildResult, *diagnostics.Bag) {
 
 	suffix := "-" + rulesVersion
 	files := map[string][]byte{
-		"businessid-rules" + suffix + ".binpb":          rules.Bytes,
-		"businessid-conformance" + suffix + ".binpb":    suite.Bytes,
-		"businessid-conformance" + suffix + ".jsonl.gz": jsonlGz,
-		"businessid-manifest" + suffix + ".json":        manifestBytes,
-		"rules.proto":                                   inputs.rulesProto,
-		"conformance.proto":                             inputs.conformanceProto,
-		"testee.proto":                                  inputs.testeeProto,
-		"ir.md":                                         irDoc,
-		"features.md":                                   featuresDoc,
-		"coverage.md":                                   coverageDoc,
-		"SBOM.spdx.json":                                sbom,
+		"entid-rules" + suffix + ".binpb":          rules.Bytes,
+		"entid-conformance" + suffix + ".binpb":    suite.Bytes,
+		"entid-conformance" + suffix + ".jsonl.gz": jsonlGz,
+		"entid-manifest" + suffix + ".json":        manifestBytes,
+		"rules.proto":                              inputs.rulesProto,
+		"conformance.proto":                        inputs.conformanceProto,
+		"testee.proto":                             inputs.testeeProto,
+		"ir.md":                                    irDoc,
+		"features.md":                              featuresDoc,
+		"coverage.md":                              coverageDoc,
+		"SBOM.spdx.json":                           sbom,
 		// The minimal reference bundle and its suite are published with the
 		// documents so that an engine can start before any official rule
 		// exists (spec.md section 14).
@@ -258,11 +258,11 @@ func readBuildInputs(bag *diagnostics.Bag, opts buildOptions) (buildInputs, bool
 		return data
 	}
 	out.rulesProto = read("CLI015", "rules.proto",
-		opts.moduleRoot, "proto", "libbusinessid", "ir", "v1", "rules.proto")
+		opts.moduleRoot, "proto", "entid", "ir", "v1", "rules.proto")
 	out.conformanceProto = read("CLI016", "conformance.proto",
-		opts.moduleRoot, "proto", "libbusinessid", "conformance", "v1", "conformance.proto")
+		opts.moduleRoot, "proto", "entid", "conformance", "v1", "conformance.proto")
 	out.testeeProto = read("CLI023", "testee.proto",
-		opts.moduleRoot, "proto", "libbusinessid", "testee", "v1", "testee.proto")
+		opts.moduleRoot, "proto", "entid", "testee", "v1", "testee.proto")
 	// The prose contracts travel with the release. An engine that only fetches
 	// releases could otherwise never update the contract it is written against:
 	// spec.md, engine.md and its own engine-<lang>.md reached it solely through

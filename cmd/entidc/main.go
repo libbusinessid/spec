@@ -1,5 +1,5 @@
-// Command businessidc compiles, lints, inspects, compares and publishes the
-// LibBusinessID rule and conformance artifacts.
+// Command entidc compiles, lints, inspects, compares and publishes the
+// EntID rule and conformance artifacts.
 //
 // Exit codes:
 //
@@ -15,8 +15,8 @@ import (
 	"io"
 	"os"
 
-	"github.com/libbusinessid/spec/internal/diagnostics"
-	"github.com/libbusinessid/spec/internal/version"
+	"github.com/entid-org/spec/internal/diagnostics"
+	"github.com/entid-org/spec/internal/version"
 )
 
 // globalCountry is the label used in human output for a definition without

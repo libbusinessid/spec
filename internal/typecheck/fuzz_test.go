@@ -3,11 +3,11 @@ package typecheck_test
 import (
 	"testing"
 
-	"github.com/libbusinessid/spec/internal/ast"
-	"github.com/libbusinessid/spec/internal/hcllang"
-	"github.com/libbusinessid/spec/internal/linker"
-	"github.com/libbusinessid/spec/internal/lower"
-	"github.com/libbusinessid/spec/internal/typecheck"
+	"github.com/entid-org/spec/internal/ast"
+	"github.com/entid-org/spec/internal/hcllang"
+	"github.com/entid-org/spec/internal/linker"
+	"github.com/entid-org/spec/internal/lower"
+	"github.com/entid-org/spec/internal/typecheck"
 )
 
 // FuzzCompileUnit drives the whole compiler on arbitrary sources, including

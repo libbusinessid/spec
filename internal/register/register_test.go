@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	conformancev1 "github.com/libbusinessid/spec/gen/go/libbusinessid/conformance/v1"
-	"github.com/libbusinessid/spec/internal/register"
+	conformancev1 "github.com/entid-org/spec/gen/go/entid/conformance/v1"
+	"github.com/entid-org/spec/internal/register"
 )
 
 // A register sweep asks one question of every identifier an issuer has handed

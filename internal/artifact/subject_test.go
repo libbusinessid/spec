@@ -8,7 +8,7 @@ import (
 
 	"google.golang.org/protobuf/proto"
 
-	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
+	irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
 )
 
 // A subject node whose subtree reads SUBJECT defines the subject in terms of

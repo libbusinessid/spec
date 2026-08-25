@@ -37,7 +37,7 @@ jobs:
       - name: Quality gates
         run: |
           go test -race ./...
-          go run ./cmd/businessidc verify
+          go run ./cmd/entidc verify
           make cover
 
       - name: Build twice in two distinct temporary directories
@@ -48,14 +48,14 @@ jobs:
           export SOURCE_DATE_EPOCH
           commit="$(git rev-parse HEAD)"
           for suffix in one two-with-a-longer-name; do
-            go run ./cmd/businessidc compile \
+            go run ./cmd/entidc compile \
               --out "${RUNNER_TEMP}/dist-${suffix}" \
               --release --source-commit "$commit"
           done
           diff -r "${RUNNER_TEMP}/dist-one" "${RUNNER_TEMP}/dist-two-with-a-longer-name"
           cp -a "${RUNNER_TEMP}/dist-one" dist
           version="$(cat RULES_VERSION)"
-          manifest="dist/businessid-manifest-${version}.json"
+          manifest="dist/entid-manifest-${version}.json"
           test "$(jq -r .reproducible "$manifest")" = "true"
           stability="$(jq -r .stability "$manifest")"
           echo "rules_version=${version}" >> "$GITHUB_OUTPUT"
@@ -98,10 +98,10 @@ jobs:
         uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
         with:
           subject-path: |
-            dist/businessid-rules-${{ needs.build.outputs.rules_version }}.binpb
-            dist/businessid-conformance-${{ needs.build.outputs.rules_version }}.binpb
-            dist/businessid-conformance-${{ needs.build.outputs.rules_version }}.jsonl.gz
-            dist/businessid-manifest-${{ needs.build.outputs.rules_version }}.json
+            dist/entid-rules-${{ needs.build.outputs.rules_version }}.binpb
+            dist/entid-conformance-${{ needs.build.outputs.rules_version }}.binpb
+            dist/entid-conformance-${{ needs.build.outputs.rules_version }}.jsonl.gz
+            dist/entid-manifest-${{ needs.build.outputs.rules_version }}.json
             dist/rules.proto
             dist/conformance.proto
             dist/testee.proto

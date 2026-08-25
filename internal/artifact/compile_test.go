@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/libbusinessid/spec/internal/artifact"
+	"github.com/entid-org/spec/internal/artifact"
 )
 
 func compileDiagnostics(t *testing.T, dir string) string {

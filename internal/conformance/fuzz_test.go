@@ -3,7 +3,7 @@ package conformance_test
 import (
 	"testing"
 
-	"github.com/libbusinessid/spec/internal/conformance"
+	"github.com/entid-org/spec/internal/conformance"
 )
 
 // FuzzReadJSONL feeds partial, duplicated and contradictory corpora to the

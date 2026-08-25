@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	testeev1 "github.com/libbusinessid/spec/gen/go/libbusinessid/testee/v1"
+	testeev1 "github.com/entid-org/spec/gen/go/entid/testee/v1"
 )
 
 type failingWriter struct{}

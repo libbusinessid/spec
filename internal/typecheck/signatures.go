@@ -3,7 +3,7 @@ package typecheck
 import (
 	"sort"
 
-	"github.com/libbusinessid/spec/internal/features"
+	"github.com/entid-org/spec/internal/features"
 )
 
 // argKind classifies one surface argument of a language function.

@@ -3,10 +3,10 @@ package typecheck
 import (
 	"fmt"
 
-	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
-	"github.com/libbusinessid/spec/internal/ast"
-	"github.com/libbusinessid/spec/internal/features"
-	"github.com/libbusinessid/spec/internal/limits"
+	irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
+	"github.com/entid-org/spec/internal/ast"
+	"github.com/entid-org/spec/internal/features"
+	"github.com/entid-org/spec/internal/limits"
 )
 
 // expr checks one expression against the expected static type.

@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/libbusinessid/spec/internal/coverage"
+	"github.com/entid-org/spec/internal/coverage"
 )
 
 func main() {

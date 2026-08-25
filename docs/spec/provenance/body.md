@@ -4,7 +4,7 @@
 machine. The specification (sections 2.2 and 4) splits the work in two:
 
 - a **generator**, which you write, runs when the engine is built. It reads
-  `spec/businessid-rules.binpb`, validates it, and emits source code in this
+  `spec/entid-rules.binpb`, validates it, and emits source code in this
   language.
 - the **engine**, which is what ships: the generated code, a small set of
   support primitives it calls, and a public API written by hand.
@@ -29,9 +29,9 @@ requires a republication of the engine for every rules version.
 | `spec/features.md` | The {{CAPABILITIES}} frozen capability IDs. |
 | `spec/rules.proto` | Schema of the rules bundle — the generator's input. |
 | `spec/conformance.proto` | Schema of the conformance corpus. |
-| `spec/businessid-rules.binpb` | The bundle to generate from. |
-| `spec/businessid-conformance.binpb` | The conformance corpus, authoritative form. |
-| `spec/businessid-conformance.jsonl` | Same corpus, readable, for development. |
+| `spec/entid-rules.binpb` | The bundle to generate from. |
+| `spec/entid-conformance.binpb` | The conformance corpus, authoritative form. |
+| `spec/entid-conformance.jsonl` | Same corpus, readable, for development. |
 | `rules.lock` | Declared digests of every file above. |
 
 The bundle lives here only until the first release is tagged. After that, the

@@ -28,14 +28,14 @@ git switch -c "${branch}"
 # The bundle is an input to the engine's generator, so it lands under spec/
 # beside the schemas and the corpus -- the same place tools/sync_engines.sh
 # writes, and the same place the engine's own lock attests. This script used to
-# copy it into Sources/BusinessID/Resources and src/main/resources, which is the
+# copy it into Sources/EntID/Resources and src/main/resources, which is the
 # bundle as a resource of the published package: engine.md section 1.2 forbids
 # exactly that, and the guard that catches the phrase read the documents and
 # never the tooling.
 mkdir -p spec
-cp "${GITHUB_WORKSPACE}/artifacts/businessid-rules-${version}.binpb" spec/businessid-rules.binpb
-cp "${GITHUB_WORKSPACE}/artifacts/businessid-conformance-${version}.binpb" spec/businessid-conformance.binpb
-gzip -dc "${GITHUB_WORKSPACE}/artifacts/businessid-conformance-${version}.jsonl.gz" > spec/businessid-conformance.jsonl
+cp "${GITHUB_WORKSPACE}/artifacts/entid-rules-${version}.binpb" spec/entid-rules.binpb
+cp "${GITHUB_WORKSPACE}/artifacts/entid-conformance-${version}.binpb" spec/entid-conformance.binpb
+gzip -dc "${GITHUB_WORKSPACE}/artifacts/entid-conformance-${version}.jsonl.gz" > spec/entid-conformance.jsonl
 for schema in rules.proto conformance.proto testee.proto ir.md features.md; do
   cp "${GITHUB_WORKSPACE}/artifacts/${schema}" "spec/${schema}"
 done
@@ -44,7 +44,7 @@ cp "${GITHUB_WORKSPACE}/rules.lock" rules.lock
 # longer name one commit while the lock beside it names another.
 cp "${GITHUB_WORKSPACE}/provenance.md" spec/PROVENANCE.md
 git add spec rules.lock
-git -c user.name="libbusinessid-bot" -c user.email="bot@libbusinessid.invalid" \
+git -c user.name="entid-bot" -c user.email="bot@entid.invalid" \
   commit -m "rules: update to ${version}"
 # A re-run after a fixed defect has to replace its own branch rather than be
 # refused as non fast forward, and --force-with-lease is the safe way to do it.
@@ -75,7 +75,7 @@ gh pr create \
   --base main \
   --title "rules: update to ${version}" \
   --body "$(cat <<BODY
-Automated synchronization of the LibBusinessID rules.
+Automated synchronization of the EntID rules.
 
 - rules version: \`${version}\`
 - source tag: \`${tag}\`

@@ -4,9 +4,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/libbusinessid/spec/internal/ast"
-	"github.com/libbusinessid/spec/internal/hcllang"
-	"github.com/libbusinessid/spec/internal/linker"
+	"github.com/entid-org/spec/internal/ast"
+	"github.com/entid-org/spec/internal/hcllang"
+	"github.com/entid-org/spec/internal/linker"
 )
 
 const validUnit = `

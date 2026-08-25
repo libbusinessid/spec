@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
-	"github.com/libbusinessid/spec/internal/features"
+	irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
+	"github.com/entid-org/spec/internal/features"
 )
 
 // ir.md section 9 puts PredicateOperation.values under the normative order --

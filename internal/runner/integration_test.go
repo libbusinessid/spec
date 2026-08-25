@@ -10,8 +10,8 @@ import (
 
 	"google.golang.org/protobuf/proto"
 
-	conformancev1 "github.com/libbusinessid/spec/gen/go/libbusinessid/conformance/v1"
-	"github.com/libbusinessid/spec/internal/runner"
+	conformancev1 "github.com/entid-org/spec/gen/go/entid/conformance/v1"
+	"github.com/entid-org/spec/internal/runner"
 )
 
 // The fixture is a representative subset, not the whole corpus: it proves the
@@ -34,7 +34,7 @@ func referenceTestee(t *testing.T) []string {
 	t.Helper()
 	bin := filepath.Join(t.TempDir(), "testee")
 	out, err := exec.Command("go", "build", "-o", bin,
-		"github.com/libbusinessid/spec/cmd/conformance-testee").CombinedOutput()
+		"github.com/entid-org/spec/cmd/conformance-testee").CombinedOutput()
 	if err != nil {
 		t.Fatalf("cannot build the reference testee: %v\n%s", err, out)
 	}

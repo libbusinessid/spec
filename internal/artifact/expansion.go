@@ -3,8 +3,8 @@ package artifact
 import (
 	"slices"
 
-	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
-	"github.com/libbusinessid/spec/internal/limits"
+	irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
+	"github.com/entid-org/spec/internal/limits"
 )
 
 // checkExpansion refuses a program that no generator could emit.

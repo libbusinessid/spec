@@ -16,4 +16,4 @@ set -euo pipefail
 dist="$2"
 engine="$5"
 output="$6"
-cp "${dist}/provenance-${engine#businessid-}.md" "${output}"
+cp "${dist}/provenance-${engine#entid-}.md" "${output}"

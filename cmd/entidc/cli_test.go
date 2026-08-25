@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/libbusinessid/spec/internal/diagnostics"
+	"github.com/entid-org/spec/internal/diagnostics"
 )
 
 // repoRoot locates the repository root from the test working directory.
@@ -62,7 +62,7 @@ func TestUsage(t *testing.T) {
 
 func TestVersionCommand(t *testing.T) {
 	code, stdout, _ := exec(t, "version")
-	if code != exitOK || !strings.HasPrefix(stdout, "businessidc ") {
+	if code != exitOK || !strings.HasPrefix(stdout, "entidc ") {
 		t.Fatalf("unexpected version output: code=%d out=%q", code, stdout)
 	}
 	if code, _, _ := exec(t, "version", "--nope"); code != exitUsage {
@@ -154,7 +154,7 @@ func TestCompileInspectDiffAndCheckGenerated(t *testing.T) {
 		t.Fatalf("unexpected compile output: %q", stdout)
 	}
 	version := strings.TrimSpace(readFile(t, filepath.Join(repoRoot(t), "RULES_VERSION")))
-	bundle := filepath.Join(out, "businessid-rules-"+version+".binpb")
+	bundle := filepath.Join(out, "entid-rules-"+version+".binpb")
 
 	code, stdout, stderr = exec(t, "inspect", bundle)
 	if code != exitOK || !strings.Contains(stdout, "rules version") {
@@ -316,30 +316,30 @@ func TestCompileReportsMissingInputs(t *testing.T) {
 	}{
 		{"missing rules.proto", func(root string) {}, "cannot read rules.proto"},
 		{"missing conformance.proto", func(root string) {
-			mkdirAll(t, filepath.Join(root, "proto", "libbusinessid", "ir", "v1"))
-			writeFile(t, filepath.Join(root, "proto", "libbusinessid", "ir", "v1", "rules.proto"), "x")
+			mkdirAll(t, filepath.Join(root, "proto", "entid", "ir", "v1"))
+			writeFile(t, filepath.Join(root, "proto", "entid", "ir", "v1", "rules.proto"), "x")
 		}, "cannot read conformance.proto"},
 		{"missing testee.proto", func(root string) {
-			mkdirAll(t, filepath.Join(root, "proto", "libbusinessid", "ir", "v1"))
-			writeFile(t, filepath.Join(root, "proto", "libbusinessid", "ir", "v1", "rules.proto"), "x")
-			mkdirAll(t, filepath.Join(root, "proto", "libbusinessid", "conformance", "v1"))
-			writeFile(t, filepath.Join(root, "proto", "libbusinessid", "conformance", "v1", "conformance.proto"), "x")
+			mkdirAll(t, filepath.Join(root, "proto", "entid", "ir", "v1"))
+			writeFile(t, filepath.Join(root, "proto", "entid", "ir", "v1", "rules.proto"), "x")
+			mkdirAll(t, filepath.Join(root, "proto", "entid", "conformance", "v1"))
+			writeFile(t, filepath.Join(root, "proto", "entid", "conformance", "v1", "conformance.proto"), "x")
 		}, "cannot read testee.proto"},
 		{"missing go.mod", func(root string) {
-			mkdirAll(t, filepath.Join(root, "proto", "libbusinessid", "ir", "v1"))
-			writeFile(t, filepath.Join(root, "proto", "libbusinessid", "ir", "v1", "rules.proto"), "x")
-			mkdirAll(t, filepath.Join(root, "proto", "libbusinessid", "conformance", "v1"))
-			writeFile(t, filepath.Join(root, "proto", "libbusinessid", "conformance", "v1", "conformance.proto"), "x")
-			mkdirAll(t, filepath.Join(root, "proto", "libbusinessid", "testee", "v1"))
-			writeFile(t, filepath.Join(root, "proto", "libbusinessid", "testee", "v1", "testee.proto"), "x")
+			mkdirAll(t, filepath.Join(root, "proto", "entid", "ir", "v1"))
+			writeFile(t, filepath.Join(root, "proto", "entid", "ir", "v1", "rules.proto"), "x")
+			mkdirAll(t, filepath.Join(root, "proto", "entid", "conformance", "v1"))
+			writeFile(t, filepath.Join(root, "proto", "entid", "conformance", "v1", "conformance.proto"), "x")
+			mkdirAll(t, filepath.Join(root, "proto", "entid", "testee", "v1"))
+			writeFile(t, filepath.Join(root, "proto", "entid", "testee", "v1", "testee.proto"), "x")
 		}, "cannot read go.mod"},
 		{"unparseable go.mod", func(root string) {
-			mkdirAll(t, filepath.Join(root, "proto", "libbusinessid", "ir", "v1"))
-			writeFile(t, filepath.Join(root, "proto", "libbusinessid", "ir", "v1", "rules.proto"), "x")
-			mkdirAll(t, filepath.Join(root, "proto", "libbusinessid", "conformance", "v1"))
-			writeFile(t, filepath.Join(root, "proto", "libbusinessid", "conformance", "v1", "conformance.proto"), "x")
-			mkdirAll(t, filepath.Join(root, "proto", "libbusinessid", "testee", "v1"))
-			writeFile(t, filepath.Join(root, "proto", "libbusinessid", "testee", "v1", "testee.proto"), "x")
+			mkdirAll(t, filepath.Join(root, "proto", "entid", "ir", "v1"))
+			writeFile(t, filepath.Join(root, "proto", "entid", "ir", "v1", "rules.proto"), "x")
+			mkdirAll(t, filepath.Join(root, "proto", "entid", "conformance", "v1"))
+			writeFile(t, filepath.Join(root, "proto", "entid", "conformance", "v1", "conformance.proto"), "x")
+			mkdirAll(t, filepath.Join(root, "proto", "entid", "testee", "v1"))
+			writeFile(t, filepath.Join(root, "proto", "entid", "testee", "v1", "testee.proto"), "x")
 			writeFile(t, filepath.Join(root, "go.mod"), "go 1.24.0\n")
 			// The prose contracts travel with the release since they are what an
 			// engine is written against, so they are read before go.mod is
@@ -490,7 +490,7 @@ func TestDiffPrintsEveryChange(t *testing.T) {
 		t.Fatalf("compile failed: %s", stderr)
 	}
 	version := strings.TrimSpace(readFile(t, filepath.Join(repoRoot(t), "RULES_VERSION")))
-	current := filepath.Join(out, "businessid-rules-"+version+".binpb")
+	current := filepath.Join(out, "entid-rules-"+version+".binpb")
 	minimal := filepath.Join(repoRoot(t), "testdata", "bundles", "minimal_valid.binpb")
 	code, stdout, stderr := exec(t, "diff", minimal, current)
 	if code != exitOK {
@@ -514,7 +514,7 @@ func TestCompileRecordsTheStabilityLevel(t *testing.T) {
 	var manifest struct {
 		Stability string `json:"stability"`
 	}
-	if err := json.Unmarshal([]byte(readFile(t, filepath.Join(out, "businessid-manifest-"+version+".json"))), &manifest); err != nil {
+	if err := json.Unmarshal([]byte(readFile(t, filepath.Join(out, "entid-manifest-"+version+".json"))), &manifest); err != nil {
 		t.Fatal(err)
 	}
 	if manifest.Stability != declared {

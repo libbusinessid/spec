@@ -4,7 +4,7 @@
 // answers requests through a small executable — the testee — and never sees an
 // expectation, so it cannot declare itself conformant by comparing too weakly.
 //
-//	conformance-runner --corpus dist/businessid-conformance-2026.08.0.binpb -- ./bin/testee --bundle rules.binpb
+//	conformance-runner --corpus dist/entid-conformance-2026.08.0.binpb -- ./bin/testee --bundle rules.binpb
 package main
 
 import (
@@ -18,9 +18,9 @@ import (
 
 	"google.golang.org/protobuf/proto"
 
-	conformancev1 "github.com/libbusinessid/spec/gen/go/libbusinessid/conformance/v1"
-	"github.com/libbusinessid/spec/internal/register"
-	"github.com/libbusinessid/spec/internal/runner"
+	conformancev1 "github.com/entid-org/spec/gen/go/entid/conformance/v1"
+	"github.com/entid-org/spec/internal/register"
+	"github.com/entid-org/spec/internal/runner"
 )
 
 func main() {

@@ -9,12 +9,12 @@ import (
 
 	"github.com/hashicorp/hcl/v2/hclwrite"
 
-	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
-	"github.com/libbusinessid/spec/internal/artifact"
-	"github.com/libbusinessid/spec/internal/conformance"
-	"github.com/libbusinessid/spec/internal/diagnostics"
-	"github.com/libbusinessid/spec/internal/hcllang"
-	"github.com/libbusinessid/spec/internal/reference"
+	irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
+	"github.com/entid-org/spec/internal/artifact"
+	"github.com/entid-org/spec/internal/conformance"
+	"github.com/entid-org/spec/internal/diagnostics"
+	"github.com/entid-org/spec/internal/hcllang"
+	"github.com/entid-org/spec/internal/reference"
 )
 
 func runFmt(args []string, stdout, stderr io.Writer) int {
@@ -197,7 +197,7 @@ func lintFormatting(bag *diagnostics.Bag, opts buildOptions) {
 			}
 			if string(hclwrite.Format(source)) != string(source) {
 				bag.Suggestf(diagnostics.Position{File: f.RelPath}, "LINT003",
-					"run `businessidc fmt`", "the file is not in its canonical form")
+					"run `entidc fmt`", "the file is not in its canonical form")
 			}
 		}
 	}

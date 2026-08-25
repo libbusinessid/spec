@@ -25,11 +25,11 @@ import (
 
 	"google.golang.org/protobuf/proto"
 
-	conformancev1 "github.com/libbusinessid/spec/gen/go/libbusinessid/conformance/v1"
-	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
-	"github.com/libbusinessid/spec/internal/artifact"
-	"github.com/libbusinessid/spec/internal/features"
-	"github.com/libbusinessid/spec/internal/limits"
+	conformancev1 "github.com/entid-org/spec/gen/go/entid/conformance/v1"
+	irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
+	"github.com/entid-org/spec/internal/artifact"
+	"github.com/entid-org/spec/internal/features"
+	"github.com/entid-org/spec/internal/limits"
 )
 
 func s(v string) *string { return &v }
@@ -145,9 +145,9 @@ func minimalBundle() *irv1.RuleBundle {
 		ChecksumProgram:         u(3),
 		DefaultProfile:          "compatible",
 		Sources: []*irv1.Source{{
-			Id:             "libbusinessid-reference-bundle",
-			Url:            "https://github.com/libbusinessid/spec",
-			Authority:      "LibBusinessID",
+			Id:             "entid-reference-bundle",
+			Url:            "https://github.com/entid-org/spec",
+			Authority:      "EntID",
 			Title:          "Minimal reference bundle",
 			AccessedAt:     "2026-08-18",
 			Jurisdiction:   "GLOBAL",

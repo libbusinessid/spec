@@ -27,8 +27,8 @@ import (
 	"strconv"
 	"strings"
 
-	conformancev1 "github.com/libbusinessid/spec/gen/go/libbusinessid/conformance/v1"
-	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
+	conformancev1 "github.com/entid-org/spec/gen/go/entid/conformance/v1"
+	irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
 )
 
 // Definition describes one issuer's bulk register: what to download, how to

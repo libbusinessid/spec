@@ -1,4 +1,4 @@
-module github.com/libbusinessid/spec
+module github.com/entid-org/spec
 
 go 1.25.0
 

@@ -1,7 +1,7 @@
 # Conformance cases
 
 The conformance suite is the shared contract of the four engines. It is written
-and reviewed in JSONL and compiled into `businessid-conformance.binpb`.
+and reviewed in JSONL and compiled into `entid-conformance.binpb`.
 
 - JSONL is the canonical human source;
 - BINPB is the typed artifact consumed by the engines;

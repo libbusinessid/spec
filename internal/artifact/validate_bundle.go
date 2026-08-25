@@ -1,9 +1,9 @@
 package artifact
 
 import (
-	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
-	"github.com/libbusinessid/spec/internal/features"
-	"github.com/libbusinessid/spec/internal/limits"
+	irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
+	"github.com/entid-org/spec/internal/features"
+	"github.com/entid-org/spec/internal/limits"
 )
 
 //nolint:gocyclo // one exhaustive validation of the definition table.

@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	conformancev1 "github.com/libbusinessid/spec/gen/go/libbusinessid/conformance/v1"
+	conformancev1 "github.com/entid-org/spec/gen/go/entid/conformance/v1"
 )
 
 // Options configures one conformance run.

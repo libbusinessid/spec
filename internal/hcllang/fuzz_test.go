@@ -3,9 +3,9 @@ package hcllang_test
 import (
 	"testing"
 
-	"github.com/libbusinessid/spec/internal/ast"
-	"github.com/libbusinessid/spec/internal/hcllang"
-	"github.com/libbusinessid/spec/internal/linker"
+	"github.com/entid-org/spec/internal/ast"
+	"github.com/entid-org/spec/internal/hcllang"
+	"github.com/entid-org/spec/internal/linker"
 )
 
 // FuzzParseHCL feeds arbitrary bytes to the whole front end. No input may cause

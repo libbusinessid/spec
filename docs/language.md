@@ -1,16 +1,16 @@
-# The LibBusinessID authoring language
+# The EntID authoring language
 
-The rules of LibBusinessID are written in HCL v2 native syntax. HCL provides the
-syntax, the expression forms and the positional diagnostics; LibBusinessID
+The rules of EntID are written in HCL v2 native syntax. HCL provides the
+syntax, the expression forms and the positional diagnostics; EntID
 defines every piece of semantics.
 
 The language is an **authoring** language. No production engine parses it: the
-compiler `businessidc` resolves every symbolic reference and emits the typed IR
+compiler `entidc` resolves every symbolic reference and emits the typed IR
 described in [`ir.md`](ir.md).
 
 ## 1. Compilation unit
 
-There is **no import mechanism**. `businessidc` walks `rules/` recursively,
+There is **no import mechanism**. `entidc` walks `rules/` recursively,
 collects every `*.hcl` file, sorts them by POSIX relative path and analyses them
 as a single compilation unit with a single global symbol table.
 
@@ -118,7 +118,7 @@ Inside a canonicalizer, `value()` is the value **current at that point**:
 `when(...)` observes the result of the previous steps. `subject()` is not
 available.
 
-Canonicalization must be idempotent. `businessidc lint` checks that property on
+Canonicalization must be idempotent. `entidc lint` checks that property on
 every conformance case and on generated probes.
 
 An impossible operation is a compile time error, never an `invalid` result. An

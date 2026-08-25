@@ -1,7 +1,7 @@
 // Package optimize implements the optional, documented structural
 // deduplication of identical IR sub-graphs.
 //
-// Deduplication is opt-out: `businessidc compile --optimize=false` disables it
+// Deduplication is opt-out: `entidc compile --optimize=false` disables it
 // and an equivalence test proves that both modes execute identically. The
 // structural key never merges two nodes with a different assertion order,
 // reason code or message key, because those values are part of the key.
@@ -10,7 +10,7 @@ package optimize
 import (
 	"google.golang.org/protobuf/proto"
 
-	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
+	irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
 )
 
 // unencodableKey is used for the nodes the runtime cannot encode. It is unique

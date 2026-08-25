@@ -27,7 +27,7 @@ contain:
 - a credential, a token or any secret.
 
 The expression "production case" is forbidden in the corpus and rejected
-automatically by `businessidc lint`.
+automatically by `entidc lint`.
 
 The project **never queries a register to check** whether a synthetic value
 happens to be assigned: that verification would itself create an unjustified
@@ -125,7 +125,7 @@ An urgent removal never requires the usual review delay.
 A pull request touching `conformance/**` or `testdata/**` requires:
 
 - a confidentiality and licence review by a maintainer;
-- the automatic checks of `businessidc lint`: classification, non empty
+- the automatic checks of `entidc lint`: classification, non empty
   redistribution basis, forbidden phrases, source references;
 - the secret scanning of the CI;
 - for an `official_public_example`, the URL, the access date and the applicable

@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/libbusinessid/spec/internal/hcllang"
+	"github.com/entid-org/spec/internal/hcllang"
 )
 
 func TestDiscoverSortsAndSkips(t *testing.T) {

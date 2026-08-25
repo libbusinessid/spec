@@ -6,9 +6,9 @@ import (
 
 	"google.golang.org/protobuf/proto"
 
-	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
-	"github.com/libbusinessid/spec/internal/artifact"
-	"github.com/libbusinessid/spec/internal/features"
+	irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
+	"github.com/entid-org/spec/internal/artifact"
+	"github.com/entid-org/spec/internal/features"
 )
 
 func baseBundle(t *testing.T) *irv1.RuleBundle {

@@ -4,7 +4,7 @@ import (
 	"encoding/hex"
 	"testing"
 
-	"github.com/libbusinessid/spec/internal/artifact"
+	"github.com/entid-org/spec/internal/artifact"
 )
 
 func TestSourceDigestIsOrderIndependent(t *testing.T) {
@@ -113,7 +113,9 @@ func TestSourceDigestIsStable(t *testing.T) {
 	// Frozen golden value, computed independently from this implementation
 	// (see tools/canonical_stream.py). Any change to the canonical stream
 	// breaks every published digest and must be an explicit, reviewed decision.
-	const want = "0c29338ef9657323dee0668af533567366aebde34a985d01c14b515f9ab96060"
+	// Moved once, at the entid rename: the domain tag became ENTID-SOURCE-V1
+	// (ND-012). Both implementations were rerun and agree on this value.
+	const want = "c5bda7845dadeec8c04077852a178bdfb2f83fd5fb54ca7656b2c412fd28ff0b"
 	if got := hex.EncodeToString(digest[:]); got != want {
 		t.Fatalf("canonical stream changed:\n got  %s\n want %s", got, want)
 	}

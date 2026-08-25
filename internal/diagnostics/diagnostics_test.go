@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/libbusinessid/spec/internal/diagnostics"
+	"github.com/entid-org/spec/internal/diagnostics"
 )
 
 func TestPositionString(t *testing.T) {

@@ -1,13 +1,13 @@
-# LibBusinessID — Contrat commun des moteurs
+# EntID — Contrat commun des moteurs
 
 ## 1. Objet
 
-Ce document définit le comportement normatif de tous les moteurs LibBusinessID :
+Ce document définit le comportement normatif de tous les moteurs EntID :
 
-- `businessid-go` ;
-- `businessid-swift` ;
-- `businessid-kotlin` ;
-- `businessid-typescript`.
+- `entid-go` ;
+- `entid-swift` ;
+- `entid-kotlin` ;
+- `entid-typescript`.
 
 Il est indépendant d’un langage. Les documents `engine-<langage>.md` complètent ce
 contrat avec les conventions, outils et APIs propres à chaque écosystème.
@@ -17,12 +17,12 @@ normatifs.
 
 Un moteur est responsable de :
 
-1. charger et valider défensivement un `businessid-rules.binpb` ;
+1. charger et valider défensivement un `entid-rules.binpb` ;
 2. exposer une API idiomatique ;
 3. dispatcher puis canonicaliser une entrée selon les deux phases normatives ;
 4. exécuter format puis checksum selon les règles communes ;
 5. produire le contrat de résultat commun ;
-6. exécuter la suite `businessid-conformance.binpb` ;
+6. exécuter la suite `entid-conformance.binpb` ;
 7. prévoir une interface de registre sans implémentation réseau en V1.
 
 Un moteur n’analyse jamais HCL et ne contient aucune règle nationale codée en dur.
@@ -36,7 +36,7 @@ L’implémentation d’un moteur NE DOIT PAS commencer avec ce seul document. L
 - `rules.proto` et `conformance.proto` ;
 - `ir.md`, qui spécifie exhaustivement chaque opcode et invariant ;
 - `features.md`, qui fige le contenu exact de chaque capability ID ;
-- `businessid-rules.binpb`, `businessid-conformance.binpb`, leur manifeste,
+- `entid-rules.binpb`, `entid-conformance.binpb`, leur manifeste,
   `SHA256SUMS` et leur attestation ;
 - les fixtures minimales valides et invalides du décodeur.
 
@@ -51,7 +51,7 @@ Un moteur NE DOIT PAS interpréter le bundle à l’exécution. Le travail se s�
 deux :
 
 - un **générateur**, que vous écrivez, s’exécute à la construction du moteur. Il lit
-  `businessid-rules.binpb`, applique les vingt-cinq contrôles de chargement de
+  `entid-rules.binpb`, applique les vingt-cinq contrôles de chargement de
   `ir.md` section 10, et émet du code source dans votre langage. Il refuse de produire
   quoi que ce soit s’il ne comprend pas une version, un champ, un opcode ou une
   capacité.
@@ -90,7 +90,7 @@ statuts `unsupported` et `not_run` sont des résultats normaux.
 
 ## 3. Terminologie
 
-- **bundle** : artefact `businessid-rules.binpb` ;
+- **bundle** : artefact `entid-rules.binpb` ;
 - **règles version** : version métier `YYYY.MM.PATCH` ;
 - **format version** : version entière de l’IR ;
 - **moteur** : runtime d’un langage ;
@@ -664,7 +664,7 @@ le reste.
 
 ### 11.1 Source exécutée
 
-Chaque moteur consomme `businessid-conformance.binpb` correspondant exactement au
+Chaque moteur consomme `entid-conformance.binpb` correspondant exactement au
 `rules.lock`. Le hash doit être vérifié lors de la mise à jour du dépôt.
 
 Tous les cas communs sont obligatoires. Un moteur ne peut pas exclure un cas pour
@@ -681,8 +681,8 @@ commit que `rules.lock` enregistre sous `source_commit`, donc au même commit qu
 corpus :
 
 ```bash
-go run github.com/libbusinessid/spec/cmd/conformance-runner@<source_commit> \
-  -corpus spec/businessid-conformance.binpb -- ./mon-testee
+go run github.com/entid-org/spec/cmd/conformance-runner@<source_commit> \
+  -corpus spec/entid-conformance.binpb -- ./mon-testee
 ```
 
 Aucune release n'est nécessaire, rien n'est à télécharger à la main, et le seul
@@ -1072,8 +1072,8 @@ chaînes en minuscules définies dans ce document.
 Le dépôt contient :
 
 ```text
-Sources/Resources/.../businessid-rules.binpb
-Tests/Resources/.../businessid-conformance.binpb
+Sources/Resources/.../entid-rules.binpb
+Tests/Resources/.../entid-conformance.binpb
 rules.lock
 ```
 

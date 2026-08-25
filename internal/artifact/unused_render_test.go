@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
-	"github.com/libbusinessid/spec/internal/features"
+	irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
+	"github.com/entid-org/spec/internal/features"
 )
 
 // A reader of the coverage document should see a sentence when nothing is

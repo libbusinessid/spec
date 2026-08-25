@@ -3,10 +3,10 @@ package typecheck
 import (
 	"testing"
 
-	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
-	"github.com/libbusinessid/spec/internal/ast"
-	"github.com/libbusinessid/spec/internal/diagnostics"
-	"github.com/libbusinessid/spec/internal/features"
+	irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
+	"github.com/entid-org/spec/internal/ast"
+	"github.com/entid-org/spec/internal/diagnostics"
+	"github.com/entid-org/spec/internal/features"
 )
 
 // These white-box tests exercise the defensive branches of the parameter

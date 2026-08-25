@@ -1,8 +1,8 @@
-# Prompt d’implémentation — moteur Kotlin LibBusinessID
+# Prompt d’implémentation — moteur Kotlin EntID
 
 ## Mission
 
-Implémente intégralement le dépôt Kotlin de LibBusinessID après lecture complète de
+Implémente intégralement le dépôt Kotlin de EntID après lecture complète de
 `engine.md`. Avant de coder, exige et lis aussi `rules.proto`, `conformance.proto`,
 `ir.md`, `features.md`, le manifeste, `SHA256SUMS`, l’attestation et les deux BINPB
 de la même release. Si un élément manque ou se contredit, arrête-toi et fais corriger
@@ -34,7 +34,7 @@ Structure recommandée :
 ├── settings.gradle.kts
 ├── gradle/libs.versions.toml
 ├── gradlew
-├── src/main/kotlin/io/libbusinessid/
+├── src/main/kotlin/org/entid/
 │   ├── api/
 │   ├── domain/
 │   ├── runtime/          # primitives que le code généré appelle
@@ -70,7 +70,7 @@ public data class IdentifierInput(
     val countryCode: String? = null,
 )
 
-public class BusinessIdEngine private constructor(...) {
+public class EntIdEngine private constructor(...) {
     public fun canonicalize(
         input: IdentifierInput,
         options: ValidationOptions = ValidationOptions(),
@@ -92,7 +92,7 @@ public class BusinessIdEngine private constructor(...) {
     ): ValidationReport
 
     public companion object {
-        public fun default(): BusinessIdEngine
+        public fun default(): EntIdEngine
     }
 }
 ```
@@ -193,8 +193,8 @@ Le runner de conformité vient de `spec`, jamais de ce dépôt. Il s'exécute é
 commit que `rules.lock` enregistre sous `source_commit` :
 
 ```bash
-go run github.com/libbusinessid/spec/cmd/conformance-runner@<source_commit> \
-  -corpus spec/businessid-conformance.binpb -- ./gradlew -q runTestee
+go run github.com/entid-org/spec/cmd/conformance-runner@<source_commit> \
+  -corpus spec/entid-conformance.binpb -- ./gradlew -q runTestee
 ```
 
 N'écris pas de comparateur : un moteur qui juge lui-même ses propres résultats peut
