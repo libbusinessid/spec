@@ -780,7 +780,9 @@ workflow de release marque chaque publication comme pré-release, et l'endpoint
 `releases/latest` de GitHub les exclut — `gh release view` répond « release not
 found » alors que la release existe. Un moteur qui interroge cet endpoint ne se
 synchroniserait jamais pendant toute la phase alpha. Il liste les releases et
-prend la plus récente qui n'est pas un brouillon. Sinon il fait, dans cet
+prend la plus récente qui n'est pas un brouillon.
+
+Quand la release trouvée et le `rules.lock` diffèrent, le moteur fait, dans cet
 ordre :
 
 1. télécharge les artefacts de la release ;
