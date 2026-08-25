@@ -140,16 +140,3 @@ jobs:
             --notes-file docs/generated/coverage.md \
             ${prerelease} \
             dist/*
-
-  downstream:
-    name: open the downstream pull requests
-    needs: [build, publish]
-    if: startsWith(github.ref, 'refs/tags/') && inputs.dry_run != true
-    uses: ./.github/workflows/downstream.yml
-    permissions:
-      contents: read
-    secrets: inherit
-    with:
-      rules_version: ${{ needs.build.outputs.rules_version }}
-      tag: ${{ github.ref_name }}
-      dry_run: false
