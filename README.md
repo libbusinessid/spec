@@ -171,7 +171,9 @@ Four things move at different rates and are versioned independently.
 | `compilerVersion` | SemVer | the tooling evolves | none |
 
 A release publishes artifacts, not the specification. One release is one
-`rulesVersion` and one immutable Git tag `v<rulesVersion>`; the patch number
+`rulesVersion` and one immutable Git tag `v<rulesVersion>` -- the release refuses a
+tag that names anything else, so this repository is versioned by calendar rather
+than by semver; the patch number
 carries every rule change, so the specification can stay untouched across dozens
 of releases. Two artifacts must never share a `rulesVersion`: `rules.lock`
 identifies a bundle by that version and its SHA-256, and `entidc diff`, the
