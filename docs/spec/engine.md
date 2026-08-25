@@ -792,7 +792,7 @@ ordre :
    publiée assemblée, une par moteur : un moteur qui a vérifié une release n'a
    ainsi rien à cloner pour écrire le dernier fichier de sa synchronisation ;
 4. **régénère le code émis** ;
-5. exécute le point d'entrée de la section 12.5 ;
+5. exécute le point d'entrée de la section 12.6 ;
 6. ouvre une pull request avec le tout, verte ou rouge.
 
 Rien n'est écrit avant que l'étape 2 ne passe. Une release dont l'attestation ne
@@ -844,7 +844,7 @@ Trois conditions, et un moteur qui n'en remplit pas une le dit plutôt que de
 contourner :
 
 - l'auto-merge doit être autorisé sur le dépôt, et une protection de branche doit
-  exiger le verdict du point d'entrée de la section 12.5 ; sans elle, l'auto-merge
+  exiger le verdict du point d'entrée de la section 12.6 ; sans elle, l'auto-merge
   fusionne dès que rien ne le bloque, ce qui n'est pas la même chose que sur vert ;
 - **le point d'entrée est la seule vérification exigée**, sinon « vert » aurait
   deux définitions et l'auto-merge suivrait la plus faible ;
@@ -957,7 +957,7 @@ Lorsque l’écosystème le permet, appliquer le mutation testing aux checksums,
 comparaisons de positions, bornes et dispatch. Objectif recommandé : mutation score
 ≥ 80 % sur le cœur, avec analyse des mutants survivants.
 
-## 12.5 Une seule commande, silencieuse quand tout passe
+### 12.6 Une seule commande, silencieuse quand tout passe
 
 Chaque moteur expose **un point d'entrée unique** qui exécute toute sa vérification :
 empreintes du lock, régénération du code émis, compilation, tests, conformité contre
