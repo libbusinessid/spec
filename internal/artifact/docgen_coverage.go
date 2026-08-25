@@ -3,6 +3,7 @@ package artifact
 import (
 	"fmt"
 	"sort"
+	"strconv"
 	"strings"
 
 	conformancev1 "github.com/libbusinessid/spec/gen/go/libbusinessid/conformance/v1"
@@ -363,4 +364,74 @@ func TagCounts(bundle *conformancev1.ConformanceBundle) map[string]int {
 		out[t.name] = t.count
 	}
 	return out
+}
+
+// ProvenanceFigures are the counts the provenance note quotes.
+//
+// They were read out of the rendered coverage.md by a shell script, with sed
+// patterns matching prose that nothing forced to stay stable. Counting the
+// bundle directly is both simpler and one fewer thing that drifts silently.
+type ProvenanceFigures struct {
+	Definitions  int
+	Nodes        int
+	Capabilities int
+	UsedOps      int
+	TotalOps     int
+}
+
+// FiguresOf counts what the provenance note states, from the bundle itself.
+func FiguresOf(bundle *irv1.RuleBundle) ProvenanceFigures {
+	out := ProvenanceFigures{
+		Definitions:  len(bundle.GetIdentifiers()),
+		Capabilities: len(bundle.GetRequiredFeatureIds()),
+		TotalOps:     len(features.Ops()),
+	}
+	used := map[string]bool{}
+	for _, p := range bundle.GetPrograms() {
+		out.Nodes += len(p.GetNodes())
+		for _, n := range p.GetNodes() {
+			shape, err := shapeOf(n)
+			if err != nil {
+				continue
+			}
+			if op, ok := features.LookupOp(shape.category, shape.code); ok {
+				used[op.Symbol] = true
+			}
+		}
+	}
+	out.UsedOps = len(used)
+	return out
+}
+
+// ProvenanceInput is everything one engine's provenance note is made of.
+type ProvenanceInput struct {
+	Commit    string
+	Version   string
+	Stability string
+	Figures   ProvenanceFigures
+	Body      []byte
+	Notes     []byte
+}
+
+// RenderProvenance assembles the note an engine ships as spec/PROVENANCE.md.
+func RenderProvenance(in ProvenanceInput) []byte {
+	body := string(in.Body)
+	for placeholder, value := range map[string]int{
+		"{{DEFINITIONS}}":  in.Figures.Definitions,
+		"{{NODES}}":        in.Figures.Nodes,
+		"{{CAPABILITIES}}": in.Figures.Capabilities,
+		"{{USED_OPS}}":     in.Figures.UsedOps,
+		"{{TOTAL_OPS}}":    in.Figures.TotalOps,
+	} {
+		body = strings.ReplaceAll(body, placeholder, strconv.Itoa(value))
+	}
+	var b strings.Builder
+	b.WriteString("# Where these files come from, and what to build\n\n")
+	b.WriteString("Copied from `github.com/libbusinessid/spec` at commit\n")
+	fmt.Fprintf(&b, "`%s`, rules version\n`%s`, stability `%s`.\n\n",
+		in.Commit, in.Version, in.Stability)
+	b.WriteString(body)
+	b.WriteString("\n")
+	b.Write(in.Notes)
+	return []byte(b.String())
 }

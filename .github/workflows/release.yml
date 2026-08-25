@@ -107,6 +107,16 @@ jobs:
             dist/testee.proto
             dist/ir.md
             dist/features.md
+            dist/spec.md
+            dist/engine.md
+            dist/engine-go.md
+            dist/engine-swift.md
+            dist/engine-kotlin.md
+            dist/engine-typescript.md
+            dist/provenance-go.md
+            dist/provenance-swift.md
+            dist/provenance-kotlin.md
+            dist/provenance-typescript.md
             dist/SHA256SUMS
             dist/SBOM.spdx.json
 

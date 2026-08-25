@@ -14,6 +14,11 @@
 set -euo pipefail
 
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+force_local="no"
+if [[ "${1:-}" == "--force-local" ]]; then
+  force_local="yes"
+  shift
+fi
 root="${1:-$(dirname "${here}")}"
 version="$(cat "${here}/RULES_VERSION")"
 commit="$(git -C "${here}" rev-parse HEAD)"
@@ -60,6 +65,21 @@ for engine in businessid-go businessid-swift businessid-kotlin businessid-typesc
     businessid-kotlin)     cp "${here}/docs/spec/engine-kotlin.md"     "${target}/spec/engine-kotlin.md" ;;
     businessid-typescript) cp "${here}/docs/spec/engine-typescript.md" "${target}/spec/engine-typescript.md" ;;
   esac
+
+  # An attested lock is never replaced by a local one. This script produces a
+  # pre-release lock from a local build, and overwriting an attested lock with it
+  # takes the engine off the verified path in silence: attestation_identity
+  # disappears and source_commit rewinds to a commit no release was built from,
+  # which is also what pins the conformance runner. The Kotlin engine found this
+  # after it had happened to its own checkout.
+  if [[ -f "${target}/rules.lock" ]] && grep -q '^attestation_identity' "${target}/rules.lock"; then
+    if [[ "${force_local:-}" != "yes" ]]; then
+      echo "refusing ${engine}: its rules.lock is attested, and this would replace it with a local one" >&2
+      echo "  pass --force-local to step off the attested path on purpose" >&2
+      continue
+    fi
+    echo "warning: ${engine} leaves the attested path, its lock becomes a local pre-release one" >&2
+  fi
 
   cat > "${target}/rules.lock" <<LOCK
 # Pre-release lock, produced locally from the spec repository.

@@ -341,6 +341,21 @@ func TestCompileReportsMissingInputs(t *testing.T) {
 			mkdirAll(t, filepath.Join(root, "proto", "libbusinessid", "testee", "v1"))
 			writeFile(t, filepath.Join(root, "proto", "libbusinessid", "testee", "v1", "testee.proto"), "x")
 			writeFile(t, filepath.Join(root, "go.mod"), "go 1.24.0\n")
+			// The prose contracts travel with the release since they are what an
+			// engine is written against, so they are read before go.mod is
+			// parsed and this case has to supply them to reach the parse.
+			mkdirAll(t, filepath.Join(root, "docs", "spec"))
+			for _, name := range []string{"spec.md", "engine.md", "engine-go.md",
+				"engine-swift.md", "engine-kotlin.md", "engine-typescript.md"} {
+				writeFile(t, filepath.Join(root, "docs", "spec", name), "x")
+			}
+			// The provenance note is assembled here too, so that an engine which
+			// has verified a release has nothing left to clone.
+			mkdirAll(t, filepath.Join(root, "docs", "spec", "provenance"))
+			for _, name := range []string{"body.md", "go.md", "swift.md",
+				"kotlin.md", "typescript.md"} {
+				writeFile(t, filepath.Join(root, "docs", "spec", "provenance", name), "x")
+			}
 		}, "cannot parse go.mod"},
 	}
 	for _, tc := range tests {

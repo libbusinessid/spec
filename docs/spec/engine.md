@@ -693,6 +693,14 @@ n'entre ni dans le paquet publié ni dans ses dépendances.
 toolchain. L'étape du runner doit donc poser `GOTOOLCHAIN: auto` ; le testee, lui,
 reste construit avec la toolchain épinglée du moteur.
 
+**Sur l'étape, pas sur le workflow.** `setup-go` n'écrit pas la variable dans son
+propre environnement : il l'exporte par `$GITHUB_ENV`, ce qui l'emporte sur les
+blocs `env` du workflow et du job. Un `GOTOOLCHAIN: auto` posé en tête de fichier
+vaut donc pour les étapes qui précèdent `setup-go` et pour aucune de celles qui le
+suivent — dont les seules qui exécutent Go. Le moteur TypeScript l'a mesuré en
+lisant l'environnement à chaque étape : `auto` avant, `local` après, et **rien
+n'échouait**, ce qui est exactement pourquoi personne ne l'aurait vu.
+
 La condition exacte est la ligne `go` du module `spec`, pas sa ligne `toolchain` :
 c'est la première qui lie. Un moteur épinglant un Go antérieur échoue sur la
 résolution de la toolchain, pas sur un écart de conformité — c'est arrivé au moteur
@@ -764,14 +772,25 @@ Quand `spec` publie une release, **c'est le moteur qui va la chercher**, pas la
 release qui vient le trouver.
 
 Chaque moteur porte un workflow de synchronisation. Il se déclenche sur une
-horloge et à la demande, compare la dernière release de `spec` à son propre
-`rules.lock`, et ne fait rien quand elles concordent. Sinon il fait, dans cet
+horloge et à la demande, compare la release la plus récente de `spec` à son propre
+`rules.lock`, et ne fait rien quand elles concordent.
+
+**La plus récente, pas « latest ».** Tant que la stabilité n'est pas `stable`, le
+workflow de release marque chaque publication comme pré-release, et l'endpoint
+`releases/latest` de GitHub les exclut — `gh release view` répond « release not
+found » alors que la release existe. Un moteur qui interroge cet endpoint ne se
+synchroniserait jamais pendant toute la phase alpha. Il liste les releases et
+prend la plus récente qui n'est pas un brouillon. Sinon il fait, dans cet
 ordre :
 
 1. télécharge les artefacts de la release ;
 2. vérifie les `SHA256SUMS`, **puis l'attestation de provenance** — propriétaire,
    dépôt, workflow signataire et tag ;
-3. écrit `spec/`, `rules.lock` et `spec/PROVENANCE.md` ;
+3. écrit `spec/`, `rules.lock` et `spec/PROVENANCE.md` — **les contrats en prose
+   compris**, `spec.md`, `engine.md` et son `engine-<langage>.md`, que la release
+   publie et atteste au même titre que les schémas. La note de provenance est
+   publiée assemblée, une par moteur : un moteur qui a vérifié une release n'a
+   ainsi rien à cloner pour écrire le dernier fichier de sa synchronisation ;
 4. **régénère le code émis** ;
 5. exécute le point d'entrée de la section 12.5 ;
 6. ouvre une pull request avec le tout, verte ou rouge.
@@ -825,12 +844,24 @@ Trois conditions, et un moteur qui n'en remplit pas une le dit plutôt que de
 contourner :
 
 - l'auto-merge doit être autorisé sur le dépôt, et une protection de branche doit
-  exiger le point d'entrée de la section 12.5 ; sans elle, l'auto-merge fusionne
-  dès que rien ne le bloque, ce qui n'est pas la même chose que sur vert ;
+  exiger le verdict du point d'entrée de la section 12.5 ; sans elle, l'auto-merge
+  fusionne dès que rien ne le bloque, ce qui n'est pas la même chose que sur vert ;
 - **le point d'entrée est la seule vérification exigée**, sinon « vert » aurait
   deux définitions et l'auto-merge suivrait la plus faible ;
 - le tag et la publication restent manuels. Merger du code vérifié et publier un
   paquet ne sont pas le même acte, et le second est le seul irréversible.
+
+**Le verdict est publié par le workflow lui-même, en statut de commit.** Une pull
+request ouverte avec le `GITHUB_TOKEN` d'un dépôt ne déclenche aucun workflow
+`pull_request` — GitHub coupe là pour empêcher une action de se rappeler en boucle.
+Une protection exigeant un check qui ne démarre jamais laisserait donc chaque
+synchronisation en attente éternelle, et l'auto-merge ne partirait pas.
+
+Le workflow exécute déjà le point d'entrée : il en publie le résultat comme statut
+de commit, sous le nom que la protection exige. Le verdict existe et porte le nom
+attendu sans qu'un second workflow ait à le recalculer, et sans jeton plus large
+puisqu'un dépôt écrit ses propres statuts. Le moteur Kotlin a mesuré le blocage et
+l'a laissé à trancher plutôt que de le contourner.
 
 Un moteur qui ne peut pas activer l'auto-merge avec le jeton dont il dispose nomme
 le réglage qui manque. Il ne demande pas un secret plus large : le rayon d'action
