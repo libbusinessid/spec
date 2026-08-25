@@ -1,8 +1,8 @@
-# Prompt d’implémentation — moteur Go LibEntID
+# Prompt d’implémentation — moteur Go EntID
 
 ## Mission
 
-Tu dois implémenter intégralement le dépôt Go du moteur LibEntID. Avant toute
+Tu dois implémenter intégralement le dépôt Go du moteur EntID. Avant toute
 modification, lis entièrement `engine.md` situé à côté de ce document. Avant de
 coder, exige et lis aussi `rules.proto`, `conformance.proto`, `ir.md`, `features.md`,
 le manifeste, `SHA256SUMS`, l’attestation et les deux BINPB de la même release. Si un

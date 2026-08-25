@@ -1,6 +1,6 @@
-# LibEntID - `spec`
+# EntID - `spec`
 
-`spec` is the source of truth of LibEntID. It holds the authoring language,
+`spec` is the source of truth of EntID. It holds the authoring language,
 the intermediate representation, the official rules, the shared conformance
 suite and the compiler that turns all of it into the artifacts the engines
 consume.
@@ -12,7 +12,7 @@ visible rather than implied.
 
 ## What this project does, and what it does not
 
-LibEntID answers two precise questions about a business identifier:
+EntID answers two precise questions about a business identifier:
 
 - **format valid**: the shape is compatible with a documented variant;
 - **checksum valid**: the documented internal check is satisfied.
@@ -30,7 +30,7 @@ considered the most serious defect of the project.
 
 ```text
 proto/          the IR and conformance Protobuf schemas
-rules/          the official rules, written in the LibEntID HCL language
+rules/          the official rules, written in the EntID HCL language
 conformance/    the reviewed JSONL corpus shared by every engine
 cmd/entidc the compiler, linker, linter, inspector and publisher
 internal/       the compiler stages and the internal reference interpreter

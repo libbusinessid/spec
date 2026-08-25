@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Independent reference implementation of the LibEntID canonical source
+"""Independent reference implementation of the EntID canonical source
 stream, used to cross-check the Go implementation without relying on it.
 
 Usage:

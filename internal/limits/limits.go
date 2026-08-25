@@ -1,5 +1,5 @@
 // Package limits holds the normative structural and arithmetic limits of the
-// LibEntID IR v1. Every value here is normative and reproduced in
+// EntID IR v1. Every value here is normative and reproduced in
 // docs/ir.md. Engines may raise an internal limit, never lower it.
 package limits
 

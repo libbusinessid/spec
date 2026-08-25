@@ -1,4 +1,4 @@
-# LibEntID spec repository.
+# EntID spec repository.
 #
 # Every generation tool is version locked in tools/go.mod. `make generate`
 # rebuilds the Protobuf code, and `make compile` rebuilds every artifact.

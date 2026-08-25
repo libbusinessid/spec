@@ -147,7 +147,7 @@ func minimalBundle() *irv1.RuleBundle {
 		Sources: []*irv1.Source{{
 			Id:             "entid-reference-bundle",
 			Url:            "https://github.com/entid-org/spec",
-			Authority:      "LibEntID",
+			Authority:      "EntID",
 			Title:          "Minimal reference bundle",
 			AccessedAt:     "2026-08-18",
 			Jurisdiction:   "GLOBAL",

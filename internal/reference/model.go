@@ -1,5 +1,5 @@
 // Package reference implements the internal reference interpreter of the
-// LibEntID IR.
+// EntID IR.
 //
 // Its only purpose is to verify the specification, the compiled bundles and the
 // reviewed conformance expectations. It is deliberately written for readability

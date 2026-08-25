@@ -1,7 +1,7 @@
-# The LibEntID authoring language
+# The EntID authoring language
 
-The rules of LibEntID are written in HCL v2 native syntax. HCL provides the
-syntax, the expression forms and the positional diagnostics; LibEntID
+The rules of EntID are written in HCL v2 native syntax. HCL provides the
+syntax, the expression forms and the positional diagnostics; EntID
 defines every piece of semantics.
 
 The language is an **authoring** language. No production engine parses it: the

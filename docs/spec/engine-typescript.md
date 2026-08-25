@@ -1,8 +1,8 @@
-# Prompt d’implémentation — moteur TypeScript LibEntID
+# Prompt d’implémentation — moteur TypeScript EntID
 
 ## Mission
 
-Implémente intégralement le dépôt TypeScript de LibEntID. Lis entièrement
+Implémente intégralement le dépôt TypeScript de EntID. Lis entièrement
 `engine.md` avant de coder. Exige et lis aussi `rules.proto`, `conformance.proto`,
 `ir.md`, `features.md`, le manifeste, `SHA256SUMS`, l’attestation et les deux BINPB
 de la même release. Si un élément manque ou se contredit, arrête-toi et fais corriger

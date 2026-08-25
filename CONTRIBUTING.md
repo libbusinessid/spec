@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for helping LibEntID. This repository is the source of truth of
+Thank you for helping EntID. This repository is the source of truth of
 the project: the rules, the IR, the conformance suite and the compiler all live
 here, and every engine consumes what is published from here.
 

@@ -1,4 +1,4 @@
-// Package ast holds the typed abstract syntax tree of the LibEntID HCL
+// Package ast holds the typed abstract syntax tree of the EntID HCL
 // language. The AST is produced by internal/hcllang, resolved by
 // internal/linker and internal/typecheck, then lowered by internal/lower.
 //

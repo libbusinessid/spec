@@ -1,4 +1,4 @@
-# LibEntID — Spécification du dépôt `spec`
+# EntID — Spécification du dépôt `spec`
 
 ## 1. Statut et objectif du document
 
@@ -10,7 +10,7 @@ de compatibilité non décrit ici.
 Les mots **DOIT**, **NE DOIT PAS**, **DEVRAIT**, **NE DEVRAIT PAS** et **PEUT** sont
 normatifs.
 
-Le dépôt `spec` est la source de vérité de LibEntID. Il contient :
+Le dépôt `spec` est la source de vérité de EntID. Il contient :
 
 - le langage HCL utilisé pour écrire les définitions d’identifiants ;
 - les schémas Protobuf de l’IR et des cas de conformité ;
@@ -265,12 +265,12 @@ Le code généré DOIT être reproductible avec les versions d’outils verrouil
 fichiers HCL et JSONL sont édités manuellement ; les `.binpb`, manifestes, tables de
 couverture et documents sous `docs/generated/` sont générés.
 
-## 6. Le langage HCL LibEntID
+## 6. Le langage HCL EntID
 
 ### 6.1 Choix de conception
 
 Le langage utilise HCL v2 natif. HCL fournit la syntaxe, les expressions et les
-diagnostics de position ; LibEntID définit toute la sémantique.
+diagnostics de position ; EntID définit toute la sémantique.
 
 Le compilateur utilise une approche en deux passes :
 

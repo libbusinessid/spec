@@ -16,7 +16,7 @@ func RenderFeaturesDoc() []byte {
 
 	w("%s", generatedBanner)
 	w("")
-	w("# LibEntID capabilities v1")
+	w("# EntID capabilities v1")
 	w("")
 	w("A capability ID designates an exact and frozen set of operations, fields, bounds")
 	w("and semantics. That set can never be widened or reinterpreted. IDs are never")

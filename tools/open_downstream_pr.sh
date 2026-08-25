@@ -75,7 +75,7 @@ gh pr create \
   --base main \
   --title "rules: update to ${version}" \
   --body "$(cat <<BODY
-Automated synchronization of the LibEntID rules.
+Automated synchronization of the EntID rules.
 
 - rules version: \`${version}\`
 - source tag: \`${tag}\`

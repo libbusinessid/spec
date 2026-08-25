@@ -1,8 +1,8 @@
-# Prompt d’implémentation — moteur Kotlin LibEntID
+# Prompt d’implémentation — moteur Kotlin EntID
 
 ## Mission
 
-Implémente intégralement le dépôt Kotlin de LibEntID après lecture complète de
+Implémente intégralement le dépôt Kotlin de EntID après lecture complète de
 `engine.md`. Avant de coder, exige et lis aussi `rules.proto`, `conformance.proto`,
 `ir.md`, `features.md`, le manifeste, `SHA256SUMS`, l’attestation et les deux BINPB
 de la même release. Si un élément manque ou se contredit, arrête-toi et fais corriger

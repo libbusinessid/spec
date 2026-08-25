@@ -142,7 +142,7 @@ func RenderSBOM(modulePath string, modules []Module, rulesVersion, compilerVersi
 		FilesAnalyzed:    false,
 		LicenseConcluded: "Apache-2.0",
 		LicenseDeclared:  "Apache-2.0",
-		Supplier:         "Organization: LibEntID",
+		Supplier:         "Organization: EntID",
 		ExternalRefs: []SPDXExtRef{{
 			ReferenceCategory: spdxPackageRefs,
 			ReferenceType:     "purl",

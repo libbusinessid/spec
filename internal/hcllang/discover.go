@@ -1,4 +1,4 @@
-// Package hcllang parses the LibEntID HCL surface language into the typed
+// Package hcllang parses the EntID HCL surface language into the typed
 // AST of internal/ast. It never evaluates HCL expressions and never resolves a
 // symbol: every reference is kept structural for the linker.
 package hcllang

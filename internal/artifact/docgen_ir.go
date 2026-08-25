@@ -20,7 +20,7 @@ func RenderIRDoc() []byte {
 
 	w("%s", generatedBanner)
 	w("")
-	w("# LibEntID IR v1")
+	w("# EntID IR v1")
 	w("")
 	w("This document is normative. Together with `rules.proto`, `conformance.proto`,")
 	w("`features.md`, the reference bundle and its conformance suite, it is sufficient")

@@ -1,8 +1,8 @@
-# LibEntID — Contrat commun des moteurs
+# EntID — Contrat commun des moteurs
 
 ## 1. Objet
 
-Ce document définit le comportement normatif de tous les moteurs LibEntID :
+Ce document définit le comportement normatif de tous les moteurs EntID :
 
 - `entid-go` ;
 - `entid-swift` ;

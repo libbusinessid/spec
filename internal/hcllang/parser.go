@@ -612,7 +612,7 @@ func (p *parser) convert(expr hclsyntax.Expression) ast.Expr {
 		return p.convertUnary(e)
 	default:
 		p.bag.Suggestf(p.pos(expr.Range()), CodeBadExpression,
-			"only literals, lists, dotted references and calls of the LibEntID language are accepted",
+			"only literals, lists, dotted references and calls of the EntID language are accepted",
 			"unsupported expression")
 		return nil
 	}

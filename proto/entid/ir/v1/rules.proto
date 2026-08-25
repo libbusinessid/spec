@@ -1,9 +1,9 @@
-// Copyright The LibEntID Authors.
+// Copyright The EntID Authors.
 // SPDX-License-Identifier: Apache-2.0
 
 syntax = "proto3";
 
-// Package entid.ir.v1 defines the LibEntID intermediate
+// Package entid.ir.v1 defines the EntID intermediate
 // representation (IR) consumed by every engine. The exhaustive normative
 // semantics of every message, enum value and execution limit is published in
 // docs/ir.md, which is generated from the same registry as this schema.

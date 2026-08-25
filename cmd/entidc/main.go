@@ -1,5 +1,5 @@
 // Command entidc compiles, lints, inspects, compares and publishes the
-// LibEntID rule and conformance artifacts.
+// EntID rule and conformance artifacts.
 //
 // Exit codes:
 //

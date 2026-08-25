@@ -1,8 +1,8 @@
-# Prompt d’implémentation — moteur Swift LibEntID
+# Prompt d’implémentation — moteur Swift EntID
 
 ## Mission
 
-Implémente intégralement le dépôt Swift du moteur LibEntID. Lis d’abord
+Implémente intégralement le dépôt Swift du moteur EntID. Lis d’abord
 `engine.md` en entier. Avant de coder, exige et lis aussi `rules.proto`,
 `conformance.proto`, `ir.md`, `features.md`, le manifeste, `SHA256SUMS`,
 l’attestation et les deux BINPB de la même release. Si un élément manque ou se

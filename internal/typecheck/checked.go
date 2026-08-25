@@ -1,4 +1,4 @@
-// Package typecheck resolves every expression of the LibEntID language
+// Package typecheck resolves every expression of the EntID language
 // into a fully typed operation graph. No dynamic type survives this stage: the
 // result is directly lowerable to the Protobuf IR.
 package typecheck
