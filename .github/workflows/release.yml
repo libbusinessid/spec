@@ -40,6 +40,25 @@ jobs:
           go run ./cmd/entidc verify
           make cover
 
+      - name: The tag must name the rules version
+        # README: "One release is one rulesVersion and one immutable Git tag
+        # v<rulesVersion>". Nothing enforced it, and practice drifted: v0.1.0
+        # carried rules 2026.08.32 and v0.1.1 carried 2026.08.33. The tag and the
+        # version were two independent axes, so nothing stopped two tags from
+        # delivering one rulesVersion -- the exact collision rules.lock cannot
+        # represent, since it identifies a bundle by that version and its digest.
+        # The tag ruleset already makes v* immutable; this makes that immutability
+        # protect the invariant the README states.
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          set -euo pipefail
+          expected="v$(cat RULES_VERSION)"
+          if [ "${GITHUB_REF_NAME}" != "${expected}" ]; then
+            echo "::error::tag ${GITHUB_REF_NAME} does not name the rules version; expected ${expected}"
+            exit 1
+          fi
+          echo "tag ${GITHUB_REF_NAME} names rules $(cat RULES_VERSION)"
+
       - name: Build twice in two distinct temporary directories
         id: build
         run: |

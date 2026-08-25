@@ -342,3 +342,38 @@ value was never taken from the implementation under test.
 
 **Implemented by** `internal/artifact/digest.go`, `tools/canonical_stream.py`,
 spec.md section 7.2.
+
+## ND-013 - The release tag names the rules version, and is checked
+
+The README has always said it: "One release is one `rulesVersion` and one
+immutable Git tag `v<rulesVersion>`", two sentences after "Two artifacts must
+never share a `rulesVersion`". Nothing enforced the first sentence, so practice
+drifted at the first opportunity:
+
+```
+v0.1.0   rules 2026.08.32
+v0.1.1   rules 2026.08.33
+```
+
+Tag and rules version were two independent axes. The release workflow read the
+tag from `GITHUB_REF_NAME` and the version from `RULES_VERSION`, and never
+compared them. Nothing stopped two tags from delivering one `rulesVersion` --
+which is precisely the collision `rules.lock` cannot express, since it
+identifies a bundle by that version together with its SHA-256.
+
+**The README wins**, for a reason beyond seniority: the tag ruleset already
+makes every `refs/tags/v*` immutable, so binding the tag to the version makes
+that immutability enforce the uniqueness invariant instead of merely coexisting
+with it. A semantic version would need a second, separate mechanism to say the
+same thing.
+
+The consequence is that this repository is versioned by calendar and not by
+semver, which fits what it publishes: rule artifacts, not a library. The four
+engines are the libraries, and they keep their own versions.
+
+The release now refuses a mismatched tag before it builds anything, and
+`TestTheReleaseRefusesATagThatDoesNotNameTheRulesVersion` refuses a workflow
+that has lost the check. Both were watched failing.
+
+**Implemented by** `.github/workflows/release.yml`, the "The tag must name the
+rules version" step.
