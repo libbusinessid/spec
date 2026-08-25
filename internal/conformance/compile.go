@@ -6,12 +6,12 @@ import (
 	"sort"
 	"strings"
 
-	conformancev1 "github.com/libbusinessid/spec/gen/go/libbusinessid/conformance/v1"
-	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
-	"github.com/libbusinessid/spec/internal/artifact"
-	"github.com/libbusinessid/spec/internal/diagnostics"
-	"github.com/libbusinessid/spec/internal/hcllang"
-	"github.com/libbusinessid/spec/internal/limits"
+	conformancev1 "github.com/entid-org/spec/gen/go/entid/conformance/v1"
+	irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
+	"github.com/entid-org/spec/internal/artifact"
+	"github.com/entid-org/spec/internal/diagnostics"
+	"github.com/entid-org/spec/internal/hcllang"
+	"github.com/entid-org/spec/internal/limits"
 )
 
 // CompileOptions controls a conformance compilation.

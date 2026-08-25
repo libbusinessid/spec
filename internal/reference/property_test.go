@@ -6,7 +6,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/libbusinessid/spec/internal/reference"
+	"github.com/entid-org/spec/internal/reference"
 )
 
 // The property tests below are the invariants every engine must satisfy. They

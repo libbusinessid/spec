@@ -4,7 +4,7 @@
 /bin/
 # `go build ./cmd/x` drops its binary here rather than under bin/, which is easy
 # to commit by accident.
-/businessidc
+/entidc
 /conformance-runner
 /conformance-testee
 /coverage.out

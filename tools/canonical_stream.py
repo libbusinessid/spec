@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Independent reference implementation of the LibBusinessID canonical source
+"""Independent reference implementation of the LibEntID canonical source
 stream, used to cross-check the Go implementation without relying on it.
 
 Usage:
@@ -79,8 +79,8 @@ def main() -> int:
     if len(sys.argv) < 3:
         print(__doc__, file=sys.stderr)
         return 2
-    domain = {"rules": "LIBBUSINESSID-SOURCE-V1\n",
-              "conformance": "LIBBUSINESSID-CONFORMANCE-SOURCE-V1\n"}[sys.argv[1]]
+    domain = {"rules": "ENTID-SOURCE-V1\n",
+              "conformance": "ENTID-CONFORMANCE-SOURCE-V1\n"}[sys.argv[1]]
     entries: list[tuple[str, bytes]] = []
     fixture_roots: list[tuple[str, str]] = []
     for spec in sys.argv[2:]:

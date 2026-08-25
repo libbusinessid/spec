@@ -65,7 +65,7 @@ func WriteFileAtomic(path string, data []byte) error {
 	if err := os.MkdirAll(dir, 0o750); err != nil {
 		return err
 	}
-	tmp, err := os.CreateTemp(dir, ".businessidc-*")
+	tmp, err := os.CreateTemp(dir, ".entidc-*")
 	if err != nil {
 		return err
 	}

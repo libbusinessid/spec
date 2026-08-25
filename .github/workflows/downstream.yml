@@ -40,10 +40,10 @@ jobs:
       fail-fast: false
       matrix:
         engine:
-          - businessid-go
-          - businessid-swift
-          - businessid-kotlin
-          - businessid-typescript
+          - entid-go
+          - entid-swift
+          - entid-kotlin
+          - entid-typescript
     steps:
       - name: Checkout the spec repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -71,9 +71,9 @@ jobs:
           version="${{ inputs.rules_version }}"
           expected_workflow=".github/workflows/release.yml"
           for artifact in \
-            "businessid-rules-${version}.binpb" \
-            "businessid-conformance-${version}.binpb" \
-            "businessid-manifest-${version}.json"; do
+            "entid-rules-${version}.binpb" \
+            "entid-conformance-${version}.binpb" \
+            "entid-manifest-${version}.json"; do
             # --owner and --repo are mutually exclusive: passing both made gh
             # refuse the arguments, so this step failed before verifying
             # anything. It failed loudly, which is the only reason the release
@@ -88,7 +88,7 @@ jobs:
         run: |
           set -euo pipefail
           version="${{ inputs.rules_version }}"
-          manifest="artifacts/businessid-manifest-${version}.json"
+          manifest="artifacts/entid-manifest-${version}.json"
           {
             printf 'rules_version = "%s"\n' "$(jq -r .rulesVersion "$manifest")"
             printf 'format_version = %s\n' "$(jq -r .formatVersion "$manifest")"
@@ -124,7 +124,7 @@ jobs:
         run: |
           ./spec/tools/write_provenance.sh \
             ./spec artifacts "${{ inputs.rules_version }}" \
-            "$(jq -r .sourceCommit "artifacts/businessid-manifest-${{ inputs.rules_version }}.json")" \
+            "$(jq -r .sourceCommit "artifacts/entid-manifest-${{ inputs.rules_version }}.json")" \
             "${{ matrix.engine }}" provenance.md
 
       - name: Open the synchronization pull request
@@ -134,7 +134,7 @@ jobs:
         # A block scalar, not a folded one: with `run:` on a plain scalar the
         # newlines fold into spaces, the backslashes become escaped spaces, and
         # every argument arrives with one leading space. gh then reported it
-        # could not resolve a repository named " libbusinessid/businessid-go".
+        # could not resolve a repository named " entid/entid-go".
         run: |
           ./spec/tools/open_downstream_pr.sh \
             "${{ github.repository_owner }}/${{ matrix.engine }}" \

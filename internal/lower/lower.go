@@ -8,14 +8,14 @@ package lower
 import (
 	"sort"
 
-	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
-	"github.com/libbusinessid/spec/internal/ast"
-	"github.com/libbusinessid/spec/internal/diagnostics"
-	"github.com/libbusinessid/spec/internal/features"
-	"github.com/libbusinessid/spec/internal/limits"
-	"github.com/libbusinessid/spec/internal/linker"
-	"github.com/libbusinessid/spec/internal/optimize"
-	"github.com/libbusinessid/spec/internal/typecheck"
+	irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
+	"github.com/entid-org/spec/internal/ast"
+	"github.com/entid-org/spec/internal/diagnostics"
+	"github.com/entid-org/spec/internal/features"
+	"github.com/entid-org/spec/internal/limits"
+	"github.com/entid-org/spec/internal/linker"
+	"github.com/entid-org/spec/internal/optimize"
+	"github.com/entid-org/spec/internal/typecheck"
 )
 
 // Diagnostic codes emitted by the lowering stage.

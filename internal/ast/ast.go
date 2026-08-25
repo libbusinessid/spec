@@ -1,4 +1,4 @@
-// Package ast holds the typed abstract syntax tree of the LibBusinessID HCL
+// Package ast holds the typed abstract syntax tree of the LibEntID HCL
 // language. The AST is produced by internal/hcllang, resolved by
 // internal/linker and internal/typecheck, then lowered by internal/lower.
 //
@@ -6,7 +6,7 @@
 // node with an exact source position.
 package ast
 
-import "github.com/libbusinessid/spec/internal/diagnostics"
+import "github.com/entid-org/spec/internal/diagnostics"
 
 // Expr is a source expression of the language.
 type Expr interface {

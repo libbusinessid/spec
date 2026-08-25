@@ -185,7 +185,7 @@ identifier "probe" "XX" {
   source {
     id               = "probe-source"
     url              = "https://example.invalid/probe"
-    authority        = "LibBusinessID"
+    authority        = "LibEntID"
     title            = "Synthetic operation probe"
     accessed_at      = "2026-08-18"
     jurisdiction     = "XX"

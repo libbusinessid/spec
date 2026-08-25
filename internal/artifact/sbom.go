@@ -127,11 +127,11 @@ func RenderSBOM(modulePath string, modules []Module, rulesVersion, compilerVersi
 		SPDXVersion:       "SPDX-2.3",
 		DataLicense:       "CC0-1.0",
 		SPDXID:            "SPDXRef-DOCUMENT",
-		Name:              "libbusinessid-rules-" + rulesVersion,
+		Name:              "entid-rules-" + rulesVersion,
 		DocumentNamespace: "https://" + modulePath + "/sbom/" + rulesVersion,
 		CreationInfo: SPDXCreationInfo{
 			Created:  generatedAt,
-			Creators: []string{"Tool: businessidc-" + compilerVersion},
+			Creators: []string{"Tool: entidc-" + compilerVersion},
 		},
 	}
 	doc.Packages = append(doc.Packages, SPDXPackage{
@@ -142,7 +142,7 @@ func RenderSBOM(modulePath string, modules []Module, rulesVersion, compilerVersi
 		FilesAnalyzed:    false,
 		LicenseConcluded: "Apache-2.0",
 		LicenseDeclared:  "Apache-2.0",
-		Supplier:         "Organization: LibBusinessID",
+		Supplier:         "Organization: LibEntID",
 		ExternalRefs: []SPDXExtRef{{
 			ReferenceCategory: spdxPackageRefs,
 			ReferenceType:     "purl",

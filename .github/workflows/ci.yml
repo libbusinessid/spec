@@ -97,8 +97,8 @@ jobs:
       - uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a # v9.3.0
         with:
           version: ${{ env.GOLANGCI_LINT_VERSION }}
-      - name: businessidc lint
-        run: go run ./cmd/businessidc lint
+      - name: entidc lint
+        run: go run ./cmd/entidc lint
 
   test:
     name: tests and coverage
@@ -114,7 +114,7 @@ jobs:
       - name: Race tests
         run: go test -race ./...
       - name: Conformance suite
-        run: go run ./cmd/businessidc verify
+        run: go run ./cmd/entidc verify
       - name: Conformance through the engine protocol
         run: |
           SOURCE_DATE_EPOCH="$(git log -1 --pretty=%ct)"
@@ -163,22 +163,22 @@ jobs:
           for suffix in alpha beta-longer-path; do
             target="${RUNNER_TEMP}/build-${suffix}"
             cp -a "$root" "$target"
-            ( cd "$target" && go run ./cmd/businessidc compile --out "$target/dist" --release )
+            ( cd "$target" && go run ./cmd/entidc compile --out "$target/dist" --release )
           done
           diff -r "${RUNNER_TEMP}/build-alpha/dist" "${RUNNER_TEMP}/build-beta-longer-path/dist"
       - name: check-generated
         run: |
           SOURCE_DATE_EPOCH="$(git log -1 --pretty=%ct)"
           export SOURCE_DATE_EPOCH
-          go run ./cmd/businessidc check-generated
+          go run ./cmd/entidc check-generated
       - name: Cross-check the canonical digests with the independent implementation
         run: |
           set -euo pipefail
           SOURCE_DATE_EPOCH="$(git log -1 --pretty=%ct)"
           export SOURCE_DATE_EPOCH
-          go run ./cmd/businessidc compile --out dist --release >/dev/null
+          go run ./cmd/entidc compile --out dist --release >/dev/null
           version="$(cat RULES_VERSION)"
-          manifest="dist/businessid-manifest-${version}.json"
+          manifest="dist/entid-manifest-${version}.json"
           rules="$(python3 tools/canonical_stream.py rules rules/=rules)"
           conformance="$(python3 tools/canonical_stream.py conformance conformance/=conformance fixtures/=testdata)"
           test "${rules}" = "$(jq -r .sourceDigest "$manifest")"
@@ -214,7 +214,7 @@ jobs:
       - name: Changed business data must move RULES_VERSION
         run: ./tools/check_rules_version.sh "origin/${{ github.base_ref }}"
       - name: Data policy of the conformance corpus
-        run: go run ./cmd/businessidc lint
+        run: go run ./cmd/entidc lint
 
   codeql:
     name: CodeQL

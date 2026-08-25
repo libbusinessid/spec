@@ -9,8 +9,8 @@ import (
 
 	"google.golang.org/protobuf/proto"
 
-	conformancev1 "github.com/libbusinessid/spec/gen/go/libbusinessid/conformance/v1"
-	testeev1 "github.com/libbusinessid/spec/gen/go/libbusinessid/testee/v1"
+	conformancev1 "github.com/entid-org/spec/gen/go/entid/conformance/v1"
+	testeev1 "github.com/entid-org/spec/gen/go/entid/testee/v1"
 )
 
 // scriptedTestee answers each request with what answer returns, so a session

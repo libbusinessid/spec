@@ -1,5 +1,5 @@
 // Package diagnostics provides the stable diagnostic model shared by every
-// stage of businessidc: file, line, column, stable code, message and optional
+// stage of entidc: file, line, column, stable code, message and optional
 // suggestion. Diagnostics are collected, sorted deterministically and rendered
 // either for humans on stderr or as machine readable JSON.
 package diagnostics

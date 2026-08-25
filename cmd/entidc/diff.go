@@ -9,15 +9,15 @@ import (
 	"sort"
 	"strings"
 
-	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
-	"github.com/libbusinessid/spec/internal/artifact"
-	"github.com/libbusinessid/spec/internal/features"
+	irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
+	"github.com/entid-org/spec/internal/artifact"
+	"github.com/entid-org/spec/internal/features"
 )
 
 // ChangeClass is the normative classification of a bundle change.
 type ChangeClass string
 
-// The change classes reported by `businessidc diff`.
+// The change classes reported by `entidc diff`.
 const (
 	// ClassWidening accepts more inputs than before: it fixes false negatives.
 	ClassWidening ChangeClass = "widening"
@@ -258,7 +258,7 @@ func runDiff(args []string, stdout, stderr io.Writer) int {
 		return exitUsage
 	}
 	if fs.NArg() != 2 {
-		_, _ = fmt.Fprintln(stderr, "usage: businessidc diff [--json] <old.binpb> <new.binpb>")
+		_, _ = fmt.Fprintln(stderr, "usage: entidc diff [--json] <old.binpb> <new.binpb>")
 		return exitUsage
 	}
 	oldRaw, err := os.ReadFile(fs.Arg(0))

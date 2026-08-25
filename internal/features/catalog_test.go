@@ -3,11 +3,11 @@ package features_test
 import (
 	"testing"
 
-	"github.com/libbusinessid/spec/internal/features"
+	"github.com/entid-org/spec/internal/features"
 
 	"google.golang.org/protobuf/reflect/protoreflect"
 
-	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
+	irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
 )
 
 func enumNames(d protoreflect.EnumDescriptor) map[int32]string {

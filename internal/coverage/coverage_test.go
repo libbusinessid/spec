@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/libbusinessid/spec/internal/coverage"
+	"github.com/entid-org/spec/internal/coverage"
 )
 
 func TestParseLine(t *testing.T) {

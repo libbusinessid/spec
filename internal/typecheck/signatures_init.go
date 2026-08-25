@@ -1,8 +1,8 @@
 package typecheck
 
 import (
-	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
-	"github.com/libbusinessid/spec/internal/features"
+	irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
+	"github.com/entid-org/spec/internal/features"
 )
 
 //nolint:funlen // the surface calling conventions are one flat, reviewable table.

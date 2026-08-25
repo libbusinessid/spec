@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/libbusinessid/spec/internal/register"
+	"github.com/entid-org/spec/internal/register"
 )
 
 // manifestPath describes where each issuer publishes its complete register.

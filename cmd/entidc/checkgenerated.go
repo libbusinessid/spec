@@ -9,8 +9,8 @@ import (
 	"path/filepath"
 	"sort"
 
-	"github.com/libbusinessid/spec/internal/artifact"
-	"github.com/libbusinessid/spec/internal/diagnostics"
+	"github.com/entid-org/spec/internal/artifact"
+	"github.com/entid-org/spec/internal/diagnostics"
 )
 
 // runCheckGenerated rebuilds every artifact in two distinct temporary
@@ -93,7 +93,7 @@ func compareInMemory(problems *diagnostics.Bag, names []string, first, second *b
 func compareOnDisk(problems *diagnostics.Bag, names []string, first, second *buildResult, stderr io.Writer) int {
 	dirs := make([]string, 2)
 	for i := range dirs {
-		dir, err := os.MkdirTemp("", fmt.Sprintf("businessidc-check-%d-", i))
+		dir, err := os.MkdirTemp("", fmt.Sprintf("entidc-check-%d-", i))
 		if err != nil {
 			return fail(stderr, "cannot create a temporary directory: %v", err)
 		}
@@ -130,12 +130,12 @@ func compareCommittedDocuments(problems *diagnostics.Bag, opts buildOptions, res
 		got, err := os.ReadFile(filepath.Join(opts.moduleRoot, path)) //nolint:gosec // repository path
 		if err != nil {
 			problems.Suggestf(diagnostics.Position{File: path}, "GEN003",
-				"run `businessidc compile --write-docs`", "the generated document is missing: %v", err)
+				"run `entidc compile --write-docs`", "the generated document is missing: %v", err)
 			continue
 		}
 		if !bytes.Equal(got, want) {
 			problems.Suggestf(diagnostics.Position{File: path}, "GEN004",
-				"run `businessidc compile --write-docs`", "the generated document is stale")
+				"run `entidc compile --write-docs`", "the generated document is stale")
 		}
 	}
 }

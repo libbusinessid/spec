@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
+	irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
 )
 
 // spec.md and engine.md are written by hand while ir.md and features.md are
@@ -105,16 +105,16 @@ func TestEveryEngineContractRefusesARuntimeLoader(t *testing.T) {
 			// from custom bytes. The first version of this test looked for
 			// declarations and saw none of it.
 			for _, phrase := range []string{
-				"embarquer `businessid-rules.binpb`",
+				"embarquer `entid-rules.binpb`",
 				"bytes personnalisés",
 				"go:embed",
 				// The bundle as a resource of the shipped package is the same
 				// mistake in layout form: it makes every caller carry data the
 				// generated code makes pointless, and implies a decoder to read
 				// it. Three contracts had it in their recommended tree.
-				"Resources/businessid-rules",
-				"resources/businessid-rules",
-				"assets/businessid-rules",
+				"Resources/entid-rules",
+				"resources/entid-rules",
+				"assets/entid-rules",
 				// The same permission stated as prose rather than as a
 				// signature or a path. engine.md still said the engine MAY be
 				// built from bytes and listed loading a bundle from memory,
@@ -320,7 +320,7 @@ func TestEveryEngineContractPointsAtTheSharedRunner(t *testing.T) {
 
 // The tooling may not put the bundle where the doctrine forbids it either.
 //
-// open_downstream_pr.sh copied it into Sources/BusinessID/Resources and
+// open_downstream_pr.sh copied it into Sources/EntID/Resources and
 // src/main/resources on every release, carrying the exact phrases the contract
 // guard forbids -- while that guard read the documents and never the scripts
 // that act on them. A rule stated in prose and contradicted by the automation
@@ -334,11 +334,11 @@ func TestTheToolingDoesNotShipTheBundleAsAResource(t *testing.T) {
 		t.Run(filepath.Base(path), func(t *testing.T) {
 			text := readDoc(t, path)
 			for _, phrase := range []string{
-				"Resources/businessid-rules",
-				"resources/businessid-rules",
-				"assets/businessid-rules",
-				"internal/rules/businessid-rules",
-				"src/rules/businessid-rules",
+				"Resources/entid-rules",
+				"resources/entid-rules",
+				"assets/entid-rules",
+				"internal/rules/entid-rules",
+				"src/rules/entid-rules",
 			} {
 				if strings.Contains(text, phrase) {
 					t.Errorf("%s writes the bundle to %q.\n"+

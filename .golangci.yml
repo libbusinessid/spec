@@ -122,7 +122,7 @@ formatters:
   settings:
     goimports:
       local-prefixes:
-        - github.com/libbusinessid/spec
+        - github.com/entid-org/spec
 
 issues:
   max-issues-per-linter: 0

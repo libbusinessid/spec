@@ -309,3 +309,36 @@ DEB1000X.HRB12345    invalid   a real five character code and one more character
 
 **Implemented by** `rules/euid/fr.hcl`, `format.euid.fr`, the `capture "register"`
 checks.
+
+## ND-012 - The source digest domain tag follows the project name
+
+The canonical source stream is prefixed by a domain separation tag, frozen so
+that a digest computed today and one computed next year cover the same bytes
+under the same label. The tag read `LIBBUSINESSID-SOURCE-V1` and
+`LIBBUSINESSID-CONFORMANCE-SOURCE-V1`.
+
+The project was renamed to **entid** before any consumer existed. Keeping the
+old tag would have carried a retired brand inside the hash domain forever, in a
+constant no reader can interpret and no tool can migrate. Both tags therefore
+became `ENTID-SOURCE-V1` and `ENTID-CONFORMANCE-SOURCE-V1`.
+
+**The `-V1` suffix is deliberately unchanged.** It names the version of the
+stream construction -- path length, path bytes, content length, content bytes --
+and that construction did not move. Only the label did. The old strings are
+retired, not coexisting: no released artifact carries a digest under both.
+
+The consequence is measurable and was measured. Every source digest moves, and
+with it the `source_digest` field the bundle embeds:
+
+```
+entid-rules-2026.08.36.binpb   120872 bytes before and after
+                               32 bytes differ, at offset 37..68
+                               exactly the source_digest field, nothing else
+```
+
+The golden value pinned by `TestSourceDigestIsStable` was recomputed by
+`tools/canonical_stream.py`, the second implementation, and the two agree. The
+value was never taken from the implementation under test.
+
+**Implemented by** `internal/artifact/digest.go`, `tools/canonical_stream.py`,
+spec.md section 7.2.

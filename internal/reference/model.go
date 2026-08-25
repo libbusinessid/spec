@@ -1,5 +1,5 @@
 // Package reference implements the internal reference interpreter of the
-// LibBusinessID IR.
+// LibEntID IR.
 //
 // Its only purpose is to verify the specification, the compiled bundles and the
 // reviewed conformance expectations. It is deliberately written for readability
@@ -8,7 +8,7 @@
 // defect is unlikely to be reproduced identically.
 package reference
 
-import irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
+import irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
 
 // StepStatus is the outcome of one validation step.
 type StepStatus string

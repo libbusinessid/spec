@@ -1,4 +1,4 @@
-# LibBusinessID spec repository.
+# LibEntID spec repository.
 #
 # Every generation tool is version locked in tools/go.mod. `make generate`
 # rebuilds the Protobuf code, and `make compile` rebuilds every artifact.
@@ -31,16 +31,16 @@ generate: tools
 
 .PHONY: fmt
 fmt: tools
-	$(GO) run ./cmd/businessidc fmt
-	$(BIN)/goimports -w -local github.com/libbusinessid/spec ./cmd ./internal
+	$(GO) run ./cmd/entidc fmt
+	$(BIN)/goimports -w -local github.com/entid-org/spec ./cmd ./internal
 	gofmt -w ./cmd ./internal
 
 .PHONY: fmt-check
 fmt-check: tools
 	@test -z "$$(gofmt -l ./cmd ./internal)" || { echo "gofmt reported files:"; gofmt -l ./cmd ./internal; exit 1; }
-	@test -z "$$($(BIN)/goimports -l -local github.com/libbusinessid/spec ./cmd ./internal)" || \
-		{ echo "goimports reported files:"; $(BIN)/goimports -l -local github.com/libbusinessid/spec ./cmd ./internal; exit 1; }
-	$(GO) run ./cmd/businessidc fmt --check
+	@test -z "$$($(BIN)/goimports -l -local github.com/entid-org/spec ./cmd ./internal)" || \
+		{ echo "goimports reported files:"; $(BIN)/goimports -l -local github.com/entid-org/spec ./cmd ./internal; exit 1; }
+	$(GO) run ./cmd/entidc fmt --check
 
 .PHONY: vet
 vet:
@@ -49,7 +49,7 @@ vet:
 .PHONY: lint
 lint: vet
 	golangci-lint run
-	$(GO) run ./cmd/businessidc lint
+	$(GO) run ./cmd/entidc lint
 
 .PHONY: proto-lint
 proto-lint:
@@ -96,19 +96,19 @@ vulncheck:
 
 .PHONY: compile
 compile:
-	$(GO) run ./cmd/businessidc compile --out $(DIST) --write-docs --source-commit $(SOURCE_COMMIT)
+	$(GO) run ./cmd/entidc compile --out $(DIST) --write-docs --source-commit $(SOURCE_COMMIT)
 
 .PHONY: release
 release:
-	$(GO) run ./cmd/businessidc compile --out $(DIST) --release --write-docs --source-commit $(SOURCE_COMMIT)
+	$(GO) run ./cmd/entidc compile --out $(DIST) --release --write-docs --source-commit $(SOURCE_COMMIT)
 
 .PHONY: verify
 verify:
-	$(GO) run ./cmd/businessidc verify
+	$(GO) run ./cmd/entidc verify
 
 .PHONY: check-generated
 check-generated:
-	$(GO) run ./cmd/businessidc check-generated
+	$(GO) run ./cmd/entidc check-generated
 
 # conformance runs the whole corpus against the reference testee through the
 # same protocol an external engine uses. The unit tests only exercise a subset;
@@ -117,8 +117,8 @@ check-generated:
 conformance: release
 	$(GO) build -o $(BIN)/conformance-testee ./cmd/conformance-testee
 	$(GO) run ./cmd/conformance-runner \
-		--corpus $(DIST)/businessid-conformance-$$(cat RULES_VERSION).binpb \
-		-- $(BIN)/conformance-testee --bundle $(DIST)/businessid-rules-$$(cat RULES_VERSION).binpb
+		--corpus $(DIST)/entid-conformance-$$(cat RULES_VERSION).binpb \
+		-- $(BIN)/conformance-testee --bundle $(DIST)/entid-rules-$$(cat RULES_VERSION).binpb
 
 .PHONY: sbom
 sbom: compile

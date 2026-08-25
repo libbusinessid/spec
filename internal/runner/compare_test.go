@@ -6,9 +6,9 @@ import (
 
 	"google.golang.org/protobuf/proto"
 
-	conformancev1 "github.com/libbusinessid/spec/gen/go/libbusinessid/conformance/v1"
-	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
-	testeev1 "github.com/libbusinessid/spec/gen/go/libbusinessid/testee/v1"
+	conformancev1 "github.com/entid-org/spec/gen/go/entid/conformance/v1"
+	irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
+	testeev1 "github.com/entid-org/spec/gen/go/entid/testee/v1"
 )
 
 func validationCase(country *string) *conformancev1.ConformanceCase {
@@ -325,7 +325,7 @@ func TestASweepRefusesAnInvalidChecksumToo(t *testing.T) {
 // engine.md section 11.2 states that the common tests compare the reason code
 // and the message key. They compared only the code: ObservedStep did not carry
 // the key, so an engine could emit any key at all and no case would notice,
-// while businessidc verify checked it against the reference interpreter. The
+// while entidc verify checked it against the reference interpreter. The
 // engines were held to a weaker contract than the corpus states.
 func TestTheMessageKeyIsCompared(t *testing.T) {
 	c := validationCase(proto.String("FR"))

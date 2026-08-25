@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Independent reference implementations of the published check algorithms used
-by the LibBusinessID pilot rules.
+by the LibEntID pilot rules.
 
 This module is deliberately written from the published algorithm descriptions
 and never consults the Go compiler or the Go reference interpreter. It is the

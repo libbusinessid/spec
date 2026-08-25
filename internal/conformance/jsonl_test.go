@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/libbusinessid/spec/internal/conformance"
+	"github.com/entid-org/spec/internal/conformance"
 )
 
 func diagnosticCodes(t *testing.T, jsonl string) string {

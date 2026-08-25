@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for helping LibBusinessID. This repository is the source of truth of
+Thank you for helping LibEntID. This repository is the source of truth of
 the project: the rules, the IR, the conformance suite and the compiler all live
 here, and every engine consumes what is published from here.
 
@@ -52,7 +52,7 @@ A rule pull request is only admissible when it contains:
 
 - **an entry in [`docs/identifier-atlas.md`](docs/identifier-atlas.md)**, moving
   the identifier from whatever status it held to `supported` with its maturity
-  and case count. `businessidc lint` refuses a definition the atlas does not
+  and case count. `entidc lint` refuses a definition the atlas does not
   name (LINT006), because a rule nobody can find is a rule that does not help
   anyone;
 
@@ -68,7 +68,7 @@ A rule pull request is only admissible when it contains:
   checksum is published, the exact bounds of every range and each branch of a
   multi variant algorithm;
 - **an analysis of the false negative risk**;
-- **the output of `businessidc diff`** between the previous and the new bundle;
+- **the output of `entidc diff`** between the previous and the new bundle;
 - **the provenance update**;
 - **a fully green conformance run**;
 - **no unintended restriction** of an existing format.
@@ -261,7 +261,7 @@ specification section 8.7. To qualify another engine, point the runner at its
 testee:
 
 ```sh
-go run ./cmd/conformance-runner --corpus dist/businessid-conformance-<version>.binpb -- ./testee
+go run ./cmd/conformance-runner --corpus dist/entid-conformance-<version>.binpb -- ./testee
 ```
 
 A run restricted with `--operation` is a diagnosis aid and never a verdict; the
@@ -314,7 +314,7 @@ Before the first release the engines carry a local copy of the bundle instead of
 a downloaded, attested one. `tools/sync_engines.sh` writes that copy:
 
 ```sh
-go run ./cmd/businessidc compile --out dist --release --write-docs
+go run ./cmd/entidc compile --out dist --release --write-docs
 ./tools/sync_engines.sh
 ```
 

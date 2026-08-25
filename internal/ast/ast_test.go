@@ -3,8 +3,8 @@ package ast_test
 import (
 	"testing"
 
-	"github.com/libbusinessid/spec/internal/ast"
-	"github.com/libbusinessid/spec/internal/diagnostics"
+	"github.com/entid-org/spec/internal/ast"
+	"github.com/entid-org/spec/internal/diagnostics"
 )
 
 func pos(line int) diagnostics.Position {

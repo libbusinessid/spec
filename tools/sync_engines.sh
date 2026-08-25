@@ -24,8 +24,8 @@ version="$(cat "${here}/RULES_VERSION")"
 commit="$(git -C "${here}" rev-parse HEAD)"
 dist="${here}/dist"
 
-if [[ ! -f "${dist}/businessid-rules-${version}.binpb" ]]; then
-  echo "error: ${dist} carries no bundle for ${version}; run businessidc compile --release first" >&2
+if [[ ! -f "${dist}/entid-rules-${version}.binpb" ]]; then
+  echo "error: ${dist} carries no bundle for ${version}; run entidc compile --release first" >&2
   exit 1
 fi
 
@@ -33,7 +33,7 @@ sha() { sha256sum "$1" | cut -d' ' -f1; }
 
 # The figures PROVENANCE.md quotes come from the bundle, not from anyone's
 # memory of it.
-inspect="$(cd "${here}" && go run ./cmd/businessidc inspect "${dist}/businessid-rules-${version}.binpb")"
+inspect="$(cd "${here}" && go run ./cmd/entidc inspect "${dist}/entid-rules-${version}.binpb")"
 definitions="$(printf '%s\n' "${inspect}" | sed -n 's/^identifiers *\([0-9]*\).*/\1/p')"
 nodes="$(printf '%s\n' "${inspect}" | sed -n 's/^programs *[0-9]* (\([0-9]*\) nodes).*/\1/p')"
 capabilities="$(printf '%s\n' "${inspect}" | grep -cE '^ +[0-9]+ [A-Z]')"
@@ -41,14 +41,14 @@ unused_ops="$(sed -n 's/^\([0-9]*\) of [0-9]* operations.*/\1/p' "${here}/docs/g
 total_ops="$(sed -n 's/^[0-9]* of \([0-9]*\) operations.*/\1/p' "${here}/docs/generated/coverage.md" | head -1)"
 used_ops="$((total_ops - unused_ops))"
 
-for engine in businessid-go businessid-swift businessid-kotlin businessid-typescript; do
+for engine in entid-go entid-swift entid-kotlin entid-typescript; do
   target="${root}/${engine}"
   [[ -d "${target}/spec" ]] || { echo "skip ${engine}: no spec directory"; continue; }
 
-  cp "${dist}/businessid-rules-${version}.binpb"       "${target}/spec/businessid-rules.binpb"
-  cp "${dist}/businessid-conformance-${version}.binpb" "${target}/spec/businessid-conformance.binpb"
-  gzip -dc "${dist}/businessid-conformance-${version}.jsonl.gz" \
-                                                       > "${target}/spec/businessid-conformance.jsonl"
+  cp "${dist}/entid-rules-${version}.binpb"       "${target}/spec/entid-rules.binpb"
+  cp "${dist}/entid-conformance-${version}.binpb" "${target}/spec/entid-conformance.binpb"
+  gzip -dc "${dist}/entid-conformance-${version}.jsonl.gz" \
+                                                       > "${target}/spec/entid-conformance.jsonl"
   for f in rules.proto conformance.proto testee.proto ir.md features.md; do
     cp "${dist}/${f}" "${target}/spec/${f}"
   done
@@ -60,10 +60,10 @@ for engine in businessid-go businessid-swift businessid-kotlin businessid-typesc
   # its checkout did not have.
   cp "${here}/docs/spec/engine.md" "${target}/spec/engine.md"
   case "${engine}" in
-    businessid-go)         cp "${here}/docs/spec/engine-go.md"         "${target}/spec/engine-go.md" ;;
-    businessid-swift)      cp "${here}/docs/spec/engine-swift.md"      "${target}/spec/engine-swift.md" ;;
-    businessid-kotlin)     cp "${here}/docs/spec/engine-kotlin.md"     "${target}/spec/engine-kotlin.md" ;;
-    businessid-typescript) cp "${here}/docs/spec/engine-typescript.md" "${target}/spec/engine-typescript.md" ;;
+    entid-go)         cp "${here}/docs/spec/engine-go.md"         "${target}/spec/engine-go.md" ;;
+    entid-swift)      cp "${here}/docs/spec/engine-swift.md"      "${target}/spec/engine-swift.md" ;;
+    entid-kotlin)     cp "${here}/docs/spec/engine-kotlin.md"     "${target}/spec/engine-kotlin.md" ;;
+    entid-typescript) cp "${here}/docs/spec/engine-typescript.md" "${target}/spec/engine-typescript.md" ;;
   esac
 
   # An attested lock is never replaced by a local one. This script produces a
@@ -91,8 +91,8 @@ for engine in businessid-go businessid-swift businessid-kotlin businessid-typesc
 # instead of the local copy under spec/.
 rules_version = "${version}"
 format_version = 1
-rules_sha256 = "$(sha "${dist}/businessid-rules-${version}.binpb")"
-conformance_sha256 = "$(sha "${dist}/businessid-conformance-${version}.binpb")"
+rules_sha256 = "$(sha "${dist}/entid-rules-${version}.binpb")"
+conformance_sha256 = "$(sha "${dist}/entid-conformance-${version}.binpb")"
 # The JSONL is shipped decompressed, so its digest is taken on what lands in
 # spec/ rather than on the archive. It went unlisted for a while: an engine
 # could not verify it, verify-lock.sh would not have noticed a drift, and
@@ -107,13 +107,13 @@ conformance_sha256 = "$(sha "${dist}/businessid-conformance-${version}.binpb")"
 # reviewed source and carries no rules version, while the compiled corpus injects
 # one into every expected report. A version bump alone moves one and not the
 # other. Both measured by the Swift engine, on the release archive.
-conformance_jsonl_sha256 = "$(gzip -dc "${dist}/businessid-conformance-${version}.jsonl.gz" | sha256sum | cut -d' ' -f1)"
+conformance_jsonl_sha256 = "$(gzip -dc "${dist}/entid-conformance-${version}.jsonl.gz" | sha256sum | cut -d' ' -f1)"
 rules_proto_sha256 = "$(sha "${dist}/rules.proto")"
 conformance_proto_sha256 = "$(sha "${dist}/conformance.proto")"
 testee_proto_sha256 = "$(sha "${dist}/testee.proto")"
 ir_doc_sha256 = "$(sha "${dist}/ir.md")"
 features_doc_sha256 = "$(sha "${dist}/features.md")"
-stability = "$(jq -r .stability "${dist}/businessid-manifest-${version}.json")"
+stability = "$(jq -r .stability "${dist}/entid-manifest-${version}.json")"
 source_commit = "${commit}"
 LOCK
 

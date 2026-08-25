@@ -3,11 +3,11 @@
 # this repository. Run by the scheduled workflow.
 set -euo pipefail
 
-owner="${GITHUB_REPOSITORY_OWNER:-libbusinessid}"
+owner="${GITHUB_REPOSITORY_OWNER:-entid-org}"
 version="$(cat RULES_VERSION)"
 status=0
 
-for engine in businessid-go businessid-swift businessid-kotlin businessid-typescript; do
+for engine in entid-go entid-swift entid-kotlin entid-typescript; do
   lock="$(gh api "repos/${owner}/${engine}/contents/rules.lock" \
     --jq '.content' 2>/dev/null | base64 --decode || true)"
   if [[ -z "${lock}" ]]; then

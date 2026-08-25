@@ -27,8 +27,8 @@ if [[ "$(value rules_version)" != "${version}" ]]; then
   exit 1
 fi
 
-expect_sha rules_sha256 "${dir}/businessid-rules-${version}.binpb"
-expect_sha conformance_sha256 "${dir}/businessid-conformance-${version}.binpb"
+expect_sha rules_sha256 "${dir}/entid-rules-${version}.binpb"
+expect_sha conformance_sha256 "${dir}/entid-conformance-${version}.binpb"
 expect_sha rules_proto_sha256 "${dir}/rules.proto"
 expect_sha conformance_proto_sha256 "${dir}/conformance.proto"
 expect_sha testee_proto_sha256 "${dir}/testee.proto"

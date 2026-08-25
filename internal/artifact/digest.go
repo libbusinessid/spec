@@ -14,8 +14,8 @@ import (
 
 // Domain separators of the canonical source streams.
 const (
-	RulesDomain       = "LIBBUSINESSID-SOURCE-V1\n"
-	ConformanceDomain = "LIBBUSINESSID-CONFORMANCE-SOURCE-V1\n"
+	RulesDomain       = "ENTID-SOURCE-V1\n"
+	ConformanceDomain = "ENTID-CONFORMANCE-SOURCE-V1\n"
 )
 
 // SourceEntry is one file of a canonical source stream. Path is the virtual

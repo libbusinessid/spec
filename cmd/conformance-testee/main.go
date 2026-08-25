@@ -19,10 +19,10 @@ import (
 
 	"google.golang.org/protobuf/proto"
 
-	conformancev1 "github.com/libbusinessid/spec/gen/go/libbusinessid/conformance/v1"
-	testeev1 "github.com/libbusinessid/spec/gen/go/libbusinessid/testee/v1"
-	"github.com/libbusinessid/spec/internal/artifact"
-	"github.com/libbusinessid/spec/internal/reference"
+	conformancev1 "github.com/entid-org/spec/gen/go/entid/conformance/v1"
+	testeev1 "github.com/entid-org/spec/gen/go/entid/testee/v1"
+	"github.com/entid-org/spec/internal/artifact"
+	"github.com/entid-org/spec/internal/reference"
 )
 
 func main() {

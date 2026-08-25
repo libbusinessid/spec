@@ -3,7 +3,7 @@ package reference
 import (
 	"strings"
 
-	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
+	irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
 )
 
 // formatOutcome is the result of a format program.

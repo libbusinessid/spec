@@ -1,12 +1,12 @@
-// Package typecheck resolves every expression of the LibBusinessID language
+// Package typecheck resolves every expression of the LibEntID language
 // into a fully typed operation graph. No dynamic type survives this stage: the
 // result is directly lowerable to the Protobuf IR.
 package typecheck
 
 import (
-	irv1 "github.com/libbusinessid/spec/gen/go/libbusinessid/ir/v1"
-	"github.com/libbusinessid/spec/internal/diagnostics"
-	"github.com/libbusinessid/spec/internal/features"
+	irv1 "github.com/entid-org/spec/gen/go/entid/ir/v1"
+	"github.com/entid-org/spec/internal/diagnostics"
+	"github.com/entid-org/spec/internal/features"
 )
 
 // Node is a checked operation of a program.

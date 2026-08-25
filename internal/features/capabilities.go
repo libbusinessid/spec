@@ -1,4 +1,4 @@
-// Package features is the single Go registry of the immutable LibBusinessID
+// Package features is the single Go registry of the immutable LibEntID
 // capability IDs and of every concrete IR operation. Both docs/ir.md and
 // docs/features.md are generated from this registry; CI rejects any divergence.
 //

@@ -1,8 +1,8 @@
-# Prompt d’implémentation — moteur Swift LibBusinessID
+# Prompt d’implémentation — moteur Swift LibEntID
 
 ## Mission
 
-Implémente intégralement le dépôt Swift du moteur LibBusinessID. Lis d’abord
+Implémente intégralement le dépôt Swift du moteur LibEntID. Lis d’abord
 `engine.md` en entier. Avant de coder, exige et lis aussi `rules.proto`,
 `conformance.proto`, `ir.md`, `features.md`, le manifeste, `SHA256SUMS`,
 l’attestation et les deux BINPB de la même release. Si un élément manque ou se
@@ -28,20 +28,20 @@ erreurs, protocoles et tests selon les conventions Swift.
 - Le bundle n'est pas une ressource du paquet : il est lu par le générateur à la
   construction. Le corpus de conformité reste accessible aux tests, jamais à la
   bibliothèque.
-- Le module public s’appelle `BusinessID`.
+- Le module public s’appelle `EntID`.
 
 Structure recommandée :
 
 ```text
 .
 ├── Package.swift
-├── Sources/BusinessID/
+├── Sources/EntID/
 │   ├── API/
 │   ├── Domain/
 │   ├── Runtime/          # primitives que le code généré appelle
 │   └── Generated/        # code émis depuis le bundle, jamais édité
-├── Sources/businessid-gen/   # le générateur : lit le bundle, valide, émet
-├── Tests/BusinessIDTests/
+├── Sources/entid-gen/   # le générateur : lit le bundle, valide, émet
+├── Tests/EntIDTests/
 │   ├── Unit/
 │   ├── Conformance/
 │   └── Security/
@@ -68,8 +68,8 @@ public struct ValidationOptions: Sendable, Hashable { ... }
 public struct CanonicalizationResult: Sendable, Hashable, Codable { ... }
 public struct ValidationReport: Sendable, Hashable, Codable { ... }
 
-public final class BusinessIDEngine: @unchecked Sendable {
-    public static let `default`: BusinessIDEngine
+public final class EntIDEngine: @unchecked Sendable {
+    public static let `default`: EntIDEngine
 
     public func canonicalize(
         _ input: IdentifierInput,
@@ -140,7 +140,7 @@ uniquement.
 
 ## SwiftProtobuf
 
-- Code généré sous `Sources/BusinessID/Generated`, visibilité internal, jamais édité à la main.
+- Code généré sous `Sources/EntID/Generated`, visibilité internal, jamais édité à la main.
 - Version de `protoc-gen-swift` alignée avec le runtime et verrouillée.
 - Commandes de génération et de vérification documentées.
 - Ne pas exposer `SwiftProtobuf.Message` publiquement.
@@ -184,8 +184,8 @@ Le runner de conformité vient de `spec`, jamais de ce dépôt. Il s'exécute é
 commit que `rules.lock` enregistre sous `source_commit` :
 
 ```bash
-go run github.com/libbusinessid/spec/cmd/conformance-runner@<source_commit> \
-  -corpus spec/businessid-conformance.binpb -- .build/debug/businessid-testee
+go run github.com/entid-org/spec/cmd/conformance-runner@<source_commit> \
+  -corpus spec/entid-conformance.binpb -- .build/debug/entid-testee
 ```
 
 N'écris pas de comparateur : un moteur qui juge lui-même ses propres résultats peut

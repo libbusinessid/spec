@@ -14,7 +14,7 @@ fi
 
 # A browser user agent, because several registers answer a bare curl with a
 # challenge page. Identifying as a browser is what a reader would do.
-agent="Mozilla/5.0 (compatible; libbusinessid-source-check/1.0)"
+agent="Mozilla/5.0 (compatible; entid-source-check/1.0)"
 
 while IFS= read -r url; do
   [[ -n "${url}" ]] || continue

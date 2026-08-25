@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/libbusinessid/spec/internal/features"
+	"github.com/entid-org/spec/internal/features"
 )
 
 // RenderFeaturesDoc renders docs/features.md, the frozen content of every
@@ -16,7 +16,7 @@ func RenderFeaturesDoc() []byte {
 
 	w("%s", generatedBanner)
 	w("")
-	w("# LibBusinessID capabilities v1")
+	w("# LibEntID capabilities v1")
 	w("")
 	w("A capability ID designates an exact and frozen set of operations, fields, bounds")
 	w("and semantics. That set can never be widened or reinterpreted. IDs are never")
